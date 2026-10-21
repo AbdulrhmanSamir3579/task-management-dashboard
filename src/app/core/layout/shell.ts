@@ -22,8 +22,11 @@ import { Sidebar } from './sidebar/sidebar';
         </main>
       </div>
     </div>
-    <ui-toast-outlet />
-    <ui-confirm-outlet />
+    <!-- Loaded right after first paint to keep PrimeNG's overlays out of the initial bundle. -->
+    @defer (on idle) {
+      <ui-toast-outlet />
+      <ui-confirm-outlet />
+    }
   `,
   styleUrl: './shell.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
