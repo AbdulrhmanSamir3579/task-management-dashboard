@@ -17,6 +17,7 @@ Short records of the decisions that shape this codebase: what was decided, why, 
 | [0011](0011-lazy-loading-and-bundle-budget.md)          | Lazy loading and bundle budget              | Accepted |
 | [0012](0012-global-search-with-suggestions.md)          | Global search with suggestions              | Accepted |
 | [0013](0013-task-board-interactions.md)                 | Task board interactions                     | Accepted |
+| [0014](0014-local-first-search.md)                      | Local-first search                          | Accepted |
 
 ## Template
 

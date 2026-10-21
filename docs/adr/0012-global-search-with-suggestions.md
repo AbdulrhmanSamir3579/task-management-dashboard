@@ -1,6 +1,6 @@
 # 0012. Global search with suggestions
 
-- Status: Accepted
+- Status: Accepted, amended by [0014](0014-local-first-search.md)
 - Date: 2026-10-21
 
 ## Context
