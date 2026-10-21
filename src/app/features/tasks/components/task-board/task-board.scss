@@ -1,0 +1,111 @@
+:host {
+  display: block;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(var(--board-columns, 3), minmax(0, 1fr));
+  align-items: start;
+  gap: 1.5rem;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: var(--app-radius-md);
+  background: var(--app-surface);
+  box-shadow: var(--app-shadow-sm);
+}
+
+.column__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.625rem;
+  border-bottom: 1px solid var(--app-border);
+}
+
+.column__title {
+  margin: 0;
+  color: var(--app-text);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.column__count {
+  min-width: 1.875rem;
+  padding: 0.0625rem 0.5rem;
+  border-radius: 0.75rem;
+  background: var(--app-border);
+  color: var(--app-text);
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.column__list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: 25rem;
+}
+
+.column__empty {
+  margin: auto;
+  color: var(--app-text-muted);
+  font-size: 0.8125rem;
+}
+
+.column__placeholder {
+  min-height: 7rem;
+  border: 2px dashed var(--app-primary);
+  border-radius: var(--app-radius-md);
+  background: rgb(25 118 210 / 6%);
+}
+
+// Drag and drop visuals. The preview is a clone placed under <body>; it keeps this
+// component's style scope.
+.cdk-drag {
+  cursor: grab;
+}
+
+.cdk-drag-disabled {
+  cursor: progress;
+}
+
+.cdk-drag-preview {
+  border-radius: var(--app-radius-md);
+  box-shadow: var(--app-shadow-md);
+  cursor: grabbing;
+  rotate: 2deg;
+}
+
+.cdk-drag-animating,
+.cdk-drop-list-dragging .cdk-drag:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+@media (max-width: 991.98px) {
+  .board {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .column__list {
+    min-height: 8rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cdk-drag-animating,
+  .cdk-drop-list-dragging .cdk-drag:not(.cdk-drag-placeholder) {
+    transition: none;
+  }
+
+  .cdk-drag-preview {
+    rotate: none;
+  }
+}
