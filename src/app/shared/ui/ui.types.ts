@@ -12,3 +12,11 @@ export interface SelectOption<T> {
   value: T;
   disabled?: boolean;
 }
+
+export interface MenuAction {
+  label: string;
+  command: () => void;
+  /** `danger` highlights destructive actions such as deleting. */
+  tone?: 'default' | 'danger';
+  disabled?: boolean;
+}

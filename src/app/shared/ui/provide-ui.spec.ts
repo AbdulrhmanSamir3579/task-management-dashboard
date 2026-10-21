@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { PrimeNG } from 'primeng/config';
 import { DARK_MODE_CLASS, provideUi } from './provide-ui';
 import { AppPreset } from './theme/app-preset';
@@ -11,6 +12,15 @@ describe('provideUi', () => {
       preset: AppPreset,
       options: { darkModeSelector: `.${DARK_MODE_CLASS}`, cssLayer: true },
     });
+  });
+});
+
+describe('provideUi services', () => {
+  it('registers the services behind notifications and confirmations', () => {
+    TestBed.configureTestingModule({ providers: [provideUi()] });
+
+    expect(TestBed.inject(MessageService)).toBeInstanceOf(MessageService);
+    expect(TestBed.inject(ConfirmationService)).toBeInstanceOf(ConfirmationService);
   });
 });
 

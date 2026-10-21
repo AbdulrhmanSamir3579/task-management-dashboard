@@ -1,0 +1,39 @@
+import { render, screen, within } from '@testing-library/angular';
+import { userEvent } from '@testing-library/user-event';
+import type { MenuAction } from '../ui.types';
+import { UiMenu } from './menu';
+
+describe('UiMenu', () => {
+  async function setup() {
+    const edit = vi.fn();
+    const remove = vi.fn();
+    const actions: MenuAction[] = [
+      { label: 'Edit', command: edit },
+      { label: 'Archive', command: vi.fn(), disabled: true },
+      { label: 'Delete', command: remove, tone: 'danger' },
+    ];
+    await render(UiMenu, { inputs: { actions, triggerLabel: 'Task actions' } });
+    await userEvent.click(screen.getByRole('button', { name: 'Task actions' }));
+    await screen.findByRole('menu');
+    return { edit, remove };
+  }
+
+  it('runs the chosen action', async () => {
+    const { edit } = await setup();
+
+    const item = screen.getByRole('menuitem', { name: 'Edit' });
+    await userEvent.click(within(item).getByText('Edit'));
+
+    expect(edit).toHaveBeenCalledTimes(1);
+  });
+
+  it('marks disabled and destructive actions', async () => {
+    await setup();
+
+    expect(screen.getByRole('menuitem', { name: 'Archive' })).toHaveAttribute(
+      'aria-disabled',
+      'true',
+    );
+    expect(screen.getByRole('menuitem', { name: 'Delete' })).toHaveClass('ui-menu-item-danger');
+  });
+});
