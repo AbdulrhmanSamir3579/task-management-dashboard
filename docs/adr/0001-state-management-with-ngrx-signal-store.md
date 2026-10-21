@@ -23,7 +23,7 @@ Use `@ngrx/signals` SignalStore for feature state.
 - `withEntities` keeps the loaded tasks; the entity state is the client-side cache, so pages share data without fetching again. An HTTP-level response cache was removed for this reason.
 - `httpResource` (through `HttpBaseService.resource()`) loads data inside the store. A store effect copies every successful load into the entity state.
 - Changes go through store methods that call `HttpBaseService`. Create and update wait for the server; move and delete are optimistic (see [0002](0002-race-free-optimistic-board-changes.md)).
-- `rxMethod` is used where RxJS operators matter, for example the debounced search.
+- `rxMethod` is used where RxJS operators matter, for example the board change queue (`concatMap`).
 - Components read signals from the store and call its methods; they never call the API.
 
 ## Consequences

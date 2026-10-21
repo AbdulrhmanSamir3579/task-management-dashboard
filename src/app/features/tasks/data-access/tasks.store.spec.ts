@@ -6,7 +6,7 @@ import { buildTaskDto, buildUser } from '../../../../testing/builders';
 import { errorInterceptor } from '../../../core/http/error.interceptor';
 import type { CreateTaskPayload, TaskDto, TasksResponse } from '../../../core/models';
 import { NotificationService } from '../../../shared/ui/notifications/notification.service';
-import { SEARCH_DEBOUNCE_MS, TASK_FEEDBACK_MS, TasksStore } from './tasks.store';
+import { TASK_FEEDBACK_MS, TasksStore } from './tasks.store';
 
 const seed: TaskDto[] = [
   buildTaskDto({
@@ -122,21 +122,6 @@ describe('TasksStore', () => {
       store.resetFilters();
       expect(store.filteredTasks()).toHaveLength(3);
       expect(store.hasActiveFilters()).toBe(false);
-    });
-
-    it('debounces search', async () => {
-      const store = await loadedStore();
-      vi.useFakeTimers();
-
-      store.search('budget');
-      vi.advanceTimersByTime(SEARCH_DEBOUNCE_MS - 1);
-      expect(store.filters().search).toBe('');
-
-      vi.advanceTimersByTime(1);
-      expect(store.filters().search).toBe('budget');
-      expect(store.filteredTasks().map((task) => task.id)).toEqual(['task-001']);
-
-      vi.useRealTimers();
     });
   });
 

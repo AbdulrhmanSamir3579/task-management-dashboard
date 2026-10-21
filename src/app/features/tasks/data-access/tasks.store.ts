@@ -15,8 +15,6 @@ import {
   type Observable,
   catchError,
   concatMap,
-  debounceTime,
-  distinctUntilChanged,
   finalize,
   firstValueFrom,
   pipe,
@@ -43,8 +41,6 @@ import {
   hasActiveFilters,
 } from './task-filters';
 import { TasksApi } from './tasks.api';
-
-export const SEARCH_DEBOUNCE_MS = 250;
 
 /** How long a card shows the result of a board change before returning to normal. */
 export const TASK_FEEDBACK_MS = new InjectionToken<number>('TASK_FEEDBACK_MS', {
@@ -133,14 +129,6 @@ export const TasksStore = signalStore(
     resetFilters(): void {
       patchState(store, { filters: EMPTY_TASK_FILTERS });
     },
-    /** Debounced, so the board does not re-filter on every keystroke. */
-    search: rxMethod<string>(
-      pipe(
-        debounceTime(SEARCH_DEBOUNCE_MS),
-        distinctUntilChanged(),
-        tap((search) => patchState(store, (state) => ({ filters: { ...state.filters, search } }))),
-      ),
-    ),
     reload(): void {
       store._resource.reload();
     },
