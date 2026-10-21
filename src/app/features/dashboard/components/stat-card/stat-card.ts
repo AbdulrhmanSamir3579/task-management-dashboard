@@ -15,52 +15,7 @@ import type { Statistic } from '../../../../core/models';
       </p>
     </article>
   `,
-  styles: `
-    :host {
-      display: block;
-    }
-    .stat {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      height: 100%;
-      padding: 1.5rem;
-      border-radius: var(--app-radius-md);
-      background: var(--app-surface);
-      box-shadow: var(--app-shadow-md);
-    }
-    .stat__title {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin: 0;
-      color: var(--app-text-muted);
-      font-size: 0.8125rem;
-    }
-    .stat__icon {
-      font-size: 1.25rem;
-    }
-    .stat__value {
-      margin: 0;
-      color: var(--app-text);
-      font-size: 1.875rem;
-      font-weight: 700;
-      line-height: 1.2;
-    }
-    .stat__change {
-      margin: 0;
-      font-size: 0.71875rem;
-    }
-    .stat__change--positive {
-      color: var(--app-success);
-    }
-    .stat__change--neutral {
-      color: var(--app-text-muted);
-    }
-    .stat__change--negative {
-      color: var(--app-danger);
-    }
-  `,
+  styleUrl: './stat-card.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StatCard {

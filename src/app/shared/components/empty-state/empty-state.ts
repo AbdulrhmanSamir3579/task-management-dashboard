@@ -13,28 +13,7 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
       <ng-content />
     </section>
   `,
-  styles: `
-    .empty-state {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 3rem 1rem;
-      text-align: center;
-    }
-    .empty-state__icon {
-      font-size: 2.5rem;
-    }
-    .empty-state__title {
-      margin: 0;
-      font-size: 1.125rem;
-    }
-    .empty-state__message {
-      margin: 0;
-      max-width: 28rem;
-      color: var(--p-text-muted-color);
-    }
-  `,
+  styleUrl: './empty-state.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmptyState {

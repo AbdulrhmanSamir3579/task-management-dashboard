@@ -14,28 +14,7 @@ export type DialogCloseGuard = () => boolean | Promise<boolean>;
   imports: [Dialog],
   host: { '(document:keydown.escape)': 'onEscape()' },
   templateUrl: './dialog.html',
-  styles: `
-    .ui-dialog__close {
-      position: absolute;
-      inset-block-start: 1rem;
-      inset-inline-end: 1rem;
-      width: 2rem;
-      height: 2rem;
-      border: 0;
-      border-radius: 50%;
-      background: none;
-      color: var(--app-text-muted);
-      cursor: pointer;
-
-      &:hover {
-        background: var(--app-background);
-      }
-
-      &:focus-visible {
-        outline: 2px solid var(--app-primary);
-      }
-    }
-  `,
+  styleUrl: './dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UiDialog {
