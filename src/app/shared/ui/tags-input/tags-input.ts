@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { Chip } from 'primeng/chip';
 import { InputText } from 'primeng/inputtext';
 import { UiFormControl, provideValueAccessor } from '../forms/form-control';
 
@@ -9,15 +8,15 @@ import { UiFormControl, provideValueAccessor } from '../forms/form-control';
  */
 @Component({
   selector: 'ui-tags-input',
-  imports: [Chip, InputText],
+  imports: [InputText],
   providers: [provideValueAccessor(() => UiTagsInput)],
   template: `
     <div class="tags-input">
       @if (tags().length) {
         <ul class="tags-input__list" [attr.aria-label]="listLabel()">
           @for (tag of tags(); track tag) {
-            <li class="tags-input__item">
-              <p-chip [label]="tag" />
+            <li class="tags-input__chip">
+              <span class="tags-input__label">{{ tag }}</span>
               <button
                 type="button"
                 class="tags-input__remove"
@@ -25,7 +24,7 @@ import { UiFormControl, provideValueAccessor } from '../forms/form-control';
                 [disabled]="disabled()"
                 (click)="remove(tag)"
               >
-                ×
+                <span aria-hidden="true">✕</span>
               </button>
             </li>
           }
@@ -60,17 +59,52 @@ import { UiFormControl, provideValueAccessor } from '../forms/form-control';
       padding: 0;
       list-style: none;
     }
-    .tags-input__item {
+    .tags-input__chip {
       display: inline-flex;
       align-items: center;
+      gap: 0.25rem;
+      max-width: 100%;
+      padding: 0.25rem 0.25rem 0.25rem 0.75rem;
+      border-radius: 1rem;
+      background: var(--p-chip-background, var(--app-background));
+      color: var(--p-chip-color, var(--app-text));
+      font-size: 0.8125rem;
+      line-height: 1.25rem;
+    }
+    .tags-input__label {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     .tags-input__remove {
-      margin-inline-start: -1.75rem;
-      padding: 0 0.5rem;
+      display: inline-flex;
+      flex: none;
+      align-items: center;
+      justify-content: center;
+      width: 1.25rem;
+      height: 1.25rem;
+      padding: 0;
       border: 0;
+      border-radius: 50%;
       background: none;
-      color: inherit;
+      color: var(--app-text-muted);
+      font-size: 0.625rem;
       cursor: pointer;
+
+      &:hover:not(:disabled) {
+        background: rgb(0 0 0 / 8%);
+        color: var(--app-text);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--app-primary);
+        outline-offset: 1px;
+      }
+
+      &:disabled {
+        cursor: default;
+        opacity: 0.5;
+      }
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

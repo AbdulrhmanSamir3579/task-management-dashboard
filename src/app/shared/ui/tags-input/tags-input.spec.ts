@@ -65,6 +65,14 @@ describe('UiTagsInput', () => {
     await vi.waitFor(() => expect(input).toBeDisabled());
   });
 
+  it('shows each tag next to its own remove button', async () => {
+    await setup(['A rather long tag name']);
+
+    const chip = (await screen.findByText('A rather long tag name')).closest('li')!;
+    expect(chip.children).toHaveLength(2);
+    expect(chip.lastElementChild).toHaveAccessibleName('Remove A rather long tag name');
+  });
+
   it('lists current tags for screen readers', async () => {
     await setup(['Docs']);
     expect(await screen.findByRole('list', { name: 'Tags' })).toHaveTextContent('Docs');
