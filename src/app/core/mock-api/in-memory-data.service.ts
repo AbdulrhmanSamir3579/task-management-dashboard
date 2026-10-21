@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
   type InMemoryDbService,
   type RequestInfo,
@@ -13,7 +13,6 @@ import type {
   TasksResponse,
   UpdateTaskPayload,
 } from '../models';
-import { CLOCK } from '../time/clock';
 import { type MockDb, createMockDb, moveTask, nextTaskId, removeTask } from './mock-db';
 
 /** Name shown in the activity feed for changes made through the app. */
@@ -27,11 +26,9 @@ export const CURRENT_USER_NAME = 'You';
  */
 @Injectable()
 export class InMemoryDataService implements InMemoryDbService {
-  private readonly now = inject(CLOCK);
-
   createDb(): Promise<MockDb> {
     // Dynamic import keeps the seed JSON out of the initial bundle.
-    return import('./seed').then(({ seed }) => createMockDb(seed, this.now()));
+    return import('./seed').then(({ seed }) => createMockDb(seed, new Date()));
   }
 
   get(reqInfo: RequestInfo): Observable<unknown> | undefined {
@@ -42,7 +39,7 @@ export class InMemoryDataService implements InMemoryDbService {
       const { tasks } = this.db(reqInfo);
       const body: TasksResponse = {
         tasks: structuredClone(tasks),
-        meta: { totalCount: tasks.length, lastUpdated: this.now().toISOString() },
+        meta: { totalCount: tasks.length, lastUpdated: new Date().toISOString() },
       };
       return { status: STATUS.OK, body };
     });
@@ -61,7 +58,7 @@ export class InMemoryDataService implements InMemoryDbService {
         return this.error(STATUS.UNPROCESSABLE_ENTRY, 'A task needs a title and a known assignee.');
       }
 
-      const timestamp = this.now().toISOString();
+      const timestamp = new Date().toISOString();
       const task: TaskDto = {
         id: nextTaskId(db.tasks),
         title: payload.title.trim(),
@@ -104,7 +101,7 @@ export class InMemoryDataService implements InMemoryDbService {
         return this.error(STATUS.UNPROCESSABLE_ENTRY, `Assignee ${assigneeId} does not exist.`);
       }
 
-      const timestamp = this.now().toISOString();
+      const timestamp = new Date().toISOString();
       const nextStatus = status ?? current.status;
       const statusChanged = nextStatus !== current.status;
       const updated: TaskDto = {
@@ -162,7 +159,7 @@ export class InMemoryDataService implements InMemoryDbService {
         type: 'deleted',
         taskId: task.id,
         taskTitle: task.title,
-        timestamp: this.now().toISOString(),
+        timestamp: new Date().toISOString(),
       });
       return { status: STATUS.NO_CONTENT };
     });

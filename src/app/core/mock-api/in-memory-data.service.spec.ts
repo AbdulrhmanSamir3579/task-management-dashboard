@@ -9,7 +9,6 @@ import type {
   UpdateTaskPayload,
   User,
 } from '../models';
-import { CLOCK } from '../time/clock';
 import { CURRENT_USER_NAME } from './in-memory-data.service';
 import { provideMockApi } from './provide-mock-api';
 
@@ -39,15 +38,16 @@ describe('InMemoryDataService', () => {
   };
 
   beforeEach(() => {
+    // Fake only the date, so the API's own timers keep working.
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(now);
     TestBed.configureTestingModule({
-      providers: [
-        provideHttpClient(),
-        provideMockApi({ delay: 0 }),
-        { provide: CLOCK, useValue: () => now },
-      ],
+      providers: [provideHttpClient(), provideMockApi({ delay: 0 })],
     });
     http = TestBed.inject(HttpClient);
   });
+
+  afterEach(() => vi.useRealTimers());
 
   describe('reads', () => {
     it('wraps tasks in the TasksResponse envelope', async () => {
