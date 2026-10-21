@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { PrimeNG } from 'primeng/config';
 import { DARK_MODE_CLASS, provideUi } from './provide-ui';
-import { AppPreset } from './theme/app-preset';
+import { AppPreset, BRAND_BLUE } from './theme/app-preset';
 
 describe('provideUi', () => {
   it('configures PrimeNG with the app preset, dark mode class and CSS layer', () => {
@@ -25,12 +25,10 @@ describe('provideUi services', () => {
 });
 
 describe('AppPreset', () => {
-  it('maps every primary shade to the blue palette', () => {
-    const primary = (AppPreset as { semantic: { primary: Record<string, string> } }).semantic
-      .primary;
+  it('uses the design primary colour as the 500 shade', () => {
+    const { primary } = (AppPreset as { semantic: { primary: Record<string, string> } }).semantic;
 
-    expect(primary['50']).toBe('{blue.50}');
-    expect(primary['500']).toBe('{blue.500}');
-    expect(primary['950']).toBe('{blue.950}');
+    expect(primary['500']).toBe('#1976d2');
+    expect(primary).toMatchObject(BRAND_BLUE);
   });
 });
