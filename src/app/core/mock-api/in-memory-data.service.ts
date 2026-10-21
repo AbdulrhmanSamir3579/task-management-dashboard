@@ -14,7 +14,8 @@ import type {
   UpdateTaskPayload,
 } from '../models';
 import { moveOnBoard, removeFromBoard } from '../../shared/utils/board-order';
-import { type MockDb, createMockDb, nextTaskId, searchTasks } from './mock-db';
+import { rankByText } from '../../shared/utils/text-search';
+import { type MockDb, createMockDb, nextTaskId } from './mock-db';
 
 /** Name shown in the activity feed for changes made through the app. */
 export const CURRENT_USER_NAME = 'You';
@@ -38,7 +39,7 @@ export class InMemoryDataService implements InMemoryDbService {
     }
     return reqInfo.utils.createResponse$(() => {
       // Optional `?search=` (title and description) and `?limit=` query parameters.
-      const matches = searchTasks(this.db(reqInfo).tasks, reqInfo.query.get('search')?.[0] ?? '');
+      const matches = rankByText(this.db(reqInfo).tasks, reqInfo.query.get('search')?.[0] ?? '');
       const limit = Number(reqInfo.query.get('limit')?.[0]);
       const page = limit > 0 ? matches.slice(0, limit) : matches;
       const body: TasksResponse = {

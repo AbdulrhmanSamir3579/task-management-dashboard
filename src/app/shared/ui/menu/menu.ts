@@ -21,7 +21,7 @@ import type { MenuAction } from '../ui.types';
       [ariaLabel]="triggerLabel()"
       (clicked)="menu.toggle($event)"
     >
-      <span aria-hidden="true">⋯</span>
+      <span aria-hidden="true">⋮</span>
     </ui-button>
     <p-menu #menu appendTo="body" [model]="items()" [popup]="true" [ariaLabel]="triggerLabel()" />
   `,

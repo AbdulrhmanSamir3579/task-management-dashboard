@@ -1,10 +1,10 @@
 import type { Observable } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
-import { buildTaskDto } from '../../../../testing/builders';
-import type { TaskDto } from '../../../core/models';
-import { type TaskSearchState, taskSearch } from './task-search';
+import { type TaskSearchState, type TaskSuggestion, taskSearch } from './task-search';
 
-const resultsFor = (query: string): TaskDto[] => [buildTaskDto({ title: `Result for ${query}` })];
+const resultsFor = (query: string): TaskSuggestion[] => [
+  { id: 'task-001', title: `Result for ${query}`, description: '' },
+];
 const loading = (query: string): TaskSearchState => ({ query, status: 'loading', results: [] });
 const success = (query: string): TaskSearchState => ({
   query,
@@ -46,7 +46,7 @@ describe('taskSearch', () => {
 
   it('does not search queries shorter than the minimum length', () => {
     scheduler.run(({ hot, expectObservable }) => {
-      const search = vi.fn<(query: string) => Observable<TaskDto[]>>();
+      const search = vi.fn<(query: string) => Observable<TaskSuggestion[]>>();
       const input = hot('a', { a: ' b ' });
 
       expectObservable(input.pipe(taskSearch(search))).toBe('300ms i', {
@@ -76,13 +76,46 @@ describe('taskSearch', () => {
     scheduler.run(({ hot, cold, expectObservable }) => {
       const input = hot('a 400ms b', { a: 'broken', b: 'budget' });
       const search = (query: string) =>
-        query === 'broken' ? cold<TaskDto[]>('-#') : cold('-r|', { r: resultsFor(query) });
+        query === 'broken' ? cold<TaskSuggestion[]>('-#') : cold('-r|', { r: resultsFor(query) });
 
       expectObservable(input.pipe(taskSearch(search))).toBe('300ms le 399ms mr', {
         l: loading('broken'),
         e: { query: 'broken', status: 'error', results: [] },
         m: loading('budget'),
         r: success('budget'),
+      });
+    });
+  });
+
+  it('searches at once when the delay is 0, for example over loaded tasks', () => {
+    scheduler.run(({ hot, cold, expectObservable }) => {
+      const input = hot('a', { a: 'budget' });
+      const search = (query: string) => cold('(r|)', { r: resultsFor(query) });
+
+      expectObservable(input.pipe(taskSearch(search, { debounceMs: () => 0 }))).toBe('(lr)', {
+        l: loading('budget'),
+        r: success('budget'),
+      });
+    });
+  });
+
+  it('reads the delay for every query', () => {
+    scheduler.run(({ hot, cold, expectObservable }) => {
+      let loaded = false;
+      const input = hot('a 400ms b', { a: 'bud', b: 'budget' });
+      const search = (query: string) => {
+        loaded = true;
+        return cold('(r|)', { r: resultsFor(query) });
+      };
+
+      // "bud" waits 300ms (not loaded yet); "budget" runs at once at 401ms.
+      expectObservable(
+        input.pipe(taskSearch(search, { debounceMs: () => (loaded ? 0 : 300) })),
+      ).toBe('300ms (lr) 97ms (mn)', {
+        l: loading('bud'),
+        r: success('bud'),
+        m: loading('budget'),
+        n: success('budget'),
       });
     });
   });

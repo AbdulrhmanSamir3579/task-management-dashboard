@@ -1,14 +1,20 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { EmptyState } from '../../shared/components/empty-state/empty-state';
+import { ChangeDetectionStrategy, Component, effect, inject, input } from '@angular/core';
+import { TasksStore } from './data-access/tasks.store';
+import { TaskBoardSection } from './task-board-section/task-board-section';
 
 @Component({
   selector: 'app-tasks-page',
-  imports: [EmptyState],
-  template: `<app-empty-state
-    icon="✅"
-    title="Tasks is on its way"
-    message="This page is being built."
-  />`,
+  imports: [TaskBoardSection],
+  template: `<app-task-board-section />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TasksPage {}
+export class TasksPage {
+  private readonly store = inject(TasksStore);
+
+  /** `?q=` from the header search, bound by the router. */
+  readonly q = input<string>();
+
+  constructor() {
+    effect(() => this.store.setFilters({ search: this.q() ?? '' }));
+  }
+}

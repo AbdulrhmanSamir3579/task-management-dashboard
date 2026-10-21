@@ -14,3 +14,8 @@ if (!window.matchMedia) {
     dispatchEvent: () => false,
   });
 }
+
+// jsdom has no scrollIntoView; PrimeNG lists call it to keep the focused option visible.
+if (!Element.prototype.scrollIntoView) {
+  Element.prototype.scrollIntoView = () => undefined;
+}

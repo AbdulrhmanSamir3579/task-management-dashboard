@@ -3,6 +3,21 @@ import type { User } from './user.model';
 export type TaskStatus = 'todo' | 'in_progress' | 'done';
 export type TaskPriority = 'high' | 'medium' | 'low';
 
+/** Board order of the statuses. */
+export const TASK_STATUSES: readonly TaskStatus[] = ['todo', 'in_progress', 'done'];
+
+export const TASK_STATUS_LABELS: Readonly<Record<TaskStatus, string>> = {
+  todo: 'To Do',
+  in_progress: 'In Progress',
+  done: 'Done',
+};
+
+export const TASK_PRIORITY_LABELS: Readonly<Record<TaskPriority, string>> = {
+  high: 'High',
+  medium: 'Medium',
+  low: 'Low',
+};
+
 /** Task as sent over the wire by the API (see DATA_README.md). */
 export interface TaskDto {
   id: string;

@@ -6,7 +6,7 @@ import { buildTaskDto, buildUser } from '../../../../testing/builders';
 import { errorInterceptor } from '../../../core/http/error.interceptor';
 import type { CreateTaskPayload, TaskDto, TasksResponse } from '../../../core/models';
 import { NotificationService } from '../../../shared/ui/notifications/notification.service';
-import { SEARCH_DEBOUNCE_MS, TASK_FEEDBACK_MS, TasksStore } from './tasks.store';
+import { TASK_FEEDBACK_MS, TasksStore } from './tasks.store';
 
 const seed: TaskDto[] = [
   buildTaskDto({
@@ -122,21 +122,6 @@ describe('TasksStore', () => {
       store.resetFilters();
       expect(store.filteredTasks()).toHaveLength(3);
       expect(store.hasActiveFilters()).toBe(false);
-    });
-
-    it('debounces search', async () => {
-      const store = await loadedStore();
-      vi.useFakeTimers();
-
-      store.search('budget');
-      vi.advanceTimersByTime(SEARCH_DEBOUNCE_MS - 1);
-      expect(store.filters().search).toBe('');
-
-      vi.advanceTimersByTime(1);
-      expect(store.filters().search).toBe('budget');
-      expect(store.filteredTasks().map((task) => task.id)).toEqual(['task-001']);
-
-      vi.useRealTimers();
     });
   });
 
@@ -361,6 +346,44 @@ describe('TasksStore', () => {
       TestBed.tick();
       httpTesting.expectOne('api/tasks').flush(response());
       await settle();
+    });
+
+    describe('drop', () => {
+      const lastPatchBody = () => patches()[0]?.request.body;
+
+      it('places a card before another card, using the full column', async () => {
+        const store = await loadedStore();
+        store.setFilters({ search: 'budget' });
+
+        store.drop('task-003', 'todo', 'task-001');
+
+        expect(lastPatchBody()).toEqual({ status: 'todo', position: 1 });
+        expect(store.entities().filter((task) => task.status === 'todo').length).toBe(3);
+      });
+
+      it('places a card at the end of the column', async () => {
+        const store = await loadedStore();
+
+        store.drop('task-003', 'todo', null);
+
+        expect(lastPatchBody()).toEqual({ status: 'todo', position: 2 });
+      });
+
+      it('falls back to the end when the anchor is not in the column', async () => {
+        const store = await loadedStore();
+
+        store.drop('task-003', 'todo', 'missing');
+
+        expect(lastPatchBody()).toEqual({ status: 'todo', position: 2 });
+      });
+
+      it('sends nothing when a card is dropped where it already is', async () => {
+        const store = await loadedStore();
+
+        store.drop('task-002', 'todo', 'task-001');
+
+        expect(patches()).toHaveLength(0);
+      });
     });
 
     it('ignores changes to unknown tasks', async () => {
