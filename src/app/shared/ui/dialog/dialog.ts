@@ -13,41 +13,7 @@ export type DialogCloseGuard = () => boolean | Promise<boolean>;
   selector: 'ui-dialog',
   imports: [Dialog],
   host: { '(document:keydown.escape)': 'onEscape()' },
-  template: `
-    <p-dialog
-      appendTo="body"
-      closeAriaLabel="Close dialog"
-      [header]="heading()"
-      [(visible)]="visible"
-      [modal]="true"
-      [draggable]="false"
-      [resizable]="false"
-      [dismissableMask]="dismissable() && !guarded()"
-      [closeOnEscape]="dismissable() && !guarded()"
-      [closable]="dismissable() && !guarded()"
-      [style]="{ width: width() }"
-      [breakpoints]="{ '640px': '95vw' }"
-      (onHide)="closed.emit()"
-    >
-      <ng-template #header let-labelledBy="ariaLabelledBy">
-        <span class="p-dialog-title" [id]="labelledBy">{{ heading() }}</span>
-        @if (guarded() && dismissable()) {
-          <button
-            type="button"
-            class="ui-dialog__close"
-            aria-label="Close dialog"
-            (click)="requestClose()"
-          >
-            <span aria-hidden="true">✕</span>
-          </button>
-        }
-      </ng-template>
-      <ng-content />
-      <ng-template #footer>
-        <ng-content select="[uiDialogFooter]" />
-      </ng-template>
-    </p-dialog>
-  `,
+  templateUrl: './dialog.html',
   styles: `
     .ui-dialog__close {
       position: absolute;

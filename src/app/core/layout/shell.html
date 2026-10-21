@@ -1,0 +1,39 @@
+<a class="skip-link" href="#main-content" (click)="skipToContent($event)"> Skip to main content </a>
+<app-header [menuOpen]="navOpen()" (menuToggle)="toggleNav()">
+  <!-- The search box needs PrimeNG's autocomplete; it loads right after first paint. -->
+  @defer (on idle) {
+    <app-task-search-box />
+  } @placeholder {
+    <span class="search-placeholder" aria-hidden="true">🔍 Search tasks...</span>
+  }
+</app-header>
+<div class="shell" [class.shell--nav-open]="navOpen()">
+  <app-sidebar
+    id="app-sidebar"
+    class="shell__sidebar"
+    [items]="navigation"
+    (navigated)="closeNav()"
+  >
+    <!-- Native button: PrimeNG's button would add to the initial bundle for one control. -->
+    <button type="button" class="shell__new-task" (click)="newTask()">+ New Task</button>
+  </app-sidebar>
+  @if (navOpen()) {
+    <button
+      type="button"
+      class="shell__backdrop"
+      aria-label="Close navigation"
+      (click)="closeNav()"
+    ></button>
+  }
+  <main #main id="main-content" class="shell__main" tabindex="-1">
+    <!-- The design has no visible page title; screen readers still get one. -->
+    <h1 class="visually-hidden">{{ pageTitle() }}</h1>
+    <router-outlet />
+  </main>
+</div>
+<!-- Loaded right after first paint to keep PrimeNG's overlays out of the initial bundle. -->
+@defer (on idle) {
+  <ui-toast-outlet />
+  <ui-confirm-outlet />
+  <app-task-editor-dialog />
+}

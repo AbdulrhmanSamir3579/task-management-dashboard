@@ -1,0 +1,39 @@
+<form role="search" (submit)="$event.preventDefault()">
+  <label for="global-search" class="visually-hidden">Search tasks</label>
+  <ui-autocomplete
+    inputId="global-search"
+    placeholder="🔍 Search tasks..."
+    optionLabel="title"
+    [suggestions]="state().results"
+    [emptyMessage]="emptyMessage()"
+    [(value)]="text"
+    (queryChange)="onQuery($event)"
+    (selected)="open($event)"
+    (submitted)="search($event)"
+  >
+    <ng-template uiAutocompleteItem [uiAutocompleteItemOf]="state().results" let-task>
+      <span class="suggestion">
+        <span class="suggestion__title">
+          @for (part of task.title | highlight: state().query; track $index) {
+            @if (part.match) {
+              <mark>{{ part.text }}</mark>
+            } @else {
+              {{ part.text }}
+            }
+          }
+        </span>
+        @if (task.description) {
+          <span class="suggestion__description">
+            @for (part of task.description | highlight: state().query; track $index) {
+              @if (part.match) {
+                <mark>{{ part.text }}</mark>
+              } @else {
+                {{ part.text }}
+              }
+            }
+          </span>
+        }
+      </span>
+    </ng-template>
+  </ui-autocomplete>
+</form>

@@ -40,38 +40,7 @@ export class UiAutocompleteItem<T> {
 @Component({
   selector: 'ui-autocomplete',
   imports: [AutoComplete, FormsModule, NgTemplateOutlet],
-  template: `
-    <p-autocomplete
-      fluid
-      appendTo="body"
-      [inputId]="inputId()"
-      [placeholder]="placeholder()"
-      [ariaLabel]="ariaLabel()"
-      [suggestions]="suggestionList()"
-      [optionLabel]="optionLabel()"
-      [delay]="0"
-      [minQueryLength]="1"
-      [showEmptyMessage]="true"
-      [emptyMessage]="emptyMessage()"
-      [ngModel]="value()"
-      (ngModelChange)="value.set($event)"
-      (completeMethod)="queryChange.emit($event.query)"
-      (onSelect)="onSelect($event.value)"
-      (onClear)="queryChange.emit('')"
-      (keydown.enter)="onEnter($event)"
-    >
-      <ng-template #item let-item>
-        @if (itemTemplate(); as custom) {
-          <ng-container
-            [ngTemplateOutlet]="custom.template"
-            [ngTemplateOutletContext]="{ $implicit: item }"
-          />
-        } @else {
-          {{ item[optionLabel()] }}
-        }
-      </ng-template>
-    </p-autocomplete>
-  `,
+  templateUrl: './autocomplete.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UiAutocomplete<T extends object> {

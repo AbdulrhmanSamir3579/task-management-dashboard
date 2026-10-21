@@ -14,31 +14,7 @@ import type { MenuAction } from '../ui.types';
 @Component({
   selector: 'ui-menu',
   imports: [Menu],
-  template: `
-    <button
-      type="button"
-      class="ui-menu__trigger"
-      aria-haspopup="menu"
-      [attr.aria-expanded]="open()"
-      [attr.aria-label]="triggerLabel()"
-      (click)="menu.toggle($event)"
-    >
-      <svg class="ui-menu__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-        <circle cx="8" cy="3" r="1.6" />
-        <circle cx="8" cy="8" r="1.6" />
-        <circle cx="8" cy="13" r="1.6" />
-      </svg>
-    </button>
-    <p-menu
-      #menu
-      appendTo="body"
-      [model]="items()"
-      [popup]="true"
-      [ariaLabel]="triggerLabel()"
-      (onShow)="open.set(true)"
-      (onHide)="open.set(false)"
-    />
-  `,
+  templateUrl: './menu.html',
   // The popup is rendered under <body>, outside this component's style scope, so the
   // styles are global and use component-specific class names.
   encapsulation: ViewEncapsulation.None,

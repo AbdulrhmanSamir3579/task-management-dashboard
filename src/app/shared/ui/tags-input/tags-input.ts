@@ -10,41 +10,7 @@ import { UiFormControl, provideValueAccessor } from '../forms/form-control';
   selector: 'ui-tags-input',
   imports: [InputText],
   providers: [provideValueAccessor(() => UiTagsInput)],
-  template: `
-    <div class="tags-input">
-      @if (tags().length) {
-        <ul class="tags-input__list" [attr.aria-label]="listLabel()">
-          @for (tag of tags(); track tag) {
-            <li class="tags-input__chip">
-              <span class="tags-input__label">{{ tag }}</span>
-              <button
-                type="button"
-                class="tags-input__remove"
-                [attr.aria-label]="'Remove ' + tag"
-                [disabled]="disabled()"
-                (click)="remove(tag)"
-              >
-                <span aria-hidden="true">✕</span>
-              </button>
-            </li>
-          }
-        </ul>
-      }
-      <input
-        #field
-        pInputText
-        fluid
-        [id]="controlId()"
-        [placeholder]="isFull() ? '' : placeholder()"
-        [disabled]="disabled() || isFull()"
-        [invalid]="isInvalid()"
-        [attr.aria-invalid]="isInvalid() || null"
-        [attr.aria-describedby]="describedBy() || null"
-        (keydown)="onKeydown($event, field)"
-        (blur)="onBlur(field)"
-      />
-    </div>
-  `,
+  templateUrl: './tags-input.html',
   styles: `
     .tags-input {
       display: flex;

@@ -4,35 +4,7 @@ import { TASK_STATUSES, TASK_STATUS_LABELS, type TaskStatus } from '../../../../
 /** Status tabs above the board, plus a slot on the right for actions. */
 @Component({
   selector: 'app-board-toolbar',
-  template: `
-    <div class="toolbar">
-      <div class="toolbar__tabs" role="group" aria-label="Show tasks by status">
-        <button
-          type="button"
-          class="tab"
-          [class.tab--active]="status() === null"
-          [attr.aria-pressed]="status() === null"
-          (click)="statusChange.emit(null)"
-        >
-          All
-        </button>
-        @for (option of statuses; track option) {
-          <button
-            type="button"
-            class="tab"
-            [class.tab--active]="status() === option"
-            [attr.aria-pressed]="status() === option"
-            (click)="statusChange.emit(option)"
-          >
-            {{ labels[option] }}
-          </button>
-        }
-      </div>
-      <div class="toolbar__actions">
-        <ng-content />
-      </div>
-    </div>
-  `,
+  templateUrl: './board-toolbar.html',
   styles: `
     .toolbar {
       display: flex;
