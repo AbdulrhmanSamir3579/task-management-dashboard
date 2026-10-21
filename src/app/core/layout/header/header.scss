@@ -8,6 +8,29 @@
   border-block-end: 1px solid var(--p-content-border-color);
 }
 
+.header__menu {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 0;
+  border-radius: 0.5rem;
+  background: none;
+  color: inherit;
+  font-size: 1.25rem;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--p-content-hover-background);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--p-primary-color);
+    outline-offset: 2px;
+  }
+}
+
 .header__title {
   margin: 0;
   font-size: 1.25rem;
@@ -19,4 +42,17 @@
   align-items: center;
   gap: 0.75rem;
   margin-inline-start: auto;
+}
+
+// The menu button only exists for the mobile drawer.
+@media (min-width: 992px) {
+  .header__menu {
+    display: none;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .header {
+    padding-inline: 1rem;
+  }
 }

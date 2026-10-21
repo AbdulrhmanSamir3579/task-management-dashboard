@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  type ElementRef,
+  inject,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs';
@@ -12,12 +19,29 @@ import { Sidebar } from './sidebar/sidebar';
 @Component({
   selector: 'app-shell',
   imports: [RouterOutlet, Sidebar, Header, UiToastOutlet, UiConfirmOutlet],
+  host: { '(document:keydown.escape)': 'closeNav()' },
   template: `
-    <div class="shell">
-      <app-sidebar class="shell__sidebar" [items]="navigation" />
+    <a class="skip-link" href="#main-content" (click)="skipToContent($event)">
+      Skip to main content
+    </a>
+    <div class="shell" [class.shell--nav-open]="navOpen()">
+      <app-sidebar
+        id="app-sidebar"
+        class="shell__sidebar"
+        [items]="navigation"
+        (navigated)="closeNav()"
+      />
+      @if (navOpen()) {
+        <button
+          type="button"
+          class="shell__backdrop"
+          aria-label="Close navigation"
+          (click)="closeNav()"
+        ></button>
+      }
       <div class="shell__body">
-        <app-header [title]="pageTitle()" />
-        <main id="main-content" class="shell__main" tabindex="-1">
+        <app-header [title]="pageTitle()" [menuOpen]="navOpen()" (menuToggle)="toggleNav()" />
+        <main #main id="main-content" class="shell__main" tabindex="-1">
           <router-outlet />
         </main>
       </div>
@@ -33,8 +57,11 @@ import { Sidebar } from './sidebar/sidebar';
 })
 export class Shell {
   private readonly router = inject(Router);
+  private readonly main = viewChild.required<ElementRef<HTMLElement>>('main');
 
   protected readonly navigation = NAVIGATION;
+  /** Mobile navigation drawer; the sidebar is always visible on wide screens. */
+  protected readonly navOpen = signal(false);
   protected readonly pageTitle = toSignal(
     this.router.events.pipe(
       filter((event) => event instanceof NavigationEnd),
@@ -42,6 +69,19 @@ export class Shell {
     ),
     { initialValue: this.activeTitle() },
   );
+
+  protected toggleNav(): void {
+    this.navOpen.update((open) => !open);
+  }
+
+  protected closeNav(): void {
+    this.navOpen.set(false);
+  }
+
+  protected skipToContent(event: Event): void {
+    event.preventDefault();
+    this.main().nativeElement.focus();
+  }
 
   /** Title of the deepest active route, as set by the `title` of its route config. */
   private activeTitle(): string {

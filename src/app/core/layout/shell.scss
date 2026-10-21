@@ -1,3 +1,19 @@
+.skip-link {
+  position: absolute;
+  inset-block-start: 0.5rem;
+  inset-inline-start: 0.5rem;
+  z-index: 1100;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  background: var(--p-primary-color);
+  color: var(--p-primary-contrast-color);
+  transform: translateY(-200%);
+
+  &:focus {
+    transform: none;
+  }
+}
+
 .shell {
   display: grid;
   grid-template-columns: 15rem 1fr;
@@ -22,5 +38,56 @@
 
   &:focus {
     outline: none;
+  }
+}
+
+// Only rendered while the mobile drawer is open.
+.shell__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  border: 0;
+  background: rgb(0 0 0 / 40%);
+}
+
+@media (min-width: 992px) {
+  .shell__backdrop {
+    display: none;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .shell {
+    grid-template-columns: 1fr;
+  }
+
+  .shell__sidebar {
+    position: fixed;
+    inset-block: 0;
+    inset-inline-start: 0;
+    z-index: 1000;
+    width: 16rem;
+    transform: translateX(-100%);
+    // Hidden from keyboard and screen readers while closed.
+    visibility: hidden;
+    transition:
+      transform 0.2s ease,
+      visibility 0.2s;
+  }
+
+  .shell--nav-open .shell__sidebar {
+    transform: none;
+    visibility: visible;
+    box-shadow: 0 0 2rem rgb(0 0 0 / 20%);
+  }
+
+  .shell__main {
+    padding: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shell__sidebar {
+    transition: none;
   }
 }
