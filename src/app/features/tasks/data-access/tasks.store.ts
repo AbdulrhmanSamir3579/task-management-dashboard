@@ -8,10 +8,20 @@ import {
   withProps,
   withState,
 } from '@ngrx/signals';
-import { setAllEntities, withEntities } from '@ngrx/signals/entities';
+import { addEntity, setAllEntities, setEntity, withEntities } from '@ngrx/signals/entities';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { debounceTime, distinctUntilChanged, pipe, tap } from 'rxjs';
-import { type Task, toTask } from '../../../core/models';
+import { debounceTime, distinctUntilChanged, firstValueFrom, pipe, tap } from 'rxjs';
+import {
+  type CreateTaskPayload,
+  type Task,
+  type TaskDto,
+  type TaskStatus,
+  type UpdateTaskPayload,
+  isTaskOverdue,
+  toTask,
+} from '../../../core/models';
+import { NotificationService } from '../../../shared/ui/notifications/notification.service';
+import { moveOnBoard, removeFromBoard } from '../../../shared/utils/board-order';
 import { toIsoDate } from '../../../shared/utils/date.utils';
 import {
   EMPTY_TASK_FILTERS,
@@ -28,6 +38,8 @@ interface TasksState {
   filters: TaskFilters;
 }
 
+const today = (): string => toIsoDate(new Date());
+
 function messageOf(error: unknown, fallback: string): string {
   return error instanceof Error && error.message ? error.message : fallback;
 }
@@ -43,7 +55,11 @@ export const TasksStore = signalStore(
   withState<TasksState>({ filters: EMPTY_TASK_FILTERS }),
   withProps(() => {
     const api = inject(TasksApi);
-    return { _api: api, _resource: api.listResource() };
+    return {
+      _api: api,
+      _resource: api.listResource(),
+      _notifications: inject(NotificationService),
+    };
   }),
   withComputed(({ entities, filters, _resource }) => {
     const filteredTasks = computed(() => filterTasks(entities(), filters()));
@@ -80,6 +96,71 @@ export const TasksStore = signalStore(
       store._resource.reload();
     },
   })),
+  withMethods((store) => {
+    const saveFromServer = (dto: TaskDto): void =>
+      patchState(store, setEntity(toTask(dto, today())));
+
+    return {
+      /** Resolves `true` once the server has created the task. */
+      async create(payload: CreateTaskPayload): Promise<boolean> {
+        try {
+          const dto = await firstValueFrom(store._api.create(payload));
+          patchState(store, addEntity(toTask(dto, today())));
+          store._notifications.success(`"${dto.title}" was added to the board.`, 'Task created');
+          return true;
+        } catch (error) {
+          store._notifications.error(messageOf(error, 'The task could not be created.'));
+          return false;
+        }
+      },
+
+      /** Resolves `true` once the server has saved the changes. */
+      async update(id: string, changes: UpdateTaskPayload): Promise<boolean> {
+        try {
+          saveFromServer(await firstValueFrom(store._api.update(id, changes)));
+          store._notifications.success('Your changes were saved.', 'Task updated');
+          return true;
+        } catch (error) {
+          store._notifications.error(messageOf(error, 'The task could not be saved.'));
+          return false;
+        }
+      },
+
+      /** Optimistic: the card moves at once and goes back if the server refuses. */
+      async move(id: string, status: TaskStatus, position: number): Promise<boolean> {
+        const previous = store.entities();
+        const moved = moveOnBoard(previous, id, status, position).map((task) => ({
+          ...task,
+          isOverdue: isTaskOverdue(task, today()),
+        }));
+        patchState(store, setAllEntities(moved));
+        try {
+          saveFromServer(await firstValueFrom(store._api.update(id, { status, position })));
+          return true;
+        } catch (error) {
+          patchState(store, setAllEntities(previous));
+          store._notifications.error(messageOf(error, 'The task could not be moved.'));
+          return false;
+        }
+      },
+
+      /** Optimistic: the card disappears at once and comes back if the server refuses. */
+      async remove(id: string): Promise<boolean> {
+        const previous = store.entities();
+        const title = store.entityMap()[id]?.title ?? 'The task';
+        patchState(store, setAllEntities(removeFromBoard(previous, id)));
+        try {
+          await firstValueFrom(store._api.remove(id), { defaultValue: undefined });
+          store._notifications.success(`"${title}" was deleted.`, 'Task deleted');
+          return true;
+        } catch (error) {
+          patchState(store, setAllEntities(previous));
+          store._notifications.error(messageOf(error, 'The task could not be deleted.'));
+          return false;
+        }
+      },
+    };
+  }),
   withHooks({
     onInit(store) {
       // Each successful load replaces the entity state with the server's tasks.
