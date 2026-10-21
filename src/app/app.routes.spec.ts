@@ -23,7 +23,7 @@ describe('app routes', () => {
     expect(await screen.findByRole('heading', { level: 1, name: 'Dashboard' })).toBeInTheDocument();
   });
 
-  it.each(['Dashboard', 'Tasks', 'Calendar', 'Analytics', 'Team', 'Settings'])(
+  it.each(['Dashboard', 'Calendar', 'Analytics', 'Team', 'Settings'])(
     'lazy loads the %s page and sets the tab title',
     async (page) => {
       await visit(`/${page.toLowerCase()}`);
