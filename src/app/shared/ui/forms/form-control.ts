@@ -15,6 +15,8 @@ import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 /** What a surrounding `ui-form-field` shares with the control inside it. */
 export interface FormFieldContext {
   controlId: string;
+  /** Id of the field's label, for controls that a `<label for>` cannot name. */
+  labelId: string;
   describedBy: Signal<string | undefined>;
   invalid: Signal<boolean>;
 }
@@ -48,6 +50,7 @@ export abstract class UiFormControl<T> implements ControlValueAccessor {
   protected readonly controlId = computed(() => this.inputId() ?? this.field?.controlId);
   protected readonly isInvalid = computed(() => this.invalid() || (this.field?.invalid() ?? false));
   protected readonly describedBy = computed(() => this.field?.describedBy());
+  protected readonly labelledBy = computed(() => this.field?.labelId);
 
   writeValue(value: T | null): void {
     this.value.set(value ?? this.emptyValue);

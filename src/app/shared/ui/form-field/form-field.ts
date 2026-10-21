@@ -36,7 +36,7 @@ interface ControlState {
   providers: [{ provide: FORM_FIELD_CONTEXT, useExisting: forwardRef(() => UiFormField) }],
   template: `
     <div class="form-field">
-      <label class="form-field__label" [for]="controlId">
+      <label class="form-field__label" [id]="labelId" [for]="controlId">
         {{ label() }}
         @if (isRequired()) {
           <span class="form-field__required" aria-hidden="true">*</span>
@@ -77,6 +77,7 @@ export class UiFormField implements FormFieldContext {
   readonly messages = input<Readonly<Record<string, string>>>({});
 
   readonly controlId = `ui-field-${nextId++}`;
+  readonly labelId = `${this.controlId}-label`;
   protected readonly errorId = `${this.controlId}-error`;
   protected readonly hintId = `${this.controlId}-hint`;
 

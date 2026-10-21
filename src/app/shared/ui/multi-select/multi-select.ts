@@ -23,6 +23,7 @@ import type { SelectOption } from '../ui.types';
       [showToggleAll]="false"
       [invalid]="isInvalid()"
       [ariaLabel]="ariaLabel()"
+      [ariaLabelledBy]="labelledBy()"
       [disabled]="disabled()"
       [ngModel]="value()"
       (ngModelChange)="updateValue($event ?? [])"
