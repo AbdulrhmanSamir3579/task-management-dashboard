@@ -9,6 +9,8 @@ Short records of the decisions that shape this codebase: what was decided, why, 
 | [0003](0003-angular-22-standalone-zoneless.md)          | Angular 22, standalone, zoneless and strict | Accepted |
 | [0004](0004-code-quality-and-delivery-workflow.md)      | Code quality and delivery workflow          | Accepted |
 | [0005](0005-testing-strategy.md)                        | Testing strategy                            | Accepted |
+| [0006](0006-ui-library-behind-wrapper-components.md)    | UI library behind wrapper components        | Accepted |
+| [0007](0007-theming-from-design-tokens.md)              | Theming from design tokens                  | Accepted |
 
 ## Template
 
