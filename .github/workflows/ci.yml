@@ -54,6 +54,10 @@ jobs:
       - name: Run tests with coverage gate
         run: npm run test:ci
 
+      - name: Publish coverage summary
+        if: always()
+        run: node scripts/coverage-summary.mjs >> "$GITHUB_STEP_SUMMARY"
+
       # Uploaded even when tests fail, so the report can be inspected.
       - name: Upload coverage report
         if: always()
