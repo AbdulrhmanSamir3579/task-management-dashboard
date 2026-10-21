@@ -304,6 +304,21 @@ export const TasksStore = signalStore(
       },
     };
   }),
+  withMethods((store) => ({
+    /**
+     * Places a dropped card before `beforeTaskId`, or at the end of the column when it is
+     * `null`. The board can show a filtered column, so the real position is worked out
+     * from the full column here rather than from the drop index.
+     */
+    drop(id: string, status: TaskStatus, beforeTaskId: string | null): void {
+      const column = store
+        .entities()
+        .filter((task) => task.status === status && task.id !== id)
+        .sort((a, b) => a.position - b.position);
+      const index = beforeTaskId ? column.findIndex((task) => task.id === beforeTaskId) : -1;
+      store.move(id, status, index === -1 ? column.length : index);
+    },
+  })),
   withHooks({
     onInit(store) {
       effect(() => {
