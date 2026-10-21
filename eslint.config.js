@@ -3,6 +3,7 @@ const eslint = require('@eslint/js');
 const { defineConfig } = require('eslint/config');
 const tseslint = require('typescript-eslint');
 const angular = require('angular-eslint');
+const prettier = require('eslint-config-prettier/flat');
 
 /**
  * Third-party UI and chart libraries are only reachable through our own wrappers,
@@ -14,7 +15,8 @@ const primeNgImports = {
 };
 const chartImports = {
   group: ['echarts', 'echarts/*', 'ngx-echarts'],
-  message: 'Use the chart services from src/app/shared/charts instead of importing ECharts directly.',
+  message:
+    'Use the chart services from src/app/shared/charts instead of importing ECharts directly.',
 };
 
 module.exports = defineConfig([
@@ -86,4 +88,6 @@ module.exports = defineConfig([
       '@angular-eslint/template/no-any': 'error',
     },
   },
+  // Must stay last: turns off every rule that would conflict with Prettier formatting.
+  prettier,
 ]);

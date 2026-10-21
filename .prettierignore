@@ -1,0 +1,6 @@
+# Files in .gitignore are ignored automatically.
+package-lock.json
+
+# Provided with the assignment, kept exactly as delivered
+data-fetching/
+DATA_README.md
