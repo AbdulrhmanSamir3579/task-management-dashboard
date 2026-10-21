@@ -14,6 +14,7 @@ The assignment asks for ESLint, Prettier, Husky on pre-commit, meaningful (prefe
   - template rules: self-closing tags, `@empty`, contextual `@for` variables, `button` types, no `$any`;
   - selector prefixes `app` and `ui`;
   - `no-restricted-imports`: `HttpClient` and `httpResource` only in `core/http`, PrimeNG only in `shared/ui`, ECharts only in `shared/charts`.
+- **Component files**: a small component may keep its template (up to 20 lines) and styles (up to 15 lines) inline; anything bigger lives in `.html` and `.scss` files next to the class. `@angular-eslint/component-max-inline-declarations` enforces the limits, so the codebase cannot drift into a mix.
 - **Prettier** (100 columns, single quotes); `eslint-config-prettier` turns off overlapping rules. The provided `data-fetching/` files and `DATA_README.md` are left untouched.
 - **Husky**: `pre-commit` runs lint-staged (ESLint fix and Prettier on staged files only); `commit-msg` runs commitlint with conventional commits, headers up to 72 characters.
 - **CI** (GitHub Actions) on every pull request and push to `main`: lint and format check, unit tests with the coverage gate (HTML report as an artifact, coverage table in the run summary), production build. A newer push cancels the running workflow.
