@@ -3,7 +3,10 @@ import {
   type HttpContext,
   type HttpHeaders,
   HttpParams,
+  type HttpResourceOptions,
+  type HttpResourceRef,
   HttpUrlEncodingCodec,
+  httpResource,
 } from '@angular/common/http';
 import { Injectable, InjectionToken, inject } from '@angular/core';
 import type { Observable } from 'rxjs';
@@ -25,6 +28,11 @@ export interface RequestOptions {
   headers?: HttpHeaders | Record<string, string | string[]>;
   /** Per-request metadata read by interceptors, e.g. caching. */
   context?: HttpContext;
+}
+
+/** A GET request described by endpoint and options, as used by `resource()`. */
+export interface ResourceRequest extends RequestOptions {
+  endpoint: string;
 }
 
 /**
@@ -79,6 +87,29 @@ export class HttpBaseService {
     options: RequestOptions = {},
   ): Observable<T> {
     return this.http.delete<T>(this.createUrl(endpoint), { ...this.toHttpOptions(options), body });
+  }
+
+  /**
+   * Signal-based GET built on `httpResource`. Signals read inside `request` are tracked:
+   * when they change, the request is sent again. Return `undefined` to skip the request.
+   * Must be called in an injection context, e.g. a field initializer.
+   */
+  resource<T>(
+    request: () => ResourceRequest | undefined,
+    options: HttpResourceOptions<T, unknown> & { defaultValue: NoInfer<T> },
+  ): HttpResourceRef<T>;
+  resource<T>(
+    request: () => ResourceRequest | undefined,
+    options?: HttpResourceOptions<T, unknown>,
+  ): HttpResourceRef<T | undefined>;
+  resource<T>(
+    request: () => ResourceRequest | undefined,
+    options?: HttpResourceOptions<T, unknown>,
+  ): HttpResourceRef<T | undefined> {
+    return httpResource<T>(() => {
+      const current = request();
+      return current && { url: this.createUrl(current.endpoint), ...this.toHttpOptions(current) };
+    }, options);
   }
 
   protected toHttpOptions({ params, headers, context }: RequestOptions) {

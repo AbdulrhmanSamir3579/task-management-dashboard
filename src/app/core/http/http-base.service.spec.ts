@@ -1,5 +1,6 @@
 import { HttpContext, HttpContextToken, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { ApplicationRef, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
 import { API_BASE_URL, HttpBaseService } from './http-base.service';
@@ -124,6 +125,70 @@ describe('HttpBaseService', () => {
       const { request } = httpTesting.expectOne('api/tasks');
       expect(request.headers.get('X-Trace')).toBe('on');
       expect(request.context.get(TRACE)).toBe(true);
+    });
+  });
+
+  describe('resource', () => {
+    const settle = () => TestBed.inject(ApplicationRef).whenStable();
+
+    it('fetches through httpResource with the same url and params handling', async () => {
+      setup();
+      const ref = TestBed.runInInjectionContext(() =>
+        service.resource<{ total: number }>(() => ({
+          endpoint: 'tasks',
+          params: { status: ['todo', 'done'] },
+        })),
+      );
+      TestBed.tick();
+
+      const req = httpTesting.expectOne((request) => request.url === 'api/tasks');
+      expect(req.request.params.getAll('status')).toEqual(['todo', 'done']);
+
+      req.flush({ total: 3 });
+      await settle();
+
+      expect(ref.value()).toEqual({ total: 3 });
+      expect(ref.isLoading()).toBe(false);
+    });
+
+    it('sends the request again when a signal it reads changes', () => {
+      setup();
+      const id = signal('task-001');
+      TestBed.runInInjectionContext(() => service.resource(() => ({ endpoint: `tasks/${id()}` })));
+      TestBed.tick();
+      httpTesting.expectOne('api/tasks/task-001').flush({});
+
+      id.set('task-002');
+      TestBed.tick();
+
+      httpTesting.expectOne('api/tasks/task-002').flush({});
+    });
+
+    it('skips the request when the request function returns undefined', () => {
+      setup();
+      const ref = TestBed.runInInjectionContext(() =>
+        service.resource<string[]>(() => undefined, { defaultValue: [] }),
+      );
+      TestBed.tick();
+
+      httpTesting.expectNone(() => true);
+      expect(ref.value()).toEqual([]);
+    });
+
+    it('exposes errors through the resource state', async () => {
+      setup();
+      const ref = TestBed.runInInjectionContext(() =>
+        service.resource(() => ({ endpoint: 'tasks' })),
+      );
+      TestBed.tick();
+
+      httpTesting
+        .expectOne('api/tasks')
+        .flush({ message: 'Down' }, { status: 503, statusText: 'Service Unavailable' });
+      await settle();
+
+      expect(ref.error()).toBeTruthy();
+      expect(ref.status()).toBe('error');
     });
   });
 });
