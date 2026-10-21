@@ -6,7 +6,7 @@ import { buildTaskDto, buildUser } from '../../../../testing/builders';
 import { errorInterceptor } from '../../../core/http/error.interceptor';
 import type { CreateTaskPayload, TaskDto, TasksResponse } from '../../../core/models';
 import { NotificationService } from '../../../shared/ui/notifications/notification.service';
-import { SEARCH_DEBOUNCE_MS, TasksStore } from './tasks.store';
+import { SEARCH_DEBOUNCE_MS, TASK_FEEDBACK_MS, TasksStore } from './tasks.store';
 
 const seed: TaskDto[] = [
   buildTaskDto({
@@ -43,6 +43,7 @@ describe('TasksStore', () => {
         provideHttpClient(withInterceptors([errorInterceptor])),
         provideHttpClientTesting(),
         { provide: NotificationService, useValue: notifications },
+        { provide: TASK_FEEDBACK_MS, useValue: 20 },
       ],
     });
     httpTesting = TestBed.inject(HttpTestingController);
@@ -203,15 +204,26 @@ describe('TasksStore', () => {
       expect(store.entityMap()['task-002']?.title).toBe('Write docs');
       expect(notifications.error).toHaveBeenCalled();
     });
+  });
 
-    it('moves a card before the server answers and keeps the server result', async () => {
+  describe('board changes', () => {
+    const serverError = { status: 500, statusText: 'Server Error' };
+    const column = (
+      store: InstanceType<typeof TasksStore>,
+      status: 'todo' | 'in_progress' | 'done',
+    ) => store.columns()[status].map((task) => task.id);
+    const patches = () => httpTesting.match((req) => req.method === 'PATCH');
+
+    it('moves a card at once, mutes it while saving and flashes success', async () => {
       const store = await loadedStore();
 
-      const result = store.move('task-001', 'done', 0);
+      store.move('task-001', 'done', 0);
 
-      expect(store.columns().todo.map((task) => task.id)).toEqual(['task-002']);
-      expect(store.columns().done.map((task) => task.id)).toEqual(['task-001', 'task-003']);
+      expect(column(store, 'todo')).toEqual(['task-002']);
+      expect(column(store, 'done')).toEqual(['task-001', 'task-003']);
       expect(store.entityMap()['task-001']?.isOverdue).toBe(false);
+      expect(store.changeStates()['task-001']).toBe('saving');
+      expect(store.isSyncing()).toBe(true);
 
       const req = httpTesting.expectOne('api/tasks/task-001');
       expect(req.request.body).toEqual({ status: 'done', position: 0 });
@@ -224,27 +236,105 @@ describe('TasksStore', () => {
         }),
       );
 
-      expect(await result).toBe(true);
       expect(store.entityMap()['task-001']?.completedAt).toBe('2026-10-21T12:00:00.000Z');
+      expect(store.changeStates()['task-001']).toBe('saved');
+      expect(store.isSyncing()).toBe(false);
+      await vi.waitFor(() => expect(store.changeStates()['task-001']).toBeUndefined());
     });
 
-    it('puts a card back when the move fails', async () => {
+    it('puts a failed move back, flashes the failure and reloads from the server', async () => {
       const store = await loadedStore();
 
-      const result = store.move('task-001', 'done', 0);
+      store.move('task-001', 'done', 0);
       httpTesting.expectOne('api/tasks/task-001').flush(null, serverError);
 
-      expect(await result).toBe(false);
-      expect(store.columns().todo.map((task) => task.id)).toEqual(['task-002', 'task-001']);
+      expect(column(store, 'todo')).toEqual(['task-002', 'task-001']);
+      expect(store.changeStates()['task-001']).toBe('failed');
       expect(notifications.error).toHaveBeenCalledWith(
         'Something went wrong on our side. Please try again.',
       );
+
+      TestBed.tick();
+      httpTesting.expectOne('api/tasks').flush(response());
+      await settle();
+      expect(column(store, 'todo')).toEqual(['task-002', 'task-001']);
     });
 
-    it('removes a card before the server answers', async () => {
+    it('ignores a drop in the same place', async () => {
       const store = await loadedStore();
 
-      const result = store.remove('task-002');
+      store.move('task-002', 'todo', 0);
+
+      httpTesting.expectNone('api/tasks/task-002');
+      expect(store.changeStates()).toEqual({});
+    });
+
+    it('sends board changes one at a time, in order', async () => {
+      const store = await loadedStore();
+
+      store.move('task-001', 'in_progress', 0);
+      store.move('task-002', 'done', 0);
+
+      const [first] = patches();
+      expect(patches()).toHaveLength(0);
+      expect(first?.request.url).toBe('api/tasks/task-001');
+
+      first?.flush(buildTaskDto({ id: 'task-001', status: 'in_progress', position: 0 }));
+
+      const [second] = patches();
+      expect(second?.request.url).toBe('api/tasks/task-002');
+      second?.flush(buildTaskDto({ id: 'task-002', status: 'done', position: 0 }));
+    });
+
+    it('does not let an older response undo a newer move of the same card', async () => {
+      const store = await loadedStore();
+
+      store.move('task-001', 'done', 0);
+      store.move('task-001', 'in_progress', 0);
+      patches()[0]?.flush(buildTaskDto({ id: 'task-001', status: 'done', position: 0 }));
+
+      expect(store.entityMap()['task-001']?.status).toBe('in_progress');
+      expect(store.changeStates()['task-001']).toBe('saving');
+
+      patches()[0]?.flush(buildTaskDto({ id: 'task-001', status: 'in_progress', position: 0 }));
+      expect(store.entityMap()['task-001']?.status).toBe('in_progress');
+      expect(store.changeStates()['task-001']).toBe('saved');
+    });
+
+    it('discards data loaded while changes are waiting and loads again afterwards', async () => {
+      const store = await loadedStore();
+
+      store.reload();
+      TestBed.tick();
+      const staleLoad = httpTesting.expectOne('api/tasks');
+      store.move('task-001', 'done', 0);
+
+      staleLoad.flush(response());
+      await settle();
+      expect(store.entityMap()['task-001']?.status).toBe('done');
+
+      httpTesting
+        .expectOne('api/tasks/task-001')
+        .flush(buildTaskDto({ id: 'task-001', status: 'done' }));
+      TestBed.tick();
+      httpTesting
+        .expectOne('api/tasks')
+        .flush(
+          response(
+            seed.map((task) =>
+              task.id === 'task-001' ? { ...task, status: 'done' as const } : task,
+            ),
+          ),
+        );
+      await settle();
+
+      expect(store.entityMap()['task-001']?.status).toBe('done');
+    });
+
+    it('removes a card at once and confirms the delete', async () => {
+      const store = await loadedStore();
+
+      store.remove('task-002');
       expect(store.ids()).not.toContain('task-002');
       expect(store.entityMap()['task-001']?.position).toBe(0);
 
@@ -252,22 +342,34 @@ describe('TasksStore', () => {
         .expectOne('api/tasks/task-002')
         .flush(null, { status: 204, statusText: 'No Content' });
 
-      expect(await result).toBe(true);
       expect(notifications.success).toHaveBeenCalledWith(
         '"Write docs" was deleted.',
         'Task deleted',
       );
     });
 
-    it('brings a card back when the delete fails', async () => {
+    it('brings a card back to its place when the delete fails', async () => {
       const store = await loadedStore();
 
-      const result = store.remove('task-002');
+      store.remove('task-002');
       httpTesting.expectOne('api/tasks/task-002').flush(null, serverError);
 
-      expect(await result).toBe(false);
-      expect(store.ids()).toContain('task-002');
+      expect(column(store, 'todo')).toEqual(['task-002', 'task-001']);
+      expect(store.changeStates()['task-002']).toBe('failed');
       expect(notifications.error).toHaveBeenCalled();
+
+      TestBed.tick();
+      httpTesting.expectOne('api/tasks').flush(response());
+      await settle();
+    });
+
+    it('ignores changes to unknown tasks', async () => {
+      const store = await loadedStore();
+
+      store.move('missing', 'done', 0);
+      store.remove('missing');
+
+      httpTesting.expectNone((req) => req.url.includes('missing'));
     });
   });
 });
