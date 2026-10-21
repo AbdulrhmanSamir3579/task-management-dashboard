@@ -24,6 +24,7 @@ import { Sidebar } from './sidebar/sidebar';
     <a class="skip-link" href="#main-content" (click)="skipToContent($event)">
       Skip to main content
     </a>
+    <app-header [menuOpen]="navOpen()" (menuToggle)="toggleNav()" />
     <div class="shell" [class.shell--nav-open]="navOpen()">
       <app-sidebar
         id="app-sidebar"
@@ -39,12 +40,11 @@ import { Sidebar } from './sidebar/sidebar';
           (click)="closeNav()"
         ></button>
       }
-      <div class="shell__body">
-        <app-header [title]="pageTitle()" [menuOpen]="navOpen()" (menuToggle)="toggleNav()" />
-        <main #main id="main-content" class="shell__main" tabindex="-1">
-          <router-outlet />
-        </main>
-      </div>
+      <main #main id="main-content" class="shell__main" tabindex="-1">
+        <!-- The design has no visible page title; screen readers still get one. -->
+        <h1 class="visually-hidden">{{ pageTitle() }}</h1>
+        <router-outlet />
+      </main>
     </div>
     <!-- Loaded right after first paint to keep PrimeNG's overlays out of the initial bundle. -->
     @defer (on idle) {

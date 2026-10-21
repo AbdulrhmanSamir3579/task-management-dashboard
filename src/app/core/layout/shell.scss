@@ -1,12 +1,17 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
 .skip-link {
   position: absolute;
   inset-block-start: 0.5rem;
   inset-inline-start: 0.5rem;
   z-index: 1100;
   padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  background: var(--p-primary-color);
-  color: var(--p-primary-contrast-color);
+  border-radius: var(--app-radius-sm);
+  background: var(--app-primary);
+  color: var(--app-primary-contrast);
   transform: translateY(-200%);
 
   &:focus {
@@ -16,25 +21,18 @@
 
 .shell {
   display: grid;
-  grid-template-columns: 15rem 1fr;
-  min-height: 100vh;
+  grid-template-columns: 15rem minmax(0, 1fr);
+  min-height: calc(100vh - 4rem);
 }
 
 .shell__sidebar {
   position: sticky;
-  top: 0;
-  height: 100vh;
-}
-
-.shell__body {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
+  top: 4rem;
+  height: calc(100vh - 4rem);
 }
 
 .shell__main {
-  flex: 1;
-  padding: 1.5rem;
+  padding: 2rem;
 
   &:focus {
     outline: none;
@@ -44,7 +42,7 @@
 // Only rendered while the mobile drawer is open.
 .shell__backdrop {
   position: fixed;
-  inset: 0;
+  inset: 4rem 0 0;
   z-index: 999;
   border: 0;
   background: rgb(0 0 0 / 40%);
@@ -58,15 +56,17 @@
 
 @media (max-width: 991.98px) {
   .shell {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
+  // Drawer below the header, so the menu button stays reachable.
   .shell__sidebar {
     position: fixed;
-    inset-block: 0;
+    inset-block: 4rem 0;
     inset-inline-start: 0;
     z-index: 1000;
     width: 16rem;
+    height: auto;
     transform: translateX(-100%);
     // Hidden from keyboard and screen readers while closed.
     visibility: hidden;
@@ -78,7 +78,6 @@
   .shell--nav-open .shell__sidebar {
     transform: none;
     visibility: visible;
-    box-shadow: 0 0 2rem rgb(0 0 0 / 20%);
   }
 
   .shell__main {

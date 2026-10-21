@@ -7,9 +7,6 @@ import type { NavItem } from '../navigation';
   imports: [RouterLink, RouterLinkActive],
   template: `
     <nav class="sidebar" aria-label="Main">
-      <a class="sidebar__brand" routerLink="/dashboard" (click)="navigated.emit()">
-        <span aria-hidden="true">📋</span> Task Manager
-      </a>
       <ul class="sidebar__list">
         @for (item of items(); track item.path) {
           <li>
@@ -26,6 +23,7 @@ import type { NavItem } from '../navigation';
           </li>
         }
       </ul>
+      <ng-content />
     </nav>
   `,
   styleUrl: './sidebar.scss',
