@@ -8,8 +8,8 @@ import {
   contentChild,
   inject,
   input,
+  model,
   output,
-  signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AutoComplete } from 'primeng/autocomplete';
@@ -91,7 +91,8 @@ export class UiAutocomplete<T extends object> {
   /** Set while a suggestion is being chosen, so the same Enter does not also submit. */
   private choosing = false;
 
-  protected readonly value = signal<T | string | null>(null);
+  /** Text in the box, or the chosen suggestion. Two-way bindable, e.g. to clear it. */
+  readonly value = model<T | string | null>(null);
   protected readonly itemTemplate = contentChild<UiAutocompleteItem<T>>(UiAutocompleteItem);
   protected readonly suggestionList = computed(() => [...this.suggestions()]);
 
