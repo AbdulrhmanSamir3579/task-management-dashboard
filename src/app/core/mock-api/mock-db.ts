@@ -1,7 +1,14 @@
-import type { Activity, TaskDto, TasksResponse, User } from '../models';
+import type { Activity, TaskDto, TaskStatus, TasksResponse, User } from '../models';
 import { addDaysToIsoDate, calendarDaysBetween } from '../../shared/utils/date.utils';
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
+
+const byPosition = (a: TaskDto, b: TaskDto): number => (a.position ?? 0) - (b.position ?? 0);
+
+/** Positions 0..n-1 for the tasks of one column, keyed by task id. */
+function renumber(column: readonly TaskDto[]): Map<string, TaskDto> {
+  return new Map(column.map((task, position) => [task.id, { ...task, position }]));
+}
 
 export interface MockDb {
   tasks: TaskDto[];
@@ -74,4 +81,56 @@ export function createMockDb(seed: TasksResponse, now: Date): MockDb {
     users: extractUsers(tasks),
     activities: seedActivities(tasks),
   };
+}
+
+/** Next sequential id, e.g. `task-018` after `task-017`. */
+export function nextTaskId(tasks: readonly TaskDto[]): string {
+  const highest = Math.max(0, ...tasks.map((task) => Number(task.id.replace(/\D/g, '')) || 0));
+  return `task-${String(highest + 1).padStart(3, '0')}`;
+}
+
+/**
+ * Moves a task to `status` at `position` (end of the column when omitted) and renumbers
+ * the columns it left and entered, the way a board backend keeps ordering consistent.
+ */
+export function moveTask(
+  tasks: readonly TaskDto[],
+  taskId: string,
+  status: TaskStatus,
+  position?: number,
+): TaskDto[] {
+  const moving = tasks.find((task) => task.id === taskId);
+  if (!moving) {
+    return [...tasks];
+  }
+
+  const target = tasks
+    .filter((task) => task.status === status && task.id !== taskId)
+    .sort(byPosition);
+  const index = Math.min(Math.max(position ?? target.length, 0), target.length);
+  target.splice(index, 0, { ...moving, status });
+
+  const source =
+    moving.status === status
+      ? []
+      : tasks
+          .filter((task) => task.status === moving.status && task.id !== taskId)
+          .sort(byPosition);
+
+  const updates = new Map([...renumber(source), ...renumber(target)]);
+  return tasks.map((task) => updates.get(task.id) ?? task);
+}
+
+/** Removes a task and closes the gap it leaves in its column. */
+export function removeTask(tasks: readonly TaskDto[], taskId: string): TaskDto[] {
+  const removed = tasks.find((task) => task.id === taskId);
+  const remaining = tasks.filter((task) => task.id !== taskId);
+  if (!removed) {
+    return remaining;
+  }
+
+  const updates = renumber(
+    remaining.filter((task) => task.status === removed.status).sort(byPosition),
+  );
+  return remaining.map((task) => updates.get(task.id) ?? task);
 }
