@@ -10,7 +10,8 @@
     "data:generate": "node data-fetching/generate-data.js",
     "lint": "ng lint",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "prepare": "husky"
   },
   "private": true,
   "packageManager": "npm@11.12.1",
@@ -32,7 +33,9 @@
     "angular-eslint": "22.6.0",
     "eslint": "^10.12.0",
     "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
     "jsdom": "^30.0.0",
+    "lint-staged": "^17.6.0",
     "prettier": "^3.8.1",
     "typescript": "~6.0.2",
     "typescript-eslint": "8.71.0",
@@ -40,5 +43,12 @@
   },
   "engines": {
     "node": "^22.22.3 || ^24.15.0 || >=26.0.0"
+  },
+  "lint-staged": {
+    "*.{ts,html}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{scss,css,json,md,js,mjs,cjs}": "prettier --write"
   }
 }
