@@ -14,6 +14,7 @@ Short records of the decisions that shape this codebase: what was decided, why, 
 | [0008](0008-single-http-entry-point.md)                 | Single HTTP entry point                     | Accepted |
 | [0009](0009-http-interceptors.md)                       | HTTP interceptors                           | Accepted |
 | [0010](0010-in-memory-mock-backend.md)                  | In-memory mock backend                      | Accepted |
+| [0011](0011-lazy-loading-and-bundle-budget.md)          | Lazy loading and bundle budget              | Accepted |
 
 ## Template
 
