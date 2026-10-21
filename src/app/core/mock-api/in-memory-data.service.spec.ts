@@ -60,6 +60,24 @@ describe('InMemoryDataService', () => {
       });
     });
 
+    it('searches titles and descriptions and limits the results', async () => {
+      const all = await firstValueFrom(
+        http.get<TasksResponse>('api/tasks', { params: { search: 'api' } }),
+      );
+      const limited = await firstValueFrom(
+        http.get<TasksResponse>('api/tasks', { params: { search: 'api', limit: 1 } }),
+      );
+
+      expect(all.tasks.length).toBeGreaterThan(1);
+      expect(
+        all.tasks.every((task) =>
+          `${task.title} ${task.description}`.toLowerCase().includes('api'),
+        ),
+      ).toBe(true);
+      expect(limited.tasks).toHaveLength(1);
+      expect(limited.meta.totalCount).toBe(all.tasks.length);
+    });
+
     it('serves the users derived from assignees', async () => {
       const users = await firstValueFrom(http.get<User[]>('api/users'));
       expect(users.map((user) => user.id)).toContain('user-001');
