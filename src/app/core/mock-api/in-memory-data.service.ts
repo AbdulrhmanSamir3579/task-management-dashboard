@@ -73,7 +73,7 @@ export class InMemoryDataService implements InMemoryDbService {
         dueDate: payload.dueDate,
         tags: payload.tags ?? [],
         assignee,
-        completedAt: payload.status === 'done' ? timestamp : null,
+        completedAt: payload.status === 'done' ? (payload.completedAt ?? timestamp) : null,
         position: db.tasks.filter((existing) => existing.status === payload.status).length,
         createdAt: timestamp,
         updatedAt: timestamp,
@@ -97,7 +97,13 @@ export class InMemoryDataService implements InMemoryDbService {
         return this.error(STATUS.NOT_FOUND, `Task ${reqInfo.id} was not found.`);
       }
 
-      const { assigneeId, position, status, ...fields } = this.body<UpdateTaskPayload>(reqInfo);
+      const {
+        assigneeId,
+        position,
+        status,
+        completedAt: requestedCompletedAt,
+        ...fields
+      } = this.body<UpdateTaskPayload>(reqInfo);
       const assignee =
         assigneeId === undefined
           ? current.assignee
@@ -114,11 +120,12 @@ export class InMemoryDataService implements InMemoryDbService {
         ...fields,
         assignee,
         updatedAt: timestamp,
-        completedAt: statusChanged
-          ? nextStatus === 'done'
-            ? timestamp
-            : null
-          : (current.completedAt ?? null),
+        // Done tasks keep a completion date: the one sent, the current one, or now.
+        completedAt:
+          nextStatus === 'done'
+            ? (requestedCompletedAt ??
+              (statusChanged ? timestamp : (current.completedAt ?? timestamp)))
+            : null,
       };
 
       db.tasks = moveOnBoard(
@@ -136,7 +143,11 @@ export class InMemoryDataService implements InMemoryDbService {
           fromStatus: current.status,
           toStatus: nextStatus,
         });
-      } else if (Object.keys(fields).length > 0 || assigneeId !== undefined) {
+      } else if (
+        Object.keys(fields).length > 0 ||
+        assigneeId !== undefined ||
+        requestedCompletedAt !== undefined
+      ) {
         this.log(db, { ...base, type: 'updated' });
       }
 

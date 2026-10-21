@@ -133,6 +133,24 @@ describe('InMemoryDataService', () => {
       expect(created.completedAt).toBe(now.toISOString());
     });
 
+    it('keeps a completion date sent with a task created as done', async () => {
+      const created = await firstValueFrom(
+        http.post<TaskDto>('api/tasks', {
+          ...newTask,
+          status: 'done',
+          completedAt: '2026-10-19T12:00:00.000Z',
+        }),
+      );
+      expect(created.completedAt).toBe('2026-10-19T12:00:00.000Z');
+    });
+
+    it('ignores a completion date for tasks that are not done', async () => {
+      const created = await firstValueFrom(
+        http.post<TaskDto>('api/tasks', { ...newTask, completedAt: '2026-10-19T12:00:00.000Z' }),
+      );
+      expect(created.completedAt).toBeNull();
+    });
+
     it('rejects a blank title or unknown assignee with 422', async () => {
       const blank = firstValueFrom(http.post('api/tasks', { ...newTask, title: '   ' }));
       const unknown = firstValueFrom(http.post('api/tasks', { ...newTask, assigneeId: 'nobody' }));
@@ -157,6 +175,21 @@ describe('InMemoryDataService', () => {
         fromStatus: 'todo',
         toStatus: 'done',
       });
+    });
+
+    it('uses the completion date sent when a task is moved to done', async () => {
+      const updated = await patchTask('task-001', {
+        status: 'done',
+        completedAt: '2026-10-20T12:00:00.000Z',
+      });
+      expect(updated.completedAt).toBe('2026-10-20T12:00:00.000Z');
+    });
+
+    it('changes the completion date of a done task and logs it as an update', async () => {
+      const updated = await patchTask('task-009', { completedAt: '2026-10-18T12:00:00.000Z' });
+
+      expect(updated.completedAt).toBe('2026-10-18T12:00:00.000Z');
+      expect((await getActivities())[0]).toMatchObject({ type: 'updated', taskId: 'task-009' });
     });
 
     it('clears the completion date when a task is reopened', async () => {
