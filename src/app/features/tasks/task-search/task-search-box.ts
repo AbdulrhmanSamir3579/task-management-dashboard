@@ -8,12 +8,16 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
-import type { TaskDto } from '../../../core/models';
+import { Subject, map } from 'rxjs';
 import { HighlightPipe } from '../../../shared/pipes/highlight.pipe';
 import { UiAutocomplete, UiAutocompleteItem } from '../../../shared/ui/autocomplete/autocomplete';
 import { TasksApi } from '../data-access/tasks.api';
-import { type TaskSearchOptions, type TaskSearchState, taskSearch } from './task-search';
+import {
+  type TaskSearchOptions,
+  type TaskSearchState,
+  type TaskSuggestion,
+  taskSearch,
+} from './task-search';
 
 /** Overrides for the search timing, e.g. no debounce in tests. */
 export const TASK_SEARCH_OPTIONS = new InjectionToken<Partial<TaskSearchOptions>>(
@@ -89,7 +93,16 @@ export class TaskSearchBox {
     this.queries
       .pipe(
         taskSearch(
-          (query) => this.api.search(query, SEARCH_SUGGESTION_LIMIT),
+          (query) =>
+            this.api.search(query, SEARCH_SUGGESTION_LIMIT).pipe(
+              map((tasks) =>
+                tasks.map(({ id, title, description }) => ({
+                  id,
+                  title,
+                  description: description ?? '',
+                })),
+              ),
+            ),
           inject(TASK_SEARCH_OPTIONS),
         ),
         takeUntilDestroyed(),
@@ -101,7 +114,7 @@ export class TaskSearchBox {
     this.queries.next(query);
   }
 
-  protected open(task: TaskDto): void {
+  protected open(task: TaskSuggestion): void {
     void this.router.navigate(['/tasks'], { queryParams: { q: task.title } });
   }
 
