@@ -4,6 +4,19 @@ const { defineConfig } = require('eslint/config');
 const tseslint = require('typescript-eslint');
 const angular = require('angular-eslint');
 
+/**
+ * Third-party UI and chart libraries are only reachable through our own wrappers,
+ * so upgrading or replacing a library touches a single folder.
+ */
+const primeNgImports = {
+  group: ['primeng', 'primeng/*', '@primeuix/*'],
+  message: 'Use the wrappers from src/app/shared/ui instead of importing PrimeNG directly.',
+};
+const chartImports = {
+  group: ['echarts', 'echarts/*', 'ngx-echarts'],
+  message: 'Use the chart services from src/app/shared/charts instead of importing ECharts directly.',
+};
+
 module.exports = defineConfig([
   {
     files: ['**/*.ts'],
@@ -31,6 +44,19 @@ module.exports = defineConfig([
           style: 'kebab-case',
         },
       ],
+      'no-restricted-imports': ['error', { patterns: [primeNgImports, chartImports] }],
+    },
+  },
+  {
+    files: ['src/app/shared/ui/**/*.ts'],
+    rules: {
+      'no-restricted-imports': ['error', { patterns: [chartImports] }],
+    },
+  },
+  {
+    files: ['src/app/shared/charts/**/*.ts'],
+    rules: {
+      'no-restricted-imports': ['error', { patterns: [primeNgImports] }],
     },
   },
   {
