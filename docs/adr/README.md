@@ -11,6 +11,9 @@ Short records of the decisions that shape this codebase: what was decided, why, 
 | [0005](0005-testing-strategy.md)                        | Testing strategy                            | Accepted |
 | [0006](0006-ui-library-behind-wrapper-components.md)    | UI library behind wrapper components        | Accepted |
 | [0007](0007-theming-from-design-tokens.md)              | Theming from design tokens                  | Accepted |
+| [0008](0008-single-http-entry-point.md)                 | Single HTTP entry point                     | Accepted |
+| [0009](0009-http-interceptors.md)                       | HTTP interceptors                           | Accepted |
+| [0010](0010-in-memory-mock-backend.md)                  | In-memory mock backend                      | Accepted |
 
 ## Template
 
