@@ -19,6 +19,18 @@
   }
 }
 
+// Same size and look as the empty search box, shown until it loads.
+.search-placeholder {
+  display: block;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius-sm);
+  background: var(--app-surface);
+  color: var(--app-text-muted);
+  font-size: 0.8125rem;
+  line-height: 1.25rem;
+}
+
 .shell {
   display: grid;
   grid-template-columns: 15rem minmax(0, 1fr);

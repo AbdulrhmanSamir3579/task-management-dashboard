@@ -26,7 +26,12 @@ import { Sidebar } from './sidebar/sidebar';
       Skip to main content
     </a>
     <app-header [menuOpen]="navOpen()" (menuToggle)="toggleNav()">
-      <app-task-search-box />
+      <!-- The search box needs PrimeNG's autocomplete; it loads right after first paint. -->
+      @defer (on idle) {
+        <app-task-search-box />
+      } @placeholder {
+        <span class="search-placeholder" aria-hidden="true">🔍 Search tasks...</span>
+      }
     </app-header>
     <div class="shell" [class.shell--nav-open]="navOpen()">
       <app-sidebar
