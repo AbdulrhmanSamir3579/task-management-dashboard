@@ -13,7 +13,8 @@ import type {
   TasksResponse,
   UpdateTaskPayload,
 } from '../models';
-import { type MockDb, createMockDb, moveTask, nextTaskId, removeTask } from './mock-db';
+import { moveOnBoard, removeFromBoard } from '../../shared/utils/board-order';
+import { type MockDb, createMockDb, nextTaskId } from './mock-db';
 
 /** Name shown in the activity feed for changes made through the app. */
 export const CURRENT_USER_NAME = 'You';
@@ -116,7 +117,7 @@ export class InMemoryDataService implements InMemoryDbService {
           : (current.completedAt ?? null),
       };
 
-      db.tasks = moveTask(
+      db.tasks = moveOnBoard(
         db.tasks.map((task) => (task.id === updated.id ? updated : task)),
         updated.id,
         nextStatus,
@@ -154,7 +155,7 @@ export class InMemoryDataService implements InMemoryDbService {
         return this.error(STATUS.NOT_FOUND, `Task ${reqInfo.id} was not found.`);
       }
 
-      db.tasks = removeTask(db.tasks, task.id);
+      db.tasks = removeFromBoard(db.tasks, task.id);
       this.log(db, {
         type: 'deleted',
         taskId: task.id,
