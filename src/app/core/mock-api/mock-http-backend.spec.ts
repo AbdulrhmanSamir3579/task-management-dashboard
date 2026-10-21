@@ -1,6 +1,13 @@
-import { HttpClient, HttpErrorResponse, provideHttpClient } from '@angular/common/http';
+import {
+  HttpBackend,
+  HttpClient,
+  HttpErrorResponse,
+  HttpRequest,
+  HttpResponse,
+  provideHttpClient,
+} from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
-import { firstValueFrom } from 'rxjs';
+import { filter, firstValueFrom } from 'rxjs';
 import type { TasksResponse } from '../models';
 import { type MockApiOptions, failureRateFromUrl, provideMockApi } from './provide-mock-api';
 
@@ -31,6 +38,17 @@ describe('MockHttpBackend failure simulation', () => {
     const response = await firstValueFrom(http.get<TasksResponse>('api/tasks'));
 
     expect(response.tasks.length).toBeGreaterThan(0);
+  });
+
+  it('draws again for every subscription, so retries can succeed', async () => {
+    const draws = [0.1, 0.9];
+    setup({ failureRate: 0.5, random: () => draws.shift() ?? 0.9 });
+    const request = TestBed.inject(HttpBackend).handle(new HttpRequest('GET', 'api/users'));
+
+    await expect(firstValueFrom(request)).rejects.toMatchObject({ status: 503 });
+    await expect(
+      firstValueFrom(request.pipe(filter((event) => event instanceof HttpResponse))),
+    ).resolves.toMatchObject({ status: 200 });
   });
 
   it('never fails with the default rate of 0', async () => {

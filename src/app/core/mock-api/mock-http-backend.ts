@@ -12,7 +12,7 @@ import {
   type ResponseOptions,
   STATUS,
 } from 'angular-in-memory-web-api';
-import { type Observable, catchError, switchMap, throwError, timer } from 'rxjs';
+import { type Observable, catchError, defer, switchMap, throwError, timer } from 'rxjs';
 
 export interface FailureSimulation {
   /** Share of API requests that fail, from 0 (never) to 1 (always). */
@@ -37,11 +37,16 @@ export class MockHttpBackend extends HttpClientBackendService {
     super(inMemDbService, config, xhrFactory);
   }
 
+  /**
+   * The failure draw happens on subscribe, like a real network call: retry operators
+   * resubscribe to the same observable, and each attempt must be able to succeed.
+   */
   override handle(req: HttpRequest<unknown>): Observable<HttpEvent<unknown>> {
-    if (this.isApiRequest(req) && this.failure.random() < this.failure.rate) {
-      return this.simulateFailure(req);
-    }
-    return super.handle(req);
+    return defer(() =>
+      this.isApiRequest(req) && this.failure.random() < this.failure.rate
+        ? this.simulateFailure(req)
+        : super.handle(req),
+    );
   }
 
   protected override createResponse$fromResponseOptions$(
