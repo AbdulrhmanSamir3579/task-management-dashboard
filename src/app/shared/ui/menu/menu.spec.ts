@@ -27,6 +27,14 @@ describe('UiMenu', () => {
     expect(edit).toHaveBeenCalledTimes(1);
   });
 
+  it('tells assistive technology that the button opens a menu', async () => {
+    await setup();
+
+    const trigger = screen.getByRole('button', { name: 'Task actions' });
+    expect(trigger).toHaveAttribute('aria-haspopup', 'menu');
+    await vi.waitFor(() => expect(trigger).toHaveAttribute('aria-expanded', 'true'));
+  });
+
   it('marks disabled and destructive actions', async () => {
     await setup();
 
