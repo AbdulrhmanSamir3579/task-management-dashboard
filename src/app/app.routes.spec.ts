@@ -1,3 +1,5 @@
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { Title } from '@angular/platform-browser';
 import { Router, TitleStrategy } from '@angular/router';
@@ -11,7 +13,12 @@ describe('app routes', () => {
   async function visit(url: string) {
     const { navigate } = await render(App, {
       routes,
-      providers: [provideUi(), { provide: TitleStrategy, useClass: AppTitleStrategy }],
+      providers: [
+        provideUi(),
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        { provide: TitleStrategy, useClass: AppTitleStrategy },
+      ],
     });
     await navigate(url);
   }
@@ -23,7 +30,7 @@ describe('app routes', () => {
     expect(await screen.findByRole('heading', { level: 1, name: 'Dashboard' })).toBeInTheDocument();
   });
 
-  it.each(['Dashboard', 'Calendar', 'Analytics', 'Team', 'Settings'])(
+  it.each(['Calendar', 'Analytics', 'Team', 'Settings'])(
     'lazy loads the %s page and sets the tab title',
     async (page) => {
       await visit(`/${page.toLowerCase()}`);
