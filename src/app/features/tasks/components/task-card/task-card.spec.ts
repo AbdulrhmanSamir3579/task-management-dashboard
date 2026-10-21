@@ -7,6 +7,7 @@ import { TaskCard } from './task-card';
 
 describe('TaskCard', () => {
   async function setup(task: Partial<Task> = {}, changeState?: TaskChangeState) {
+    const editRequest = vi.fn();
     const moveRequest = vi.fn();
     const deleteRequest = vi.fn();
     const { fixture } = await render(TaskCard, {
@@ -23,9 +24,9 @@ describe('TaskCard', () => {
         changeState,
         today: '2026-10-21',
       },
-      on: { moveRequest, deleteRequest },
+      on: { editRequest, moveRequest, deleteRequest },
     });
-    return { host: fixture.nativeElement as HTMLElement, moveRequest, deleteRequest };
+    return { host: fixture.nativeElement as HTMLElement, editRequest, moveRequest, deleteRequest };
   }
 
   async function chooseAction(label: string) {
@@ -84,6 +85,14 @@ describe('TaskCard', () => {
 
     expect(moveRequest).toHaveBeenCalledWith('in_progress');
     expect(screen.queryByRole('menuitem', { name: 'Move to To Do' })).not.toBeInTheDocument();
+  });
+
+  it('asks to edit', async () => {
+    const { editRequest } = await setup();
+
+    await chooseAction('Edit');
+
+    expect(editRequest).toHaveBeenCalled();
   });
 
   it('asks to delete', async () => {

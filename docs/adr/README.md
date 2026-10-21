@@ -19,6 +19,7 @@ Short records of the decisions that shape this codebase: what was decided, why, 
 | [0013](0013-task-board-interactions.md)                 | Task board interactions                     | Accepted                  |
 | [0014](0014-local-first-search.md)                      | Local-first search                          | Accepted                  |
 | [0015](0015-dashboard-statistics-from-tasks.md)         | Dashboard statistics computed from tasks    | Accepted                  |
+| [0016](0016-task-form.md)                               | Task form                                   | Accepted                  |
 
 ## Template
 

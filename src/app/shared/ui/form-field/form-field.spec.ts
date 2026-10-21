@@ -2,6 +2,7 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { render, screen } from '@testing-library/angular';
 import { userEvent } from '@testing-library/user-event';
 import { UiInputText } from '../input-text/input-text';
+import { UiSelect } from '../select/select';
 import { UiFormField } from './form-field';
 
 describe('UiFormField', () => {
@@ -91,5 +92,20 @@ describe('UiFormField', () => {
 
     const hint = screen.getByText('Keep it short');
     expect(input).toHaveAttribute('aria-describedby', hint.id);
+  });
+
+  it('names selects after the label, which a label element cannot do for them', async () => {
+    const control = new FormControl<string | null>(null);
+    await render(
+      `<ui-form-field label="Assignee" [control]="control">
+         <ui-select [formControl]="control" [options]="options" />
+       </ui-form-field>`,
+      {
+        imports: [UiFormField, UiSelect, ReactiveFormsModule],
+        componentProperties: { control, options: [{ label: 'John Doe', value: 'user-001' }] },
+      },
+    );
+
+    expect(screen.getByRole('combobox', { name: 'Assignee' })).toBeInTheDocument();
   });
 });

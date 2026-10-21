@@ -22,6 +22,7 @@ import type { SelectOption } from '../ui.types';
       [filter]="searchable()"
       [invalid]="isInvalid()"
       [ariaLabel]="ariaLabel()"
+      [ariaLabelledBy]="labelledBy()"
       [disabled]="disabled()"
       [ngModel]="value()"
       (ngModelChange)="updateValue($event)"

@@ -18,6 +18,7 @@ describe('TaskBoard', () => {
     options: { statuses?: TaskStatus[]; changeStates?: Record<string, TaskChangeState> } = {},
   ) {
     const dropped = vi.fn();
+    const editRequest = vi.fn();
     const moveRequest = vi.fn();
     const deleteRequest = vi.fn();
     const view = await render(TaskBoard, {
@@ -27,7 +28,7 @@ describe('TaskBoard', () => {
         ...(options.statuses ? { statuses: options.statuses } : {}),
         ...(options.changeStates ? { changeStates: options.changeStates } : {}),
       },
-      on: { dropped, moveRequest, deleteRequest },
+      on: { dropped, editRequest, moveRequest, deleteRequest },
     });
     const dropLists = view.fixture.debugElement.queryAll(By.directive(CdkDropList));
     const drop = (
@@ -49,7 +50,7 @@ describe('TaskBoard', () => {
         item: { data: task },
       });
     };
-    return { dropped, moveRequest, deleteRequest, drop };
+    return { dropped, editRequest, moveRequest, deleteRequest, drop };
   }
 
   it('shows each column with its title, count and cards in order', async () => {
@@ -111,10 +112,15 @@ describe('TaskBoard', () => {
   });
 
   it('passes card actions up with their task', async () => {
-    const { moveRequest, deleteRequest } = await setup();
+    const { editRequest, moveRequest, deleteRequest } = await setup();
 
     await userEvent.click(screen.getByRole('button', { name: 'Actions for Charlie' }));
-    let item = await screen.findByRole('menuitem', { name: 'Move to To Do' });
+    let item = await screen.findByRole('menuitem', { name: 'Edit' });
+    await userEvent.click(within(item).getByText('Edit'));
+    expect(editRequest).toHaveBeenCalledWith(c);
+
+    await userEvent.click(screen.getByRole('button', { name: 'Actions for Charlie' }));
+    item = await screen.findByRole('menuitem', { name: 'Move to To Do' });
     await userEvent.click(within(item).getByText('Move to To Do'));
     expect(moveRequest).toHaveBeenCalledWith({ task: c, status: 'todo' });
 

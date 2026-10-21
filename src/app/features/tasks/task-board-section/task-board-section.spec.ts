@@ -11,6 +11,7 @@ import type { TasksResponse } from '../../../core/models';
 import { ConfirmService } from '../../../shared/ui/confirm/confirm.service';
 import { NotificationService } from '../../../shared/ui/notifications/notification.service';
 import { TaskBoard } from '../components/task-board/task-board';
+import { TaskEditorStore } from '../data-access/task-editor.store';
 import { TasksStore } from '../data-access/tasks.store';
 import { TaskBoardSection } from './task-board-section';
 
@@ -138,6 +139,20 @@ describe('TaskBoardSection', () => {
     expect(confirm).toHaveBeenLastCalledWith(
       expect.objectContaining({ tone: 'danger', confirmLabel: 'Delete' }),
     );
+  });
+
+  it('opens the task form for a new task and for editing', async () => {
+    await loaded();
+    const editor = TestBed.inject(TaskEditorStore);
+
+    await userEvent.click(screen.getByRole('button', { name: '+ New Task' }));
+    expect([editor.open(), editor.taskId()]).toEqual([true, null]);
+
+    editor.close();
+    await userEvent.click(screen.getByRole('button', { name: 'Actions for Write docs' }));
+    const item = await screen.findByRole('menuitem', { name: 'Edit' });
+    await userEvent.click(within(item).getByText('Edit'));
+    expect([editor.open(), editor.taskId()]).toEqual([true, 'task-002']);
   });
 
   it('shows the active search with a way to clear it', async () => {

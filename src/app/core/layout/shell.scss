@@ -19,6 +19,29 @@
   }
 }
 
+.shell__new-task {
+  width: 100%;
+  min-height: 2rem;
+  padding: 0.5rem 1rem;
+  border: 0;
+  border-radius: var(--app-radius-sm);
+  background: var(--app-primary);
+  color: var(--app-primary-contrast);
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--p-primary-600, #1565c0);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--app-primary);
+    outline-offset: 2px;
+  }
+}
+
 // Same size and look as the empty search box, shown until it loads.
 .search-placeholder {
   display: block;

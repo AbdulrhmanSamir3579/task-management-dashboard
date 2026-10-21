@@ -58,6 +58,7 @@ export interface TaskMoveRequest {
                 [task]="task"
                 [changeState]="changeStates()[task.id]"
                 [today]="today()"
+                (editRequest)="editRequest.emit(task)"
                 (moveRequest)="moveRequest.emit({ task, status: $event })"
                 (deleteRequest)="deleteRequest.emit(task)"
               >
@@ -81,6 +82,7 @@ export class TaskBoard {
   readonly changeStates = input<Readonly<Record<string, TaskChangeState>>>({});
   readonly today = input(toIsoDate(new Date()));
   readonly dropped = output<TaskDrop>();
+  readonly editRequest = output<Task>();
   readonly moveRequest = output<TaskMoveRequest>();
   readonly deleteRequest = output<Task>();
 

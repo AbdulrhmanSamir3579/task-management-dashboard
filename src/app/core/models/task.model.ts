@@ -72,6 +72,8 @@ export interface CreateTaskPayload {
   dueDate: string;
   assigneeId: string;
   tags: string[];
+  /** Only used for done tasks; the server uses the current time when it is missing. */
+  completedAt?: string | null;
 }
 
 /** Body of `PATCH /api/tasks/:id`. Every field is optional. */

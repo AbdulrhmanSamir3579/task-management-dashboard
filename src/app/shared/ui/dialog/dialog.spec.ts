@@ -7,7 +7,12 @@ import { UiDialog } from './dialog';
   imports: [UiDialog],
   template: `
     <button type="button" (click)="open.set(true)">Open</button>
-    <ui-dialog header="New task" [dismissable]="dismissable" [(visible)]="open" (closed)="closed()">
+    <ui-dialog
+      heading="New task"
+      [dismissable]="dismissable"
+      [(visible)]="open"
+      (closed)="closed()"
+    >
       <p>Dialog body</p>
       <button type="button" uiDialogFooter (click)="open.set(false)">Done</button>
     </ui-dialog>
@@ -51,6 +56,56 @@ describe('UiDialog', () => {
 
     await vi.waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
     expect(host.open()).toBe(false);
+  });
+
+  describe('with a close guard', () => {
+    @Component({
+      imports: [UiDialog],
+      template: `
+        <ui-dialog heading="Edit task" [beforeClose]="guard" [(visible)]="open">
+          <p>Form</p>
+        </ui-dialog>
+      `,
+      changeDetection: ChangeDetectionStrategy.OnPush,
+    })
+    class GuardedHost {
+      readonly open = signal(true);
+      guard = vi.fn(() => false);
+    }
+
+    async function openGuarded(answer: boolean) {
+      const { fixture } = await render(GuardedHost);
+      fixture.componentInstance.guard.mockResolvedValue(answer);
+      await screen.findByRole('dialog', { name: 'Edit task' });
+      return fixture.componentInstance;
+    }
+
+    it('keeps the dialog open when the guard says no', async () => {
+      const host = await openGuarded(false);
+
+      await userEvent.click(screen.getByRole('button', { name: 'Close dialog' }));
+
+      await vi.waitFor(() => expect(host.guard).toHaveBeenCalled());
+      expect(host.open()).toBe(true);
+      expect(screen.getByRole('dialog', { name: 'Edit task' })).toBeInTheDocument();
+    });
+
+    it('closes when the guard agrees', async () => {
+      const host = await openGuarded(true);
+
+      await userEvent.click(screen.getByRole('button', { name: 'Close dialog' }));
+
+      await vi.waitFor(() => expect(host.open()).toBe(false));
+    });
+
+    it('asks the guard on Escape', async () => {
+      const host = await openGuarded(true);
+
+      await userEvent.keyboard('{Escape}');
+
+      await vi.waitFor(() => expect(host.open()).toBe(false));
+      expect(host.guard).toHaveBeenCalledTimes(1);
+    });
   });
 
   it('hides the close button when not dismissable', async () => {
