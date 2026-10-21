@@ -13,63 +13,8 @@ export type DialogCloseGuard = () => boolean | Promise<boolean>;
   selector: 'ui-dialog',
   imports: [Dialog],
   host: { '(document:keydown.escape)': 'onEscape()' },
-  template: `
-    <p-dialog
-      appendTo="body"
-      closeAriaLabel="Close dialog"
-      [header]="heading()"
-      [(visible)]="visible"
-      [modal]="true"
-      [draggable]="false"
-      [resizable]="false"
-      [dismissableMask]="dismissable() && !guarded()"
-      [closeOnEscape]="dismissable() && !guarded()"
-      [closable]="dismissable() && !guarded()"
-      [style]="{ width: width() }"
-      [breakpoints]="{ '640px': '95vw' }"
-      (onHide)="closed.emit()"
-    >
-      <ng-template #header let-labelledBy="ariaLabelledBy">
-        <span class="p-dialog-title" [id]="labelledBy">{{ heading() }}</span>
-        @if (guarded() && dismissable()) {
-          <button
-            type="button"
-            class="ui-dialog__close"
-            aria-label="Close dialog"
-            (click)="requestClose()"
-          >
-            <span aria-hidden="true">✕</span>
-          </button>
-        }
-      </ng-template>
-      <ng-content />
-      <ng-template #footer>
-        <ng-content select="[uiDialogFooter]" />
-      </ng-template>
-    </p-dialog>
-  `,
-  styles: `
-    .ui-dialog__close {
-      position: absolute;
-      inset-block-start: 1rem;
-      inset-inline-end: 1rem;
-      width: 2rem;
-      height: 2rem;
-      border: 0;
-      border-radius: 50%;
-      background: none;
-      color: var(--app-text-muted);
-      cursor: pointer;
-
-      &:hover {
-        background: var(--app-background);
-      }
-
-      &:focus-visible {
-        outline: 2px solid var(--app-primary);
-      }
-    }
-  `,
+  templateUrl: './dialog.html',
+  styleUrl: './dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UiDialog {

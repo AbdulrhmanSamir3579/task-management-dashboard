@@ -24,34 +24,7 @@ import { describeDueDate } from '../../utils/due-date';
     '[class.task-card--failed]': "changeState() === 'failed'",
     '[attr.aria-busy]': "changeState() === 'saving' || null",
   },
-  template: `
-    <article class="card" [attr.aria-label]="task().title">
-      <div class="card__top">
-        <span class="card__priority" [class]="'card__priority--' + task().priority">
-          {{ priorityLabel() }}
-        </span>
-        <ui-menu [actions]="actions()" [triggerLabel]="'Actions for ' + task().title" />
-      </div>
-      <h3 class="card__title">{{ task().title }}</h3>
-      @if (task().description) {
-        <p class="card__description">{{ task().description }}</p>
-      }
-      <p class="card__meta">
-        <span aria-hidden="true">{{ due().icon }}</span>
-        {{ due().label }}
-      </p>
-      @if (task().tags.length) {
-        <p class="card__meta">
-          <span aria-hidden="true">🏷️</span>
-          {{ task().tags.join(', ') }}
-        </p>
-      }
-      <footer class="card__footer">
-        <ui-avatar [initials]="task().assignee.avatar" [name]="task().assignee.name" />
-        <span>&#64;{{ firstName() }}</span>
-      </footer>
-    </article>
-  `,
+  templateUrl: './task-card.html',
   styleUrl: './task-card.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

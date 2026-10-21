@@ -1,0 +1,54 @@
+<div class="section">
+  <app-board-toolbar [status]="selectedStatus()" (statusChange)="selectStatus($event)">
+    <ui-button label="+ New Task" size="small" (clicked)="editor.openCreate()" />
+  </app-board-toolbar>
+
+  @if (store.filters().search; as search) {
+    <p class="search-chip">
+      Showing results for “{{ search }}”
+      <button
+        type="button"
+        class="search-chip__clear"
+        aria-label="Clear search"
+        (click)="clearSearch()"
+      >
+        ✕
+      </button>
+    </p>
+  }
+
+  @if (!store.hasLoaded() && store.loadError(); as error) {
+    <app-empty-state icon="⚠️" title="Tasks could not be loaded" [message]="error">
+      <ui-button label="Try again" (clicked)="store.reload()" />
+    </app-empty-state>
+  } @else if (!store.hasLoaded()) {
+    <div class="skeleton-board" role="status" aria-label="Loading tasks">
+      @for (column of skeletonColumns; track column) {
+        <div class="skeleton-board__column">
+          <ui-skeleton width="40%" height="1.25rem" />
+          @for (card of skeletonCards; track card) {
+            <ui-skeleton height="8rem" borderRadius="8px" />
+          }
+        </div>
+      }
+    </div>
+  } @else if (store.hasActiveFilters() && store.filteredTasks().length === 0) {
+    <app-empty-state
+      icon="🔍"
+      title="No tasks match your filters"
+      message="Try another search or clear the filters."
+    >
+      <ui-button label="Clear filters" variant="secondary" (clicked)="clearFilters()" />
+    </app-empty-state>
+  } @else {
+    <app-task-board
+      [columns]="store.columns()"
+      [statuses]="visibleStatuses()"
+      [changeStates]="store.changeStates()"
+      (dropped)="drop($event)"
+      (editRequest)="editor.openEdit($event.id)"
+      (moveRequest)="moveTo($event)"
+      (deleteRequest)="confirmDelete($event)"
+    />
+  }
+</div>

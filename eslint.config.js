@@ -70,6 +70,8 @@ module.exports = defineConfig([
         },
       ],
       '@angular-eslint/prefer-signals': 'error',
+      // Small components may keep template and styles inline; bigger ones use .html/.scss files.
+      '@angular-eslint/component-max-inline-declarations': ['error', { template: 20, styles: 15 }],
       '@angular-eslint/prefer-output-readonly': 'error',
       '@typescript-eslint/consistent-type-imports': ['error', { fixStyle: 'inline-type-imports' }],
       '@typescript-eslint/no-non-null-assertion': 'error',
