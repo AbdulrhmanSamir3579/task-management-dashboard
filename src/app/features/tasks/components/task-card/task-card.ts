@@ -60,6 +60,7 @@ export class TaskCard {
   readonly changeState = input<TaskChangeState>();
   /** `YYYY-MM-DD` the due date is described against. */
   readonly today = input(toIsoDate(new Date()));
+  readonly editRequest = output<void>();
   readonly moveRequest = output<TaskStatus>();
   readonly deleteRequest = output<void>();
 
@@ -67,6 +68,7 @@ export class TaskCard {
   protected readonly due = computed(() => describeDueDate(this.task(), this.today()));
   protected readonly firstName = computed(() => this.task().assignee.name.split(' ')[0]);
   protected readonly actions = computed<MenuAction[]>(() => [
+    { label: 'Edit', command: () => this.editRequest.emit() },
     ...TASK_STATUSES.filter((status) => status !== this.task().status).map((status) => ({
       label: `Move to ${TASK_STATUS_LABELS[status]}`,
       command: () => this.moveRequest.emit(status),

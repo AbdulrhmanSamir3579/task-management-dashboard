@@ -1,6 +1,10 @@
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { render, screen, within } from '@testing-library/angular';
 import { userEvent } from '@testing-library/user-event';
+import { TaskEditorStore } from '../../features/tasks/data-access/task-editor.store';
 import { provideUi } from '../../shared/ui/provide-ui';
 import { Shell } from './shell';
 
@@ -10,7 +14,7 @@ class StubPage {}
 describe('Shell', () => {
   async function setup(url: string) {
     const { navigate } = await render(Shell, {
-      providers: [provideUi()],
+      providers: [provideUi(), provideHttpClient(), provideHttpClientTesting()],
       routes: [
         { path: 'dashboard', title: 'Dashboard', component: StubPage },
         { path: 'tasks', title: 'Tasks', component: StubPage },
@@ -89,6 +93,14 @@ describe('Shell', () => {
       await userEvent.click(screen.getByRole('link', { name: /Tasks/ }));
       await expectClosed();
     });
+  });
+
+  it('opens the task form from the sidebar', async () => {
+    await setup('/dashboard');
+
+    await userEvent.click(screen.getByRole('button', { name: '+ New Task' }));
+
+    expect(TestBed.inject(TaskEditorStore).open()).toBe(true);
   });
 
   it('moves focus to the page content with the skip link', async () => {

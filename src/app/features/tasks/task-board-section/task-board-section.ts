@@ -11,6 +11,7 @@ import {
   type TaskDrop,
   type TaskMoveRequest,
 } from '../components/task-board/task-board';
+import { TaskEditorStore } from '../data-access/task-editor.store';
 import { TasksStore } from '../data-access/tasks.store';
 
 /** Toolbar and board connected to the tasks store; used by the Dashboard and Tasks pages. */
@@ -19,7 +20,9 @@ import { TasksStore } from '../data-access/tasks.store';
   imports: [BoardToolbar, TaskBoard, EmptyState, UiButton, UiSkeleton],
   template: `
     <div class="section">
-      <app-board-toolbar [status]="selectedStatus()" (statusChange)="selectStatus($event)" />
+      <app-board-toolbar [status]="selectedStatus()" (statusChange)="selectStatus($event)">
+        <ui-button label="+ New Task" size="small" (clicked)="editor.openCreate()" />
+      </app-board-toolbar>
 
       @if (store.filters().search; as search) {
         <p class="search-chip">
@@ -64,6 +67,7 @@ import { TasksStore } from '../data-access/tasks.store';
           [statuses]="visibleStatuses()"
           [changeStates]="store.changeStates()"
           (dropped)="drop($event)"
+          (editRequest)="editor.openEdit($event.id)"
           (moveRequest)="moveTo($event)"
           (deleteRequest)="confirmDelete($event)"
         />
@@ -118,6 +122,7 @@ import { TasksStore } from '../data-access/tasks.store';
 })
 export class TaskBoardSection {
   protected readonly store = inject(TasksStore);
+  protected readonly editor = inject(TaskEditorStore);
   private readonly confirm = inject(ConfirmService);
   private readonly router = inject(Router);
 

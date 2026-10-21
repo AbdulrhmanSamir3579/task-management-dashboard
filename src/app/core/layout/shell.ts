@@ -10,7 +10,10 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs';
 import { UiConfirmOutlet } from '../../shared/ui/confirm/confirm-outlet';
+import { TaskEditorStore } from '../../features/tasks/data-access/task-editor.store';
+import { TaskEditorDialog } from '../../features/tasks/task-editor/task-editor-dialog';
 import { TaskSearchBox } from '../../features/tasks/task-search/task-search-box';
+import { UiButton } from '../../shared/ui/button/button';
 import { UiToastOutlet } from '../../shared/ui/notifications/toast-outlet';
 import { Header } from './header/header';
 import { NAVIGATION } from './navigation';
@@ -19,7 +22,16 @@ import { Sidebar } from './sidebar/sidebar';
 /** Layout around every page: sidebar, header, routed content and the overlay outlets. */
 @Component({
   selector: 'app-shell',
-  imports: [RouterOutlet, Sidebar, Header, TaskSearchBox, UiToastOutlet, UiConfirmOutlet],
+  imports: [
+    RouterOutlet,
+    Sidebar,
+    Header,
+    TaskSearchBox,
+    TaskEditorDialog,
+    UiButton,
+    UiToastOutlet,
+    UiConfirmOutlet,
+  ],
   host: { '(document:keydown.escape)': 'closeNav()' },
   template: `
     <a class="skip-link" href="#main-content" (click)="skipToContent($event)">
@@ -39,7 +51,9 @@ import { Sidebar } from './sidebar/sidebar';
         class="shell__sidebar"
         [items]="navigation"
         (navigated)="closeNav()"
-      />
+      >
+        <ui-button label="+ New Task" size="small" [fullWidth]="true" (clicked)="newTask()" />
+      </app-sidebar>
       @if (navOpen()) {
         <button
           type="button"
@@ -58,6 +72,7 @@ import { Sidebar } from './sidebar/sidebar';
     @defer (on idle) {
       <ui-toast-outlet />
       <ui-confirm-outlet />
+      <app-task-editor-dialog />
     }
   `,
   styleUrl: './shell.scss',
@@ -65,6 +80,7 @@ import { Sidebar } from './sidebar/sidebar';
 })
 export class Shell {
   private readonly router = inject(Router);
+  private readonly taskEditor = inject(TaskEditorStore);
   private readonly main = viewChild.required<ElementRef<HTMLElement>>('main');
 
   protected readonly navigation = NAVIGATION;
@@ -77,6 +93,11 @@ export class Shell {
     ),
     { initialValue: this.activeTitle() },
   );
+
+  protected newTask(): void {
+    this.closeNav();
+    this.taskEditor.openCreate();
+  }
 
   protected toggleNav(): void {
     this.navOpen.update((open) => !open);
