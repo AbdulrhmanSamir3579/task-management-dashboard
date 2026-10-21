@@ -19,6 +19,7 @@ interface Fruit {
       [suggestions]="suggestions()"
       (queryChange)="queries.push($event)"
       (selected)="chosen = $event"
+      (submitted)="submitted.push($event)"
     >
       @if (customTemplate) {
         <ng-template uiAutocompleteItem [uiAutocompleteItemOf]="suggestions()" let-fruit>
@@ -34,6 +35,7 @@ class Host {
   customTemplate = true;
   queries: string[] = [];
   chosen: Fruit | null = null;
+  submitted: string[] = [];
 }
 
 describe('UiAutocomplete', () => {
@@ -69,6 +71,26 @@ describe('UiAutocomplete', () => {
 
     expect(host.chosen).toEqual({ name: 'Apricot', colour: 'orange' });
     await vi.waitFor(() => expect(input).toHaveValue('Apricot'));
+  });
+
+  it('submits the typed text on Enter', async () => {
+    const { host, input } = await setup();
+
+    await userEvent.type(input, 'kiwi{Enter}');
+
+    expect(host.submitted).toEqual(['kiwi']);
+  });
+
+  it('does not submit when Enter chooses a suggestion', async () => {
+    const { host, input } = await setup();
+
+    await userEvent.type(input, 'ap');
+    host.suggestions.set([{ name: 'Apple', colour: 'green' }]);
+    await screen.findByRole('option', { name: /Apple/ });
+    await userEvent.keyboard('{ArrowDown}{Enter}');
+
+    expect(host.chosen).toEqual({ name: 'Apple', colour: 'green' });
+    expect(host.submitted).toEqual([]);
   });
 
   it('falls back to the option label without a custom template', async () => {

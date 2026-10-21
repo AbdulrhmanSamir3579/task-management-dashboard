@@ -33,8 +33,9 @@ export class UiAutocompleteItem<T> {
 }
 
 /**
- * Text box with a list of suggestions. It only reports what is typed (`queryChange`) and
- * what is chosen (`selected`); debouncing and fetching belong to the caller.
+ * Text box with a list of suggestions. It only reports what is typed (`queryChange`),
+ * what is chosen (`selected`) and Enter without a choice (`submitted`); debouncing and
+ * fetching belong to the caller.
  */
 @Component({
   selector: 'ui-autocomplete',
@@ -55,8 +56,9 @@ export class UiAutocompleteItem<T> {
       [ngModel]="value()"
       (ngModelChange)="value.set($event)"
       (completeMethod)="queryChange.emit($event.query)"
-      (onSelect)="selected.emit($event.value)"
+      (onSelect)="onSelect($event.value)"
       (onClear)="queryChange.emit('')"
+      (keydown.enter)="onEnter($event)"
     >
       <ng-template #item let-item>
         @if (itemTemplate(); as custom) {
@@ -83,8 +85,25 @@ export class UiAutocomplete<T extends object> {
   readonly emptyMessage = input('No results');
   readonly queryChange = output<string>();
   readonly selected = output<T>();
+  /** Enter pressed without choosing a suggestion; carries the typed text. */
+  readonly submitted = output<string>();
+
+  /** Set while a suggestion is being chosen, so the same Enter does not also submit. */
+  private choosing = false;
 
   protected readonly value = signal<T | string | null>(null);
   protected readonly itemTemplate = contentChild<UiAutocompleteItem<T>>(UiAutocompleteItem);
   protected readonly suggestionList = computed(() => [...this.suggestions()]);
+
+  protected onSelect(item: T): void {
+    this.choosing = true;
+    queueMicrotask(() => (this.choosing = false));
+    this.selected.emit(item);
+  }
+
+  protected onEnter(event: Event): void {
+    if (!this.choosing) {
+      this.submitted.emit((event.target as HTMLInputElement).value);
+    }
+  }
 }
