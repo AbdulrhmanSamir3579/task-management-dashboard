@@ -13,7 +13,6 @@ import { UiConfirmOutlet } from '../../shared/ui/confirm/confirm-outlet';
 import { TaskEditorStore } from '../../features/tasks/data-access/task-editor.store';
 import { TaskEditorDialog } from '../../features/tasks/task-editor/task-editor-dialog';
 import { TaskSearchBox } from '../../features/tasks/task-search/task-search-box';
-import { UiButton } from '../../shared/ui/button/button';
 import { UiToastOutlet } from '../../shared/ui/notifications/toast-outlet';
 import { Header } from './header/header';
 import { NAVIGATION } from './navigation';
@@ -28,7 +27,6 @@ import { Sidebar } from './sidebar/sidebar';
     Header,
     TaskSearchBox,
     TaskEditorDialog,
-    UiButton,
     UiToastOutlet,
     UiConfirmOutlet,
   ],
@@ -52,7 +50,8 @@ import { Sidebar } from './sidebar/sidebar';
         [items]="navigation"
         (navigated)="closeNav()"
       >
-        <ui-button label="+ New Task" size="small" [fullWidth]="true" (clicked)="newTask()" />
+        <!-- Native button: PrimeNG's button would add to the initial bundle for one control. -->
+        <button type="button" class="shell__new-task" (click)="newTask()">+ New Task</button>
       </app-sidebar>
       @if (navOpen()) {
         <button
