@@ -1,24 +1,21 @@
-import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { render, screen } from '@testing-library/angular';
 import { App } from './app';
 
+@Component({
+  template: '<h1>Stub page</h1>',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class StubPage {}
+
 describe('App', () => {
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [App],
-      providers: [provideRouter([])],
-    }).compileComponents();
-  });
+  it('renders the active route inside the root component', async () => {
+    const { navigate } = await render(App, {
+      routes: [{ path: '', component: StubPage }],
+    });
 
-  it('should create the root component', () => {
-    const fixture = TestBed.createComponent(App);
-    expect(fixture.componentInstance).toBeTruthy();
-  });
+    await navigate('/');
 
-  it('should host the router outlet', async () => {
-    const fixture = TestBed.createComponent(App);
-    await fixture.whenStable();
-    const host = fixture.nativeElement as HTMLElement;
-    expect(host.querySelector('router-outlet')).not.toBeNull();
+    expect(await screen.findByRole('heading', { name: 'Stub page' })).toBeInTheDocument();
   });
 });
