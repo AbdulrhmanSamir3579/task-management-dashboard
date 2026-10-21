@@ -60,6 +60,27 @@ describe('TaskSearchBox', () => {
     };
   }
 
+  /**
+   * Waits until the suggestion for `title` highlights exactly `query`. Typing produces a
+   * result per keystroke, so earlier suggestions can still be on screen for a moment.
+   */
+  async function findSuggestion(title: RegExp, query: string): Promise<HTMLElement> {
+    let found: HTMLElement | undefined;
+    await vi.waitFor(
+      () => {
+        const option = screen.getByRole('option', { name: title });
+        expect(
+          within(option)
+            .getAllByText(query)
+            .some((element) => element.tagName === 'MARK'),
+        ).toBe(true);
+        found = option;
+      },
+      { timeout: 3000 },
+    );
+    return found!;
+  }
+
   const searchRequests = (httpTesting: HttpTestingController) =>
     httpTesting.match((req) => req.url === 'api/tasks' && req.params.has('search'));
 
@@ -97,7 +118,7 @@ describe('TaskSearchBox', () => {
 
       last.flush(loadedTasks);
 
-      const option = await screen.findByRole('option', { name: /Prepare Q4 budget report/ });
+      const option = await findSuggestion(/Prepare Q4 budget report/, 'budget');
       const marks = within(option).getAllByText('budget');
       expect(marks).toHaveLength(2);
       expect(marks.every((mark) => mark.tagName === 'MARK')).toBe(true);
@@ -121,8 +142,7 @@ describe('TaskSearchBox', () => {
 
       await userEvent.type(input, 'docu');
 
-      const option = await screen.findByRole('option', { name: /Write docs/ });
-      expect(within(option).getByText('docu').tagName).toBe('MARK');
+      await findSuggestion(/Write docs/, 'docu');
       expect(searchRequests(httpTesting)).toEqual([]);
     });
   });
@@ -163,7 +183,7 @@ describe('TaskSearchBox', () => {
     await loadTasks();
 
     await userEvent.type(input, 'budget');
-    const option = await screen.findByRole('option', { name: /Prepare Q4 budget report/ });
+    const option = await findSuggestion(/Prepare Q4 budget report/, 'budget');
     await userEvent.click(within(option).getAllByText(/Prepare Q4/)[0]!);
 
     await vi.waitFor(() => expect(router.url).toBe('/tasks?q=Prepare%20Q4%20budget%20report'));
