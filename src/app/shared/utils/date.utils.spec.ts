@@ -1,9 +1,15 @@
-import { addDaysToIsoDate, calendarDaysBetween, toIsoDate } from './date.utils';
+import { addDaysToIsoDate, calendarDaysBetween, fromIsoDate, toIsoDate } from './date.utils';
 
 describe('date utils', () => {
   describe('toIsoDate', () => {
     it('formats a local date with zero padding', () => {
       expect(toIsoDate(new Date(2026, 0, 5, 23, 30))).toBe('2026-01-05');
+    });
+  });
+
+  describe('fromIsoDate', () => {
+    it('parses a calendar day as local midnight', () => {
+      expect(fromIsoDate('2026-10-23')).toEqual(new Date(2026, 9, 23));
     });
   });
 

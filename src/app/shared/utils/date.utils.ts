@@ -8,10 +8,15 @@ export function toIsoDate(date: Date): string {
   return `${year}-${month}-${day}`;
 }
 
+/** Parses a `YYYY-MM-DD` date as local midnight. */
+export function fromIsoDate(isoDate: string): Date {
+  // A date-time without an offset is parsed as local time.
+  return new Date(`${isoDate}T00:00:00`);
+}
+
 /** Adds whole days to a `YYYY-MM-DD` date. Negative values move backwards. */
 export function addDaysToIsoDate(isoDate: string, days: number): string {
-  // A date-time without an offset is parsed as local time.
-  const date = new Date(`${isoDate}T00:00:00`);
+  const date = fromIsoDate(isoDate);
   date.setDate(date.getDate() + days);
   return toIsoDate(date);
 }
