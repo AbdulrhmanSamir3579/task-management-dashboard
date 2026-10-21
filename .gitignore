@@ -1,23 +1,30 @@
 # Dependencies
-node_modules/
+/node_modules
 
 # Build output
 /dist
 /tmp
 /out-tsc
+/bazel-out
 /.angular/cache
-.angular/
 .sass-cache/
 
 # Tests
 /coverage
+__screenshots__/
+testem.log
 
 # Editors and OS
 .DS_Store
 Thumbs.db
 .idea/
+.project
+.classpath
+.settings/
+*.sublime-workspace
 .vscode/*
 !.vscode/extensions.json
+.history/*
 *.swp
 
 # Local environment
