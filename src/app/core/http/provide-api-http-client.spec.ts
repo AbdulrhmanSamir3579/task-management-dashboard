@@ -1,9 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
 import { provideMockApi } from '../mock-api/provide-mock-api';
-import type { CreateTaskPayload, TasksResponse, User } from '../models';
+import type { User } from '../models';
 import { ApiError } from './api-error';
-import { invalidates, withCache } from './cache.interceptor';
 import { HttpBaseService } from './http-base.service';
 import { provideApiHttpClient } from './provide-api-http-client';
 import { RETRY_CONFIG } from './retry.interceptor';
@@ -54,33 +53,5 @@ describe('provideApiHttpClient', () => {
     await expect(request).rejects.toBeInstanceOf(ApiError);
     await expect(request).rejects.toMatchObject({ kind: 'server', retryable: true });
     expect(backendCalls).toBe(4);
-  });
-
-  it('answers cached reads without reaching the backend', async () => {
-    await firstValueFrom(http.get('users', { context: withCache() }));
-    await firstValueFrom(http.get('users', { context: withCache() }));
-
-    expect(backendCalls).toBe(1);
-  });
-
-  it('fetches fresh data after a mutation invalidates the cache', async () => {
-    const readTasks = () =>
-      firstValueFrom(http.get<TasksResponse>('tasks', { context: withCache() }));
-    const before = await readTasks();
-    const payload: CreateTaskPayload = {
-      title: 'Plan sprint review',
-      description: '',
-      status: 'todo',
-      priority: 'low',
-      dueDate: '2026-10-30',
-      assigneeId: 'user-001',
-      tags: [],
-    };
-
-    await firstValueFrom(http.post('tasks', payload, { context: invalidates(['activities']) }));
-    const after = await readTasks();
-
-    expect(after.meta.totalCount).toBe(before.meta.totalCount + 1);
-    expect(backendCalls).toBe(3);
   });
 });

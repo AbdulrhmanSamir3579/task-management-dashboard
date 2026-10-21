@@ -26,7 +26,7 @@ export interface RequestOptions {
   /** Empty values are skipped; arrays repeat the key (`?tag=a&tag=b`). */
   params?: QueryParams;
   headers?: HttpHeaders | Record<string, string | string[]>;
-  /** Per-request metadata read by interceptors, e.g. caching. */
+  /** Per-request metadata read by interceptors. */
   context?: HttpContext;
 }
 
