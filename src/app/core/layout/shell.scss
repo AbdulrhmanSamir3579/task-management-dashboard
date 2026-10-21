@@ -1,0 +1,92 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.skip-link {
+  position: absolute;
+  inset-block-start: 0.5rem;
+  inset-inline-start: 0.5rem;
+  z-index: 1100;
+  padding: 0.5rem 1rem;
+  border-radius: var(--app-radius-sm);
+  background: var(--app-primary);
+  color: var(--app-primary-contrast);
+  transform: translateY(-200%);
+
+  &:focus {
+    transform: none;
+  }
+}
+
+.shell {
+  display: grid;
+  grid-template-columns: 15rem minmax(0, 1fr);
+  min-height: calc(100vh - 4rem);
+}
+
+.shell__sidebar {
+  position: sticky;
+  top: 4rem;
+  height: calc(100vh - 4rem);
+}
+
+.shell__main {
+  padding: 2rem;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+// Only rendered while the mobile drawer is open.
+.shell__backdrop {
+  position: fixed;
+  inset: 4rem 0 0;
+  z-index: 999;
+  border: 0;
+  background: rgb(0 0 0 / 40%);
+}
+
+@media (min-width: 992px) {
+  .shell__backdrop {
+    display: none;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .shell {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  // Drawer below the header, so the menu button stays reachable.
+  .shell__sidebar {
+    position: fixed;
+    inset-block: 4rem 0;
+    inset-inline-start: 0;
+    z-index: 1000;
+    width: 16rem;
+    height: auto;
+    transform: translateX(-100%);
+    // Hidden from keyboard and screen readers while closed.
+    visibility: hidden;
+    transition:
+      transform 0.2s ease,
+      visibility 0.2s;
+  }
+
+  .shell--nav-open .shell__sidebar {
+    transform: none;
+    visibility: visible;
+  }
+
+  .shell__main {
+    padding: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shell__sidebar {
+    transition: none;
+  }
+}

@@ -1,0 +1,97 @@
+:host {
+  position: sticky;
+  top: 0;
+  z-index: 1001;
+  display: block;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: 1fr minmax(0, 25rem) 1fr;
+  align-items: center;
+  gap: 1.5rem;
+  height: 4rem;
+  padding: 0 1.5rem;
+  background: var(--app-surface);
+  box-shadow: var(--app-shadow-sm);
+}
+
+.header__start,
+.header__end {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header__end {
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.header__menu {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--app-text);
+  font-size: 1.25rem;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--app-background);
+  }
+}
+
+.header__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+.header__logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--app-radius-md);
+  background: var(--app-primary);
+  font-size: 1rem;
+}
+
+.header__brand-name {
+  color: var(--app-primary);
+  font-size: 1.1875rem;
+  font-weight: 700;
+  line-height: 2rem;
+}
+
+.header__menu:focus-visible,
+.header__brand:focus-visible {
+  outline: 2px solid var(--app-primary);
+  outline-offset: 2px;
+}
+
+// The menu button only exists for the mobile drawer.
+@media (min-width: 992px) {
+  .header__menu {
+    display: none;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .header {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 0.75rem;
+    padding: 0 1rem;
+  }
+
+  .header__brand-name {
+    display: none;
+  }
+}
