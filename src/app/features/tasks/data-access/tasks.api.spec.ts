@@ -35,6 +35,17 @@ describe('TasksApi', () => {
     expect(resource.value()).toEqual(response);
   });
 
+  it('searches tasks with a result limit', async () => {
+    const results = firstValueFrom(api.search('budget', 5));
+
+    const req = httpTesting.expectOne((request) => request.url === 'api/tasks');
+    expect(req.request.params.get('search')).toBe('budget');
+    expect(req.request.params.get('limit')).toBe('5');
+    req.flush({ tasks: [buildTaskDto()], meta: { totalCount: 1, lastUpdated: '' } });
+
+    expect(await results).toEqual([buildTaskDto()]);
+  });
+
   it('creates a task', async () => {
     const payload: CreateTaskPayload = {
       title: 'New',

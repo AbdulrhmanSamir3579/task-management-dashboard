@@ -1,0 +1,38 @@
+:host {
+  display: block;
+  --p-inputtext-padding-y: 0.5rem;
+  --p-inputtext-padding-x: 1rem;
+  --p-inputtext-font-size: 0.8125rem;
+  --p-inputtext-border-radius: var(--app-radius-sm);
+  --p-inputtext-border-color: var(--app-border);
+  --p-inputtext-placeholder-color: var(--app-text-muted);
+}
+
+// Suggestions render in an overlay under <body>; these elements still belong to this
+// component's template, so its styles apply.
+.suggestion {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.suggestion__title {
+  font-weight: 600;
+  color: var(--app-text);
+}
+
+.suggestion__description {
+  overflow: hidden;
+  font-size: 0.75rem;
+  color: var(--app-text-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+mark {
+  padding: 0;
+  background: var(--app-warning-surface);
+  color: inherit;
+  font-weight: 700;
+}

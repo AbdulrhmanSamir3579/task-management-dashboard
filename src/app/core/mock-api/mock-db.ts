@@ -81,3 +81,19 @@ export function nextTaskId(tasks: readonly TaskDto[]): string {
   const highest = Math.max(0, ...tasks.map((task) => Number(task.id.replace(/\D/g, '')) || 0));
   return `task-${String(highest + 1).padStart(3, '0')}`;
 }
+
+/** Case-insensitive match on title or description; title matches come first. */
+export function searchTasks(tasks: readonly TaskDto[], query: string): TaskDto[] {
+  const term = query.trim().toLowerCase();
+  if (!term) {
+    return [...tasks];
+  }
+  const inTitle = (task: TaskDto): boolean => task.title.toLowerCase().includes(term);
+  const inDescription = (task: TaskDto): boolean =>
+    (task.description ?? '').toLowerCase().includes(term);
+
+  return [
+    ...tasks.filter(inTitle),
+    ...tasks.filter((task) => !inTitle(task) && inDescription(task)),
+  ];
+}

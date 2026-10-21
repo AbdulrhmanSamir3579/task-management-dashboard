@@ -12,7 +12,7 @@ Measured on a production build: the initial bundle is about 620 kB raw (about 14
 ## Decision
 
 - Every page is a lazy route (`loadComponent`), so the initial bundle holds only the shell. Pages are preloaded in the background after start-up (`PreloadAllModules`), so navigation stays instant.
-- Overlays that are not needed for the first paint load with `@defer (on idle)`: the toast outlet (about 9 kB transferred) and the confirm dialog outlet (about 14 kB).
+- Parts that are not needed for the first paint load with `@defer (on idle)`: the toast outlet (about 9 kB transferred), the confirm dialog outlet (about 14 kB) and the header search box (about 31 kB, see [0012](0012-global-search-with-suggestions.md)).
 - The mock database seed loads as its own chunk the first time the API is called.
 - The initial budget is raised to a 650 kB warning (error stays at 1 MB), with this record as the reason. Any growth beyond it has to be justified or removed.
 - Zoneless change detection and OnPush keep runtime work low.

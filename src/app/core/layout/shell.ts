@@ -10,8 +10,8 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs';
 import { UiConfirmOutlet } from '../../shared/ui/confirm/confirm-outlet';
+import { TaskSearchBox } from '../../features/tasks/task-search/task-search-box';
 import { UiToastOutlet } from '../../shared/ui/notifications/toast-outlet';
-import { GlobalSearch } from './global-search/global-search';
 import { Header } from './header/header';
 import { NAVIGATION } from './navigation';
 import { Sidebar } from './sidebar/sidebar';
@@ -19,14 +19,19 @@ import { Sidebar } from './sidebar/sidebar';
 /** Layout around every page: sidebar, header, routed content and the overlay outlets. */
 @Component({
   selector: 'app-shell',
-  imports: [RouterOutlet, Sidebar, Header, GlobalSearch, UiToastOutlet, UiConfirmOutlet],
+  imports: [RouterOutlet, Sidebar, Header, TaskSearchBox, UiToastOutlet, UiConfirmOutlet],
   host: { '(document:keydown.escape)': 'closeNav()' },
   template: `
     <a class="skip-link" href="#main-content" (click)="skipToContent($event)">
       Skip to main content
     </a>
     <app-header [menuOpen]="navOpen()" (menuToggle)="toggleNav()">
-      <app-global-search />
+      <!-- The search box needs PrimeNG's autocomplete; it loads right after first paint. -->
+      @defer (on idle) {
+        <app-task-search-box />
+      } @placeholder {
+        <span class="search-placeholder" aria-hidden="true">🔍 Search tasks...</span>
+      }
     </app-header>
     <div class="shell" [class.shell--nav-open]="navOpen()">
       <app-sidebar

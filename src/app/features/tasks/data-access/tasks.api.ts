@@ -1,6 +1,6 @@
 import type { HttpResourceRef } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import type { Observable } from 'rxjs';
+import { type Observable, map } from 'rxjs';
 import { HttpBaseService } from '../../../core/http/http-base.service';
 import type {
   CreateTaskPayload,
@@ -17,6 +17,13 @@ export class TasksApi {
   /** `GET /tasks` as an `httpResource`. Must be called in an injection context. */
   listResource(): HttpResourceRef<TasksResponse | undefined> {
     return this.http.resource<TasksResponse>(() => ({ endpoint: 'tasks' }));
+  }
+
+  /** Tasks whose title or description contains `query`, title matches first. */
+  search(query: string, limit: number): Observable<TaskDto[]> {
+    return this.http
+      .get<TasksResponse>('tasks', { params: { search: query, limit } })
+      .pipe(map((response) => response.tasks));
   }
 
   create(payload: CreateTaskPayload): Observable<TaskDto> {
