@@ -15,6 +15,7 @@ export const UsersStore = signalStore(
     return {
       users,
       isLoading: computed(() => _resource.isLoading()),
+      hasLoaded: computed(() => _resource.hasValue()),
       hasError: computed(() => _resource.status() === 'error'),
       /** Users as options for selects, sorted by name. */
       options: computed<SelectOption<string>[]>(() =>

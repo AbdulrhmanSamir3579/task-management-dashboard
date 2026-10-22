@@ -52,6 +52,16 @@ describe('TaskForm', () => {
     await userEvent.click(screen.getByText('15'));
   }
 
+  it('starts a new task with the assignee chosen in advance', async () => {
+    const view = await render(TaskForm, {
+      providers: [provideUi()],
+      inputs: { assignees, defaultAssigneeId: 'user-002' },
+    });
+
+    await vi.waitFor(() => expect(combobox('Assignee')).toHaveTextContent('Sarah Smith'));
+    expect(view.fixture.componentInstance.hasChanges()).toBe(false);
+  });
+
   it('creates a task from the filled form', async () => {
     const { saved } = await setup();
 
