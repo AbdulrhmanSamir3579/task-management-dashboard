@@ -42,3 +42,7 @@ CLAUDE.md
 
 # Assignment brief (kept locally only)
 SENIOR_ANGULAR_DEVELOPER_ASSIGNMENT.md
+
+# Lighthouse CI
+/.lighthouseci
+/lighthouse-report

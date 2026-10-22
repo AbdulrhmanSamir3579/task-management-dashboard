@@ -84,3 +84,37 @@ jobs:
       # Fails when a bundle exceeds the budgets defined in angular.json.
       - name: Build
         run: npm run build
+
+  lighthouse:
+    name: Lighthouse
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      # Audits the production build; fails when a score is below the minimums in
+      # lighthouserc.json.
+      - name: Run Lighthouse
+        run: npm run lighthouse
+
+      - name: Publish scores
+        if: always()
+        run: node scripts/lighthouse-summary.mjs >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: lighthouse-report
+          path: lighthouse-report/
+          retention-days: 14
+          if-no-files-found: ignore
