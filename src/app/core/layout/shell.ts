@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { filter, map } from 'rxjs';
 import { ActivityBell } from '../../features/activity/activity-bell/activity-bell';
 import { UiConfirmOutlet } from '../../shared/ui/confirm/confirm-outlet';
@@ -24,6 +25,7 @@ import { Sidebar } from './sidebar/sidebar';
   selector: 'app-shell',
   imports: [
     RouterOutlet,
+    TranslatePipe,
     Sidebar,
     Header,
     ActivityBell,
@@ -71,7 +73,7 @@ export class Shell {
     this.main().nativeElement.focus();
   }
 
-  /** Title of the deepest active route, as set by the `title` of its route config. */
+  /** Translation key of the deepest active route's title, from its route config. */
   private activeTitle(): string {
     let route = this.router.routerState.snapshot.root;
     while (route.firstChild) {

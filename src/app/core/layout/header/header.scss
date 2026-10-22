@@ -71,8 +71,26 @@
   line-height: 2rem;
 }
 
+.header__language {
+  min-height: 2.25rem;
+  padding: 0 0.75rem;
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius-sm);
+  background: var(--app-surface);
+  color: var(--app-text);
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--app-background);
+  }
+}
+
 .header__menu:focus-visible,
-.header__brand:focus-visible {
+.header__brand:focus-visible,
+.header__language:focus-visible {
   outline: 2px solid var(--app-primary);
   outline-offset: 2px;
 }

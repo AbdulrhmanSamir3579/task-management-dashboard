@@ -1,10 +1,14 @@
-<a class="skip-link" href="#main-content" (click)="skipToContent($event)"> Skip to main content </a>
+<a class="skip-link" href="#main-content" (click)="skipToContent($event)">
+  {{ 'NAV.SKIP_TO_CONTENT' | translate }}
+</a>
 <app-header [menuOpen]="navOpen()" (menuToggle)="toggleNav()">
   <!-- The search box needs PrimeNG's autocomplete; it loads right after first paint. -->
   @defer (on idle) {
     <app-task-search-box />
   } @placeholder {
-    <span class="search-placeholder" aria-hidden="true">🔍 Search tasks...</span>
+    <span class="search-placeholder" aria-hidden="true">{{
+      'HEADER.SEARCH_PLACEHOLDER' | translate
+    }}</span>
   }
   <div headerActions class="header-actions">
     <!-- Needs PrimeNG's popover; loads right after first paint, like the search box. -->
@@ -23,19 +27,21 @@
     (navigated)="closeNav()"
   >
     <!-- Native button: PrimeNG's button would add to the initial bundle for one control. -->
-    <button type="button" class="shell__new-task" (click)="newTask()">+ New Task</button>
+    <button type="button" class="shell__new-task" (click)="newTask()">
+      {{ 'COMMON.NEW_TASK' | translate }}
+    </button>
   </app-sidebar>
   @if (navOpen()) {
     <button
       type="button"
       class="shell__backdrop"
-      aria-label="Close navigation"
+      [attr.aria-label]="'NAV.CLOSE' | translate"
       (click)="closeNav()"
     ></button>
   }
   <main #main id="main-content" class="shell__main" tabindex="-1">
     <!-- The design has no visible page title; screen readers still get one. -->
-    <h1 class="visually-hidden">{{ pageTitle() }}</h1>
+    <h1 class="visually-hidden">{{ pageTitle() | translate }}</h1>
     <router-outlet />
   </main>
 </div>

@@ -14,5 +14,26 @@
   },
   "LANGUAGE": {
     "SWITCH_TO": "Switch to {{language}}"
+  },
+  "NAV": {
+    "LABEL": "Main",
+    "DASHBOARD": "Dashboard",
+    "TASKS": "Tasks",
+    "CALENDAR": "Calendar",
+    "ANALYTICS": "Analytics",
+    "TEAM": "Team",
+    "SETTINGS": "Settings",
+    "NOT_FOUND": "Page not found",
+    "OPEN": "Open navigation",
+    "CLOSE": "Close navigation",
+    "SKIP_TO_CONTENT": "Skip to main content"
+  },
+  "HEADER": {
+    "SEARCH_PLACEHOLDER": "🔍 Search tasks..."
+  },
+  "NOT_FOUND": {
+    "TITLE": "Page not found",
+    "MESSAGE": "The page you are looking for does not exist or has moved.",
+    "BACK": "Back to the dashboard"
   }
 }

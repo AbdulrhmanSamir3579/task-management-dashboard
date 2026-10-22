@@ -117,4 +117,20 @@ describe('Shell', () => {
 
     await expectNoAccessibilityViolations();
   });
+
+  it('switches between English and Arabic from the header', async () => {
+    await setup('/dashboard');
+    const header = within(screen.getByRole('banner'));
+
+    await userEvent.click(header.getByRole('button', { name: 'Switch to العربية' }));
+    TestBed.tick();
+
+    expect(document.documentElement.dir).toBe('rtl');
+    expect(header.getByRole('button', { name: 'Switch to English' })).toBeInTheDocument();
+
+    await userEvent.click(header.getByRole('button', { name: 'Switch to English' }));
+    TestBed.tick();
+    expect(document.documentElement.dir).toBe('ltr');
+    localStorage.clear();
+  });
 });

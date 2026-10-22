@@ -5,21 +5,29 @@
       class="header__menu"
       aria-controls="app-sidebar"
       [attr.aria-expanded]="menuOpen()"
-      [attr.aria-label]="menuOpen() ? 'Close navigation' : 'Open navigation'"
+      [attr.aria-label]="(menuOpen() ? 'NAV.CLOSE' : 'NAV.OPEN') | translate"
       (click)="menuToggle.emit()"
     >
       <span aria-hidden="true">☰</span>
     </button>
     <!-- Named here too: the visible name is hidden on phones. -->
-    <a class="header__brand" routerLink="/dashboard" aria-label="Task Manager">
+    <a class="header__brand" routerLink="/dashboard" [attr.aria-label]="'APP.NAME' | translate">
       <span class="header__logo" aria-hidden="true">📋</span>
-      <span class="header__brand-name">Task Manager</span>
+      <span class="header__brand-name">{{ 'APP.NAME' | translate }}</span>
     </a>
   </div>
   <div class="header__center">
     <ng-content />
   </div>
   <div class="header__end">
+    <button
+      type="button"
+      class="header__language"
+      [attr.aria-label]="'LANGUAGE.SWITCH_TO' | translate: { language: otherLanguage().nativeName }"
+      (click)="switchLanguage()"
+    >
+      <span [lang]="otherLanguage().code">{{ otherLanguage().nativeName }}</span>
+    </button>
     <ng-content select="[headerActions]" />
     <ui-avatar initials="JD" name="John Doe" size="large" />
   </div>
