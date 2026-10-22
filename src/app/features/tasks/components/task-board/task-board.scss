@@ -64,7 +64,7 @@
   min-height: 7rem;
   border: 2px dashed var(--app-primary);
   border-radius: var(--app-radius-md);
-  background: rgb(25 118 210 / 6%);
+  background: color-mix(in srgb, var(--app-primary) 6%, transparent);
 }
 
 // Drag and drop visuals. The preview is a clone placed under <body>; it keeps this

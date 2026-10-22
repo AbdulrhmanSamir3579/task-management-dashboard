@@ -1,6 +1,6 @@
 # 0007. Theming from design tokens
 
-- Status: Accepted
+- Status: Accepted, amended by [0024](0024-dark-mode-and-settings.md)
 - Date: 2026-10-21
 
 ## Context

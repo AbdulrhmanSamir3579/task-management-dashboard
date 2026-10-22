@@ -1,4 +1,9 @@
-import { type ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import {
+  type ApplicationConfig,
+  inject,
+  provideAppInitializer,
+  provideBrowserGlobalErrorListeners,
+} from '@angular/core';
 import {
   PreloadAllModules,
   TitleStrategy,
@@ -12,6 +17,7 @@ import { routes } from './app.routes';
 import { provideApiHttpClient } from './core/http/provide-api-http-client';
 import { AppTitleStrategy } from './core/layout/app-title.strategy';
 import { failureRateFromUrl, provideMockApi } from './core/mock-api/provide-mock-api';
+import { ThemeService } from './core/theme/theme.service';
 import { provideUi } from './shared/ui/provide-ui';
 
 export const appConfig: ApplicationConfig = {
@@ -27,6 +33,10 @@ export const appConfig: ApplicationConfig = {
     ),
     { provide: TitleStrategy, useClass: AppTitleStrategy },
     provideUi(),
+    // Applies the saved theme and keeps following it (and the device, for "system").
+    provideAppInitializer(() => {
+      inject(ThemeService);
+    }),
     provideApiHttpClient(),
     // Must come after provideApiHttpClient(): it replaces the default backend.
     provideMockApi({ failureRate: failureRateFromUrl(window.location.search) }),

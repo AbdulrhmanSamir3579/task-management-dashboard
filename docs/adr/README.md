@@ -10,7 +10,7 @@ Short records of the decisions that shape this codebase: what was decided, why, 
 | [0004](0004-code-quality-and-delivery-workflow.md)      | Code quality and delivery workflow          | Accepted                  |
 | [0005](0005-testing-strategy.md)                        | Testing strategy                            | Accepted                  |
 | [0006](0006-ui-library-behind-wrapper-components.md)    | UI library behind wrapper components        | Accepted                  |
-| [0007](0007-theming-from-design-tokens.md)              | Theming from design tokens                  | Accepted                  |
+| [0007](0007-theming-from-design-tokens.md)              | Theming from design tokens                  | Accepted, amended by 0024 |
 | [0008](0008-single-http-entry-point.md)                 | Single HTTP entry point                     | Accepted                  |
 | [0009](0009-http-interceptors.md)                       | HTTP interceptors                           | Accepted                  |
 | [0010](0010-in-memory-mock-backend.md)                  | In-memory mock backend                      | Accepted                  |
@@ -21,12 +21,13 @@ Short records of the decisions that shape this codebase: what was decided, why, 
 | [0015](0015-dashboard-statistics-from-tasks.md)         | Dashboard statistics computed from tasks    | Accepted                  |
 | [0016](0016-task-form.md)                               | Task form                                   | Accepted                  |
 | [0017](0017-board-filters.md)                           | Board filters                               | Accepted, amended by 0022 |
-| [0018](0018-chart-layer.md)                             | Chart layer                                 | Accepted                  |
+| [0018](0018-chart-layer.md)                             | Chart layer                                 | Accepted, amended by 0024 |
 | [0019](0019-activity-feed.md)                           | Activity feed                               | Accepted                  |
 | [0020](0020-team-page.md)                               | Team page                                   | Accepted                  |
 | [0021](0021-calendar-agenda.md)                         | Calendar as an agenda                       | Accepted, amended by 0023 |
 | [0022](0022-inline-board-filters.md)                    | Inline board filters                        | Accepted                  |
 | [0023](0023-calendar-views.md)                          | Calendar views                              | Accepted                  |
+| [0024](0024-dark-mode-and-settings.md)                  | Dark mode and settings                      | Accepted                  |
 
 ## Template
 

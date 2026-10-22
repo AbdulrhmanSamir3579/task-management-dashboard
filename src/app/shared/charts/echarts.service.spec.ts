@@ -1,3 +1,4 @@
+import { computed } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { EchartsService } from './echarts.service';
 
@@ -6,6 +7,7 @@ describe('EchartsService', () => {
 
   afterEach(() => {
     document.documentElement.style.removeProperty('--app-primary');
+    document.documentElement.classList.remove('app-dark');
     vi.restoreAllMocks();
   });
 
@@ -17,6 +19,20 @@ describe('EchartsService', () => {
     expect(theme.tones.primary).toBe('#123456');
     expect(theme.tones.danger).toBe('#d32f2f');
     expect(theme.palette[0]).toBe('#123456');
+  });
+
+  it('gives charts built in computed() the new colours after a theme change', async () => {
+    const primary = TestBed.runInInjectionContext(() =>
+      computed(() => service().theme().tones.primary),
+    );
+    expect(primary()).toBe('#1976d2');
+
+    // The dark theme class on <html> switches the tokens.
+    document.documentElement.style.setProperty('--app-primary', '#42a5f5');
+    document.documentElement.classList.add('app-dark');
+    await Promise.resolve();
+
+    expect(primary()).toBe('#42a5f5');
   });
 
   it('uses the tone colour, or the palette in order when there is none', () => {

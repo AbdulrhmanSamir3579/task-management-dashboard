@@ -1,4 +1,4 @@
-import { DOCUMENT, Injectable, inject } from '@angular/core';
+import { DOCUMENT, DestroyRef, Injectable, inject, signal } from '@angular/core';
 import type {
   GridComponentOption,
   LegendComponentOption,
@@ -43,9 +43,27 @@ const EXTRA_PALETTE = ['#7b1fa2', '#0097a7', '#c2185b', '#5d4037'];
 @Injectable({ providedIn: 'root' })
 export class EchartsService {
   private readonly document = inject(DOCUMENT);
+  /** Goes up whenever the theme class or inline styles on `<html>` change. */
+  private readonly themeVersion = signal(0);
 
-  /** Read when a chart is built, so charts built after a theme change use its colours. */
+  constructor() {
+    const MutationObserver = this.document.defaultView?.MutationObserver;
+    if (MutationObserver) {
+      const observer = new MutationObserver(() => this.themeVersion.update((v) => v + 1));
+      observer.observe(this.document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style'],
+      });
+      inject(DestroyRef).onDestroy(() => observer.disconnect());
+    }
+  }
+
+  /**
+   * Colours read from the design tokens. It is a signal read: charts built in `computed()`
+   * are built again when the theme changes, e.g. to dark mode.
+   */
   theme(): ChartTheme {
+    this.themeVersion();
     const styles = this.document.defaultView?.getComputedStyle(this.document.documentElement);
     const token = (name: string, fallback: string): string =>
       styles?.getPropertyValue(`--app-${name}`).trim() || fallback;

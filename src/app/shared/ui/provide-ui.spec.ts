@@ -1,7 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { PrimeNG } from 'primeng/config';
-import { DARK_MODE_CLASS, provideUi } from './provide-ui';
+import { provideUi } from './provide-ui';
+import { DARK_MODE_CLASS } from './theme/dark-mode';
 import { AppPreset, BRAND_BLUE } from './theme/app-preset';
 
 describe('provideUi', () => {

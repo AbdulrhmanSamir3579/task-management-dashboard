@@ -33,7 +33,7 @@
   cursor: pointer;
 
   &:hover {
-    background: var(--p-primary-600, #1565c0);
+    background: var(--app-primary-hover);
   }
 
   &:focus-visible {
