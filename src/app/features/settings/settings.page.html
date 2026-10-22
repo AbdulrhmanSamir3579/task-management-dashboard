@@ -1,0 +1,50 @@
+<div class="settings">
+  <section class="settings__card" aria-labelledby="appearance-title">
+    <h2 class="settings__title" id="appearance-title">Appearance</h2>
+    <fieldset class="theme">
+      <legend class="theme__legend">Theme</legend>
+      <div class="theme__options">
+        @for (option of options; track option.value) {
+          <label
+            class="theme__option"
+            [class.theme__option--selected]="theme.preference() === option.value"
+          >
+            <input
+              class="theme__input"
+              type="radio"
+              name="theme"
+              [value]="option.value"
+              [checked]="theme.preference() === option.value"
+              [attr.aria-describedby]="'theme-hint-' + option.value"
+              (change)="theme.setPreference(option.value)"
+            />
+            <span class="theme__icon" aria-hidden="true">{{ option.icon }}</span>
+            <span class="theme__text">
+              <span class="theme__name">{{ option.label }}</span>
+              <!-- Read as the description, not as part of the name. -->
+              <span class="theme__hint" aria-hidden="true" [id]="'theme-hint-' + option.value">
+                {{ option.hint }}
+              </span>
+            </span>
+          </label>
+        }
+      </div>
+    </fieldset>
+  </section>
+
+  <section class="settings__card" aria-labelledby="data-title">
+    <h2 class="settings__title" id="data-title">Demo data</h2>
+    <p class="settings__text">
+      Tasks are served by a mock API that runs in your browser. Changes last until the page is
+      reloaded, which brings the original data back.
+    </p>
+    <p class="settings__text">
+      To see how the app handles errors, open it with <code>?chaos=0.3</code>: about 30% of requests
+      then fail, and reads are retried before an error is shown.
+    </p>
+    <div class="settings__links">
+      <a class="settings__link" href="dashboard?chaos=0.3">Try with simulated failures</a>
+      <a class="settings__link" href="dashboard">Back to normal</a>
+    </div>
+  </section>
+</div>

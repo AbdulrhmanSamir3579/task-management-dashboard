@@ -53,13 +53,13 @@ describe('app routes', () => {
     expect(TestBed.inject(Title).getTitle()).toBe('Calendar · Task Manager');
   });
 
-  it.each(['Settings'])('lazy loads the %s page and sets the tab title', async (page) => {
-    await visit(`/${page.toLowerCase()}`);
+  it('lazy loads the Settings page and sets the tab title', async () => {
+    await visit('/settings');
 
     expect(
-      await screen.findByRole('heading', { level: 2, name: `${page} is on its way` }),
+      await screen.findByRole('heading', { level: 2, name: 'Appearance' }),
     ).toBeInTheDocument();
-    expect(TestBed.inject(Title).getTitle()).toBe(`${page} · Task Manager`);
+    expect(TestBed.inject(Title).getTitle()).toBe('Settings · Task Manager');
   });
 
   it('shows a not found page with a way back for unknown urls', async () => {
