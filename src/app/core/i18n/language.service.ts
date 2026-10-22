@@ -3,6 +3,7 @@ import { type InterpolationParameters, TranslateService } from '@ngx-translate/c
 import { firstValueFrom } from 'rxjs';
 import { BrowserStorage } from '../storage/browser-storage';
 import { DEFAULT_LANGUAGE, LANGUAGES, type Language, isLanguage } from './languages';
+import type { TextRef } from './text-ref';
 import type { PluralKey, TranslationKey } from './translation-key';
 
 /** Also read by the inline script in index.html, which sets the direction before start-up. */
@@ -59,6 +60,13 @@ export class LanguageService {
    * A counted string in the plural form the current language uses for `count`, e.g.
    * "1 day" / "3 days", or Arabic's six forms. `{{count}}` is filled in.
    */
+  /** Renders a `TextRef` returned by a pure function. */
+  text(text: TextRef): string {
+    return 'plural' in text
+      ? this.plural(text.plural, text.count, text.params)
+      : this.t(text.key, text.params);
+  }
+
   plural(key: PluralKey, count: number, params?: InterpolationParameters): string {
     const form = new Intl.PluralRules(this.locale()).select(count);
     const values = { count, ...params };

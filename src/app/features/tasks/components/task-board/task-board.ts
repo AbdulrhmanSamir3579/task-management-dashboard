@@ -6,9 +6,11 @@ import {
   CdkDropListGroup,
 } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
+import { PluralPipe } from '../../../../core/i18n/plural.pipe';
 import {
   TASK_STATUSES,
-  TASK_STATUS_LABELS,
+  TASK_STATUS_KEYS,
   type Task,
   type TaskStatus,
 } from '../../../../core/models';
@@ -32,7 +34,15 @@ export interface TaskMoveRequest {
 /** Kanban columns with drag and drop. Presentational: it only reports what the user did. */
 @Component({
   selector: 'app-task-board',
-  imports: [CdkDropListGroup, CdkDropList, CdkDrag, CdkDragPlaceholder, TaskCard],
+  imports: [
+    CdkDropListGroup,
+    CdkDropList,
+    CdkDrag,
+    CdkDragPlaceholder,
+    PluralPipe,
+    TaskCard,
+    TranslatePipe,
+  ],
   host: { '[style.--board-columns]': 'statuses().length' },
   templateUrl: './task-board.html',
   styleUrl: './task-board.scss',
@@ -49,11 +59,7 @@ export class TaskBoard {
   readonly moveRequest = output<TaskMoveRequest>();
   readonly deleteRequest = output<Task>();
 
-  protected readonly labels = TASK_STATUS_LABELS;
-
-  protected countLabel(count: number): string {
-    return `${count} ${count === 1 ? 'task' : 'tasks'}`;
-  }
+  protected readonly labels = TASK_STATUS_KEYS;
 
   /**
    * The column may be filtered, so the drop index is turned into "before which card"

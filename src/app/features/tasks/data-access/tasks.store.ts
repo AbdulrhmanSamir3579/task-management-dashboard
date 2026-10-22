@@ -30,6 +30,7 @@ import {
   isTaskOverdue,
   toTask,
 } from '../../../core/models';
+import { LanguageService } from '../../../core/i18n/language.service';
 import { NotificationService } from '../../../shared/ui/notifications/notification.service';
 import { moveOnBoard, removeFromBoard } from '../../../shared/utils/board-order';
 import { toIsoDate } from '../../../shared/utils/date.utils';
@@ -99,6 +100,7 @@ export const TasksStore = signalStore(
       _api: api,
       _resource: api.listResource(),
       _notifications: inject(NotificationService),
+      _language: inject(LanguageService),
       _feedbackMs: inject(TASK_FEEDBACK_MS),
       _sync: {
         /** Changes waiting for the server, per task. */
@@ -109,7 +111,7 @@ export const TasksStore = signalStore(
       },
     };
   }),
-  withComputed(({ entities, filters, changeStates, _resource }) => {
+  withComputed(({ entities, filters, changeStates, _resource, _language }) => {
     const filteredTasks = computed(() => filterTasks(entities(), filters()));
     return {
       isLoading: computed(() => _resource.isLoading()),
@@ -117,7 +119,7 @@ export const TasksStore = signalStore(
       /** Message of the last failed load; tasks loaded earlier stay visible. */
       loadError: computed(() =>
         _resource.status() === 'error'
-          ? messageOf(_resource.error(), 'Tasks could not be loaded.')
+          ? messageOf(_resource.error(), _language.t('TASK_MESSAGES.LOAD_FAILED'))
           : null,
       ),
       filteredTasks,
@@ -239,10 +241,15 @@ export const TasksStore = signalStore(
           const dto = await firstValueFrom(store._api.create(payload));
           patchState(store, addEntity(toTask(dto, today())));
           store._countSaved();
-          store._notifications.success(`"${dto.title}" was added to the board.`, 'Task created');
+          store._notifications.success(
+            store._language.t('TASK_MESSAGES.CREATED', { title: dto.title }),
+            store._language.t('TASK_MESSAGES.CREATED_TITLE'),
+          );
           return true;
         } catch (error) {
-          store._notifications.error(messageOf(error, 'The task could not be created.'));
+          store._notifications.error(
+            messageOf(error, store._language.t('TASK_MESSAGES.CREATE_FAILED')),
+          );
           return false;
         }
       },
@@ -252,10 +259,15 @@ export const TasksStore = signalStore(
         try {
           saveFromServer(await firstValueFrom(store._api.update(id, changes)));
           store._countSaved();
-          store._notifications.success('Your changes were saved.', 'Task updated');
+          store._notifications.success(
+            store._language.t('TASK_MESSAGES.UPDATED'),
+            store._language.t('TASK_MESSAGES.UPDATED_TITLE'),
+          );
           return true;
         } catch (error) {
-          store._notifications.error(messageOf(error, 'The task could not be saved.'));
+          store._notifications.error(
+            messageOf(error, store._language.t('TASK_MESSAGES.UPDATE_FAILED')),
+          );
           return false;
         }
       },
@@ -276,7 +288,7 @@ export const TasksStore = signalStore(
           onSuccess: (dto) => saveFromServer(dto as TaskDto),
           rollback: () =>
             store._setBoard(moveOnBoard(store.entities(), id, origin.status, origin.position)),
-          errorMessage: `"${task.title}" could not be moved.`,
+          errorMessage: store._language.t('TASK_MESSAGES.MOVE_FAILED', { title: task.title }),
         });
       },
 
@@ -293,12 +305,15 @@ export const TasksStore = signalStore(
           taskId: id,
           request: () => store._api.remove(id),
           onSuccess: () =>
-            store._notifications.success(`"${task.title}" was deleted.`, 'Task deleted'),
+            store._notifications.success(
+              store._language.t('TASK_MESSAGES.DELETED', { title: task.title }),
+              store._language.t('TASK_MESSAGES.DELETED_TITLE'),
+            ),
           rollback: () =>
             store._setBoard(
               moveOnBoard([...store.entities(), task], id, task.status, task.position),
             ),
-          errorMessage: `"${task.title}" could not be deleted.`,
+          errorMessage: store._language.t('TASK_MESSAGES.DELETE_FAILED', { title: task.title }),
         });
       },
     };

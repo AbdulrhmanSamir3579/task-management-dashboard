@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { UsersStore } from '../../../core/data-access/users.store';
+import { LanguageService } from '../../../core/i18n/language.service';
 import { TASK_STATUSES, type Task, type TaskStatus } from '../../../core/models';
 import { EmptyState } from '../../../shared/components/empty-state/empty-state';
 import { UiButton } from '../../../shared/ui/button/button';
@@ -18,7 +20,15 @@ import { TasksStore } from '../data-access/tasks.store';
 /** Toolbar and board connected to the tasks store; used by the Dashboard and Tasks pages. */
 @Component({
   selector: 'app-task-board-section',
-  imports: [BoardToolbar, TaskBoard, TaskFilterBar, EmptyState, UiButton, UiSkeleton],
+  imports: [
+    BoardToolbar,
+    TaskBoard,
+    TaskFilterBar,
+    EmptyState,
+    TranslatePipe,
+    UiButton,
+    UiSkeleton,
+  ],
   templateUrl: './task-board-section.html',
   styleUrl: './task-board-section.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,6 +38,7 @@ export class TaskBoardSection {
   protected readonly editor = inject(TaskEditorStore);
   protected readonly users = inject(UsersStore);
   private readonly confirm = inject(ConfirmService);
+  private readonly language = inject(LanguageService);
 
   protected readonly skeletonColumns = [0, 1, 2];
   protected readonly skeletonCards = [0, 1, 2];
@@ -60,9 +71,9 @@ export class TaskBoardSection {
 
   protected async confirmDelete(task: Task): Promise<void> {
     const confirmed = await this.confirm.confirm({
-      title: 'Delete task?',
-      message: `"${task.title}" will be removed from the board. This cannot be undone.`,
-      confirmLabel: 'Delete',
+      title: this.language.t('BOARD.DELETE_TITLE'),
+      message: this.language.t('BOARD.DELETE_MESSAGE', { title: task.title }),
+      confirmLabel: this.language.t('COMMON.DELETE'),
       tone: 'danger',
     });
     if (confirmed) {

@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { TextPipe } from '../../../../core/i18n/text.pipe';
 import { TASK_PRIORITY_LABELS, TASK_STATUS_LABELS } from '../../../../core/models';
 import { UiAvatar } from '../../../../shared/ui/avatar/avatar';
 import { UiTag } from '../../../../shared/ui/tag/tag';
@@ -14,7 +15,7 @@ const fullDate = new Intl.DateTimeFormat('en', { dateStyle: 'full' });
 /** Agenda groups with their tasks; choosing a task asks to open it. */
 @Component({
   selector: 'app-agenda-list',
-  imports: [UiAvatar, UiTag],
+  imports: [TextPipe, UiAvatar, UiTag],
   templateUrl: './agenda-list.html',
   styleUrl: './agenda-list.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

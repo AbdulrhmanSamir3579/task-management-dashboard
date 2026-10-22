@@ -91,5 +91,79 @@
   },
   "CHART": {
     "EMPTY": "Nothing to show yet."
+  },
+  "TASK": {
+    "STATUS": {
+      "TODO": "To Do",
+      "IN_PROGRESS": "In Progress",
+      "DONE": "Done"
+    },
+    "PRIORITY": {
+      "HIGH": "High",
+      "MEDIUM": "Medium",
+      "LOW": "Low"
+    },
+    "COUNT": {
+      "one": "{{count}} task",
+      "other": "{{count}} tasks"
+    }
+  },
+  "DUE": {
+    "COMPLETED": "Completed",
+    "TODAY": "Due today",
+    "TOMORROW": "Due tomorrow",
+    "OVERDUE_BY": {
+      "one": "Overdue by {{count}} day",
+      "other": "Overdue by {{count}} days"
+    },
+    "IN": {
+      "one": "Due in {{count}} day",
+      "other": "Due in {{count}} days"
+    }
+  },
+  "BOARD": {
+    "STATUS_TABS": "Show tasks by status",
+    "ALL": "All",
+    "NO_TASKS": "No tasks",
+    "SEARCH_RESULTS": "Showing results for “{{search}}”",
+    "CLEAR_SEARCH": "Clear search",
+    "LOAD_ERROR": "Tasks could not be loaded",
+    "LOADING": "Loading tasks",
+    "NO_MATCH_TITLE": "No tasks match your filters",
+    "NO_MATCH_MESSAGE": "Try another search or clear the filters.",
+    "CLEAR_FILTERS": "Clear filters",
+    "DELETE_TITLE": "Delete task?",
+    "DELETE_MESSAGE": "\"{{title}}\" will be removed from the board. This cannot be undone."
+  },
+  "CARD": {
+    "ACTIONS": "Actions for {{title}}",
+    "MOVE_TO": "Move to {{status}}",
+    "CHECKLIST_DONE": "checklist items done"
+  },
+  "FILTERS": {
+    "PRIORITY": "Priority",
+    "ALL_PRIORITIES": "All priorities",
+    "ASSIGNEE": "Assignee",
+    "ALL_ASSIGNEES": "All assignees"
+  },
+  "TASK_MESSAGES": {
+    "LOAD_FAILED": "Tasks could not be loaded.",
+    "CREATED_TITLE": "Task created",
+    "CREATED": "\"{{title}}\" was added to the board.",
+    "CREATE_FAILED": "The task could not be created.",
+    "UPDATED_TITLE": "Task updated",
+    "UPDATED": "Your changes were saved.",
+    "UPDATE_FAILED": "The task could not be saved.",
+    "DELETED_TITLE": "Task deleted",
+    "DELETED": "\"{{title}}\" was deleted.",
+    "MOVE_FAILED": "\"{{title}}\" could not be moved.",
+    "DELETE_FAILED": "\"{{title}}\" could not be deleted."
+  },
+  "SEARCH": {
+    "LABEL": "Search tasks",
+    "MIN_CHARS": "Type at least 2 characters",
+    "SEARCHING": "Searching…",
+    "NO_RESULTS": "No tasks found",
+    "UNAVAILABLE": "Search is unavailable right now. Please try again."
   }
 }

@@ -1,8 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
+import { LanguageService } from '../../../../core/i18n/language.service';
+import { TextPipe } from '../../../../core/i18n/text.pipe';
 import {
-  TASK_PRIORITY_LABELS,
+  TASK_PRIORITY_KEYS,
   TASK_STATUSES,
-  TASK_STATUS_LABELS,
+  TASK_STATUS_KEYS,
   type Task,
   type TaskStatus,
 } from '../../../../core/models';
@@ -16,7 +19,7 @@ import { describeDueDate } from '../../utils/due-date';
 /** One task on the board. Shows the result of a move or delete as a short flash. */
 @Component({
   selector: 'app-task-card',
-  imports: [UiAvatar, UiMenu],
+  imports: [TextPipe, TranslatePipe, UiAvatar, UiMenu],
   host: {
     '[class.task-card--overdue]': 'task().isOverdue',
     '[class.task-card--saving]': "changeState() === 'saving'",
@@ -37,18 +40,26 @@ export class TaskCard {
   readonly moveRequest = output<TaskStatus>();
   readonly deleteRequest = output<void>();
 
-  protected readonly priorityLabel = computed(() => TASK_PRIORITY_LABELS[this.task().priority]);
+  private readonly language = inject(LanguageService);
+
+  protected readonly priorityKey = computed(() => TASK_PRIORITY_KEYS[this.task().priority]);
   protected readonly due = computed(() => describeDueDate(this.task(), this.today()));
   protected readonly firstName = computed(() => this.task().assignee.name.split(' ')[0]);
   protected readonly checklistDone = computed(
     () => this.task().checklist.filter((item) => item.done).length,
   );
   protected readonly actions = computed<MenuAction[]>(() => [
-    { label: 'Edit', command: () => this.editRequest.emit() },
+    { label: this.language.t('COMMON.EDIT'), command: () => this.editRequest.emit() },
     ...TASK_STATUSES.filter((status) => status !== this.task().status).map((status) => ({
-      label: `Move to ${TASK_STATUS_LABELS[status]}`,
+      label: this.language.t('CARD.MOVE_TO', {
+        status: this.language.t(TASK_STATUS_KEYS[status]),
+      }),
       command: () => this.moveRequest.emit(status),
     })),
-    { label: 'Delete', tone: 'danger' as const, command: () => this.deleteRequest.emit() },
+    {
+      label: this.language.t('COMMON.DELETE'),
+      tone: 'danger' as const,
+      command: () => this.deleteRequest.emit(),
+    },
   ]);
 }

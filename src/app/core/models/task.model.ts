@@ -1,3 +1,4 @@
+import type { TranslationKey } from '../i18n/translation-key';
 import type { User } from './user.model';
 
 export type TaskStatus = 'todo' | 'in_progress' | 'done';
@@ -12,6 +13,13 @@ export const TASK_STATUS_LABELS: Readonly<Record<TaskStatus, string>> = {
   done: 'Done',
 };
 
+/** Translation keys of the status names. */
+export const TASK_STATUS_KEYS: Readonly<Record<TaskStatus, TranslationKey>> = {
+  todo: 'TASK.STATUS.TODO',
+  in_progress: 'TASK.STATUS.IN_PROGRESS',
+  done: 'TASK.STATUS.DONE',
+};
+
 /** Priorities from most to least urgent. */
 export const TASK_PRIORITIES: readonly TaskPriority[] = ['high', 'medium', 'low'];
 
@@ -19,6 +27,13 @@ export const TASK_PRIORITY_LABELS: Readonly<Record<TaskPriority, string>> = {
   high: 'High',
   medium: 'Medium',
   low: 'Low',
+};
+
+/** Translation keys of the priority names. */
+export const TASK_PRIORITY_KEYS: Readonly<Record<TaskPriority, TranslationKey>> = {
+  high: 'TASK.PRIORITY.HIGH',
+  medium: 'TASK.PRIORITY.MEDIUM',
+  low: 'TASK.PRIORITY.LOW',
 };
 
 /** One step of a task's checklist. */

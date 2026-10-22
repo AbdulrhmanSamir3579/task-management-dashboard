@@ -95,5 +95,91 @@
   },
   "CHART": {
     "EMPTY": "لا توجد بيانات لعرضها بعد."
+  },
+  "TASK": {
+    "STATUS": {
+      "TODO": "للتنفيذ",
+      "IN_PROGRESS": "قيد التنفيذ",
+      "DONE": "مكتملة"
+    },
+    "PRIORITY": {
+      "HIGH": "عالية",
+      "MEDIUM": "متوسطة",
+      "LOW": "منخفضة"
+    },
+    "COUNT": {
+      "zero": "لا توجد مهام",
+      "one": "مهمة واحدة",
+      "two": "مهمتان",
+      "few": "{{count}} مهام",
+      "many": "{{count}} مهمة",
+      "other": "{{count}} مهمة"
+    }
+  },
+  "DUE": {
+    "COMPLETED": "مكتملة",
+    "TODAY": "مستحقة اليوم",
+    "TOMORROW": "مستحقة غدًا",
+    "OVERDUE_BY": {
+      "zero": "متأخرة",
+      "one": "متأخرة يومًا واحدًا",
+      "two": "متأخرة يومين",
+      "few": "متأخرة {{count}} أيام",
+      "many": "متأخرة {{count}} يومًا",
+      "other": "متأخرة {{count}} يوم"
+    },
+    "IN": {
+      "zero": "مستحقة اليوم",
+      "one": "مستحقة خلال يوم واحد",
+      "two": "مستحقة خلال يومين",
+      "few": "مستحقة خلال {{count}} أيام",
+      "many": "مستحقة خلال {{count}} يومًا",
+      "other": "مستحقة خلال {{count}} يوم"
+    }
+  },
+  "BOARD": {
+    "STATUS_TABS": "عرض المهام حسب الحالة",
+    "ALL": "الكل",
+    "NO_TASKS": "لا توجد مهام",
+    "SEARCH_RESULTS": "نتائج البحث عن «{{search}}»",
+    "CLEAR_SEARCH": "مسح البحث",
+    "LOAD_ERROR": "تعذر تحميل المهام",
+    "LOADING": "جارٍ تحميل المهام",
+    "NO_MATCH_TITLE": "لا توجد مهام تطابق عوامل التصفية",
+    "NO_MATCH_MESSAGE": "جرّب بحثًا آخر أو امسح عوامل التصفية.",
+    "CLEAR_FILTERS": "مسح عوامل التصفية",
+    "DELETE_TITLE": "حذف المهمة؟",
+    "DELETE_MESSAGE": "ستُحذف «{{title}}» من اللوحة. لا يمكن التراجع عن ذلك."
+  },
+  "CARD": {
+    "ACTIONS": "إجراءات «{{title}}»",
+    "MOVE_TO": "نقل إلى {{status}}",
+    "CHECKLIST_DONE": "من خطوات القائمة مكتملة"
+  },
+  "FILTERS": {
+    "PRIORITY": "الأولوية",
+    "ALL_PRIORITIES": "كل الأولويات",
+    "ASSIGNEE": "المسؤول",
+    "ALL_ASSIGNEES": "كل المسؤولين"
+  },
+  "TASK_MESSAGES": {
+    "LOAD_FAILED": "تعذر تحميل المهام.",
+    "CREATED_TITLE": "تمت إضافة المهمة",
+    "CREATED": "تمت إضافة «{{title}}» إلى اللوحة.",
+    "CREATE_FAILED": "تعذر إنشاء المهمة.",
+    "UPDATED_TITLE": "تم تحديث المهمة",
+    "UPDATED": "تم حفظ تغييراتك.",
+    "UPDATE_FAILED": "تعذر حفظ المهمة.",
+    "DELETED_TITLE": "تم حذف المهمة",
+    "DELETED": "تم حذف «{{title}}».",
+    "MOVE_FAILED": "تعذر نقل «{{title}}».",
+    "DELETE_FAILED": "تعذر حذف «{{title}}»."
+  },
+  "SEARCH": {
+    "LABEL": "البحث في المهام",
+    "MIN_CHARS": "اكتب حرفين على الأقل",
+    "SEARCHING": "جارٍ البحث…",
+    "NO_RESULTS": "لم يتم العثور على مهام",
+    "UNAVAILABLE": "البحث غير متاح حاليًا. يرجى المحاولة مرة أخرى."
   }
 }

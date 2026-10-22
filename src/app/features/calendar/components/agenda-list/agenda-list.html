@@ -25,7 +25,7 @@
               {{ entry.task.title }}
             </button>
             <span class="agenda-item__meta" [class]="'agenda-item__meta--' + entry.due.tone">
-              <span aria-hidden="true">{{ entry.due.icon }}</span> {{ entry.due.label }} ·
+              <span aria-hidden="true">{{ entry.due.icon }}</span> {{ entry.due.text | text }} ·
               {{ entry.status }}
             </span>
           </div>
