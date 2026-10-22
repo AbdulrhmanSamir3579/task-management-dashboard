@@ -5,18 +5,22 @@
         <button
           type="button"
           class="calendar-toolbar__step"
-          [attr.aria-label]="'Previous ' + view()"
+          [attr.aria-label]="
+            (view() === 'week' ? 'CALENDAR.PREVIOUS_WEEK' : 'CALENDAR.PREVIOUS_MONTH') | translate
+          "
           (click)="previous.emit()"
         >
           <span aria-hidden="true">‹</span>
         </button>
         <button type="button" class="calendar-toolbar__today" (click)="goToToday.emit()">
-          Today
+          {{ 'CALENDAR.TODAY' | translate }}
         </button>
         <button
           type="button"
           class="calendar-toolbar__step"
-          [attr.aria-label]="'Next ' + view()"
+          [attr.aria-label]="
+            (view() === 'week' ? 'CALENDAR.NEXT_WEEK' : 'CALENDAR.NEXT_MONTH') | translate
+          "
           (click)="next.emit()"
         >
           <span aria-hidden="true">›</span>
@@ -25,7 +29,11 @@
     }
     <h2 class="calendar-toolbar__title" aria-live="polite">{{ label() }}</h2>
   </div>
-  <div class="calendar-toolbar__views" role="group" aria-label="Calendar view">
+  <div
+    class="calendar-toolbar__views"
+    role="group"
+    [attr.aria-label]="'CALENDAR.VIEW_LABEL' | translate"
+  >
     @for (option of views; track option.value) {
       <button
         type="button"
@@ -34,7 +42,7 @@
         [attr.aria-pressed]="view() === option.value"
         (click)="viewChange.emit(option.value)"
       >
-        {{ option.label }}
+        {{ option.label | translate }}
       </button>
     }
   </div>

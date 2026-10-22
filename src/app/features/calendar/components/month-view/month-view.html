@@ -1,6 +1,8 @@
 <table class="month">
   <caption class="visually-hidden">
-    Tasks due each day
+    {{
+      'CALENDAR.TABLE_CAPTION' | translate
+    }}
   </caption>
   <thead>
     <tr>
@@ -28,7 +30,7 @@
                 <button
                   type="button"
                   class="month__add"
-                  [attr.aria-label]="'Add task on ' + day.fullDate"
+                  [attr.aria-label]="'CALENDAR.ADD_TASK_ON' | translate: { date: day.fullDate }"
                   (click)="dayAdd.emit(day.date)"
                 >
                   <span aria-hidden="true">+</span>
@@ -44,7 +46,11 @@
                       [class]="'month__task month__task--' + task.priority"
                       [class.month__task--done]="task.status === 'done'"
                       [title]="task.title"
-                      [attr.aria-label]="task.status === 'done' ? task.title + ', done' : null"
+                      [attr.aria-label]="
+                        task.status === 'done'
+                          ? ('CALENDAR.TASK_DONE' | translate: { title: task.title })
+                          : null
+                      "
                       (click)="taskOpen.emit(task.id)"
                     >
                       {{ task.title }}
@@ -57,10 +63,12 @@
               <button
                 type="button"
                 class="month__more"
-                [attr.aria-label]="'+' + day.hidden + ' more on ' + day.fullDate"
+                [attr.aria-label]="
+                  'CALENDAR.MORE_ON' | translate: { count: day.hidden, date: day.fullDate }
+                "
                 (click)="dayShow.emit(day.date)"
               >
-                +{{ day.hidden }} more
+                {{ 'CALENDAR.MORE' | translate: { count: day.hidden } }}
               </button>
             }
             @if (day.tasks.length) {
@@ -68,7 +76,9 @@
               <button
                 type="button"
                 class="month__count"
-                [attr.aria-label]="day.tasks.length + ' tasks on ' + day.fullDate"
+                [attr.aria-label]="
+                  'CALENDAR.TASKS_ON' | plural: day.tasks.length : { date: day.fullDate }
+                "
                 (click)="dayShow.emit(day.date)"
               >
                 {{ day.tasks.length }}

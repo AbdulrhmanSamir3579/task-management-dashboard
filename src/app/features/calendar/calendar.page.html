@@ -9,11 +9,11 @@
   />
 
   @if (!store.hasLoaded() && store.loadError(); as error) {
-    <app-empty-state icon="⚠️" title="The calendar could not be loaded" [message]="error">
-      <ui-button label="Try again" (clicked)="store.reload()" />
+    <app-empty-state icon="⚠️" [title]="'CALENDAR.LOAD_ERROR' | translate" [message]="error">
+      <ui-button [label]="'COMMON.TRY_AGAIN' | translate" (clicked)="store.reload()" />
     </app-empty-state>
   } @else if (!store.hasLoaded()) {
-    <div role="status" aria-label="Loading the calendar">
+    <div role="status" [attr.aria-label]="'CALENDAR.LOADING' | translate">
       <ui-skeleton height="30rem" borderRadius="8px" />
     </div>
   } @else {
@@ -21,6 +21,7 @@
       @case ('week') {
         <app-week-view
           [days]="days()"
+          [locale]="locale()"
           (taskOpen)="editor.openEdit($event)"
           (dayAdd)="addTask($event)"
         />
@@ -30,18 +31,24 @@
           <app-agenda-list
             [groups]="agenda()"
             [today]="today()"
+            [locale]="locale()"
             (taskOpen)="editor.openEdit($event)"
           />
         } @else {
-          <app-empty-state icon="🎉" title="Nothing due" message="Every task is done.">
-            <ui-button label="+ New Task" (clicked)="editor.openCreate()" />
+          <app-empty-state
+            icon="🎉"
+            [title]="'CALENDAR.NOTHING_DUE' | translate"
+            [message]="'CALENDAR.ALL_DONE' | translate"
+          >
+            <ui-button [label]="'COMMON.NEW_TASK' | translate" (clicked)="editor.openCreate()" />
           </app-empty-state>
         }
       }
       @default {
         <app-month-view
           [weeks]="weeks()"
-          [weekdays]="weekdays"
+          [weekdays]="weekdays()"
+          [locale]="locale()"
           (taskOpen)="editor.openEdit($event)"
           (dayAdd)="addTask($event)"
           (dayShow)="showDay($event)"

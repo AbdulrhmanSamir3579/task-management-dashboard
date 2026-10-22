@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
+import { LanguageService } from '../../core/i18n/language.service';
 import { EmptyState } from '../../shared/components/empty-state/empty-state';
 import { UiButton } from '../../shared/ui/button/button';
 import { UiSkeleton } from '../../shared/ui/skeleton/skeleton';
@@ -31,7 +33,16 @@ const isView = (value: string | undefined): value is CalendarView =>
  */
 @Component({
   selector: 'app-calendar-page',
-  imports: [AgendaList, CalendarToolbar, EmptyState, MonthView, UiButton, UiSkeleton, WeekView],
+  imports: [
+    AgendaList,
+    CalendarToolbar,
+    EmptyState,
+    MonthView,
+    TranslatePipe,
+    UiButton,
+    UiSkeleton,
+    WeekView,
+  ],
   templateUrl: './calendar.page.html',
   styleUrl: './calendar.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -40,6 +51,7 @@ export class CalendarPage {
   protected readonly store = inject(TasksStore);
   protected readonly editor = inject(TaskEditorStore);
   private readonly router = inject(Router);
+  private readonly language = inject(LanguageService);
 
   // Query params, bound by the router.
   readonly view = input<string>();
@@ -58,8 +70,13 @@ export class CalendarPage {
     const date = this.date();
     return isIsoDate(date) ? date : this.today();
   });
-  protected readonly label = computed(() => periodLabel(this.activeView(), this.activeDate()));
-  protected readonly weekdays = weekdayLabels();
+  protected readonly locale = computed(() => this.language.locale());
+  protected readonly label = computed(
+    () =>
+      periodLabel(this.activeView(), this.activeDate(), this.locale()) ??
+      this.language.t('CALENDAR.AGENDA_TITLE'),
+  );
+  protected readonly weekdays = computed(() => weekdayLabels(this.locale()));
   protected readonly weeks = computed(() =>
     monthGrid(this.activeDate(), this.store.entities(), this.today()),
   );

@@ -1,6 +1,7 @@
 import { render, screen, within } from '@testing-library/angular';
 import { userEvent } from '@testing-library/user-event';
 import { buildTask } from '../../../../../testing/builders';
+import { provideArabicForTesting } from '../../../../../testing/i18n';
 import { monthGrid, weekdayLabels } from '../../data-access/calendar-grid';
 import { MonthView } from './month-view';
 
@@ -21,7 +22,7 @@ describe('MonthView', () => {
       ],
       today,
     );
-    await render(MonthView, { inputs: { weeks, weekdays: weekdayLabels() }, on: handlers });
+    await render(MonthView, { inputs: { weeks, weekdays: weekdayLabels('en') }, on: handlers });
     return handlers;
   }
 
@@ -86,5 +87,22 @@ describe('MonthView', () => {
     await userEvent.click(count!);
 
     expect(dayShow).toHaveBeenCalledWith(today);
+  });
+
+  it('shows Arabic weekday names, dates and labels', async () => {
+    const locale = 'ar-u-nu-latn';
+    await render(MonthView, {
+      inputs: { weeks: monthGrid(today, [], today), weekdays: weekdayLabels(locale), locale },
+      providers: [provideArabicForTesting()],
+    });
+    const friday = new Intl.DateTimeFormat(locale, {
+      weekday: 'long',
+      month: 'long',
+      day: 'numeric',
+    }).format(new Date(2026, 9, 23));
+
+    expect(screen.getByRole('table', { name: 'المهام المستحقة في كل يوم' })).toBeInTheDocument();
+    expect(screen.getAllByRole('columnheader')[0]).toHaveTextContent(weekdayLabels(locale)[0]!);
+    expect(screen.getByRole('button', { name: `إضافة مهمة في ${friday}` })).toBeInTheDocument();
   });
 });

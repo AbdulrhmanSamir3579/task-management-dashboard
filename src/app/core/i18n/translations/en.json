@@ -262,5 +262,36 @@
     "VIEW_TASKS_OF": "View tasks of {{name}}",
     "ASSIGN": "Assign task",
     "ASSIGN_TO": "Assign task to {{name}}"
+  },
+  "CALENDAR": {
+    "VIEW_LABEL": "Calendar view",
+    "MONTH": "Month",
+    "WEEK": "Week",
+    "AGENDA": "Agenda",
+    "TODAY": "Today",
+    "PREVIOUS_MONTH": "Previous month",
+    "NEXT_MONTH": "Next month",
+    "PREVIOUS_WEEK": "Previous week",
+    "NEXT_WEEK": "Next week",
+    "AGENDA_TITLE": "Open tasks by due date",
+    "LOAD_ERROR": "The calendar could not be loaded",
+    "LOADING": "Loading the calendar",
+    "NOTHING_DUE": "Nothing due",
+    "ALL_DONE": "Every task is done.",
+    "TABLE_CAPTION": "Tasks due each day",
+    "ADD_TASK_ON": "Add task on {{date}}",
+    "MORE": "+{{count}} more",
+    "MORE_ON": "+{{count}} more on {{date}}",
+    "TASKS_ON": {
+      "one": "{{count}} task on {{date}}",
+      "other": "{{count}} tasks on {{date}}"
+    },
+    "TASK_DONE": "{{title}}, done",
+    "GROUP": {
+      "OVERDUE": "Overdue",
+      "TODAY": "Today",
+      "WEEK": "Next 7 days",
+      "LATER": "Later"
+    }
   }
 }

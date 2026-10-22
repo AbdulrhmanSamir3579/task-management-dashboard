@@ -286,5 +286,40 @@
     "VIEW_TASKS_OF": "عرض المهام الخاصة بـ {{name}}",
     "ASSIGN": "إسناد مهمة",
     "ASSIGN_TO": "إسناد مهمة إلى {{name}}"
+  },
+  "CALENDAR": {
+    "VIEW_LABEL": "طريقة عرض التقويم",
+    "MONTH": "شهر",
+    "WEEK": "أسبوع",
+    "AGENDA": "جدول الأعمال",
+    "TODAY": "اليوم",
+    "PREVIOUS_MONTH": "الشهر السابق",
+    "NEXT_MONTH": "الشهر التالي",
+    "PREVIOUS_WEEK": "الأسبوع السابق",
+    "NEXT_WEEK": "الأسبوع التالي",
+    "AGENDA_TITLE": "المهام المفتوحة حسب تاريخ الاستحقاق",
+    "LOAD_ERROR": "تعذر تحميل التقويم",
+    "LOADING": "جارٍ تحميل التقويم",
+    "NOTHING_DUE": "لا توجد مهام مستحقة",
+    "ALL_DONE": "كل المهام مكتملة.",
+    "TABLE_CAPTION": "المهام المستحقة في كل يوم",
+    "ADD_TASK_ON": "إضافة مهمة في {{date}}",
+    "MORE": "+{{count}} أخرى",
+    "MORE_ON": "+{{count}} أخرى في {{date}}",
+    "TASKS_ON": {
+      "zero": "لا توجد مهام في {{date}}",
+      "one": "مهمة واحدة في {{date}}",
+      "two": "مهمتان في {{date}}",
+      "few": "{{count}} مهام في {{date}}",
+      "many": "{{count}} مهمة في {{date}}",
+      "other": "{{count}} مهمة في {{date}}"
+    },
+    "TASK_DONE": "{{title}}، مكتملة",
+    "GROUP": {
+      "OVERDUE": "متأخرة",
+      "TODAY": "اليوم",
+      "WEEK": "الأيام السبعة القادمة",
+      "LATER": "لاحقًا"
+    }
   }
 }

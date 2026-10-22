@@ -2,7 +2,7 @@ import { buildTask } from '../../../../testing/builders';
 import { monthGrid, periodLabel, shiftDate, weekDays, weekdayLabels } from './calendar-grid';
 
 /** Intl puts thin and no-break spaces around the range dash. */
-const plain = (text: string) => text.replace(/\s/g, ' ');
+const plain = (text: string | null) => text?.replace(/\s/g, ' ');
 
 describe('calendar grid', () => {
   const today = '2026-10-22';
@@ -73,14 +73,15 @@ describe('calendar grid', () => {
   });
 
   it('names the period on screen', () => {
-    expect(periodLabel('month', today)).toBe('October 2026');
-    expect(plain(periodLabel('week', today))).toBe('Oct 19 – 25, 2026');
-    expect(plain(periodLabel('week', '2026-09-30'))).toBe('Sep 28 – Oct 4, 2026');
-    expect(plain(periodLabel('week', '2026-12-30'))).toBe('Dec 28, 2026 – Jan 3, 2027');
-    expect(periodLabel('agenda', today)).toBe('Open tasks by due date');
+    expect(periodLabel('month', today, 'en')).toBe('October 2026');
+    expect(plain(periodLabel('week', today, 'en'))).toBe('Oct 19 – 25, 2026');
+    expect(plain(periodLabel('week', '2026-09-30', 'en'))).toBe('Sep 28 – Oct 4, 2026');
+    expect(plain(periodLabel('week', '2026-12-30', 'en'))).toBe('Dec 28, 2026 – Jan 3, 2027');
+    expect(periodLabel('agenda', today, 'en')).toBeNull();
+    expect(periodLabel('month', today, 'ar-u-nu-latn')).toBe('أكتوبر 2026');
   });
 
   it('lists weekday names from Monday', () => {
-    expect(weekdayLabels()).toEqual(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
+    expect(weekdayLabels('en')).toEqual(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
   });
 });
