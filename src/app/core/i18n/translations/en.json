@@ -203,5 +203,64 @@
     "DISCARD_MESSAGE": "Your changes to this task will be lost.",
     "DISCARD": "Discard",
     "KEEP_EDITING": "Keep editing"
+  },
+  "STATS": {
+    "TOTAL": "Total Tasks",
+    "COMPLETED": "Completed",
+    "IN_PROGRESS": "In Progress",
+    "OVERDUE": "Overdue",
+    "THIS_WEEK": "this week",
+    "TODAY": "today",
+    "DUE_THIS_WEEK": "due this week",
+    "LABEL": "Task statistics",
+    "LOADING": "Loading statistics"
+  },
+  "ANALYTICS": {
+    "LOAD_ERROR": "Analytics could not be loaded",
+    "BY_STATUS": "Tasks by status",
+    "BY_STATUS_HINT": "Where the work stands right now.",
+    "BY_PRIORITY": "Tasks by priority",
+    "BY_PRIORITY_HINT": "How urgent the work is.",
+    "WORKLOAD": "Workload by assignee",
+    "WORKLOAD_HINT": "Each person’s tasks by status.",
+    "TREND": "Created vs completed",
+    "TREND_HINT": "Tasks per day, last 14 days.",
+    "TREND_LABEL": "Tasks created and completed per day",
+    "TREND_EMPTY": "No tasks were created or completed in the last 14 days.",
+    "LOADING_CHART": "Loading chart",
+    "STATUS": "Status",
+    "PRIORITY": "Priority",
+    "ASSIGNEE": "Assignee",
+    "DAY": "Day",
+    "TASKS": "Tasks",
+    "SHARE": "Share",
+    "CREATED": "Created",
+    "COMPLETED": "Completed"
+  },
+  "TEAM": {
+    "LOAD_ERROR": "The team could not be loaded",
+    "LOAD_ERROR_MESSAGE": "Check your connection and try again.",
+    "EMPTY_TITLE": "No team members yet",
+    "EMPTY_MESSAGE": "People appear here once they can be assigned tasks.",
+    "LOADING": "Loading the team",
+    "MEMBERS": {
+      "one": "{{count}} member",
+      "other": "{{count}} members"
+    },
+    "OPEN_TASKS": {
+      "one": "{{count}} open task",
+      "other": "{{count}} open tasks"
+    },
+    "OVERDUE_COUNT": "{{count}} overdue",
+    "OPEN": "Open",
+    "IN_PROGRESS": "In progress",
+    "DONE": "Done",
+    "OVERDUE": "Overdue",
+    "COMPLETED": "Completed",
+    "COMPLETED_BY": "Tasks completed by {{name}}",
+    "VIEW_TASKS": "View tasks",
+    "VIEW_TASKS_OF": "View tasks of {{name}}",
+    "ASSIGN": "Assign task",
+    "ASSIGN_TO": "Assign task to {{name}}"
   }
 }

@@ -11,7 +11,7 @@ export class DonutChartService {
   build(data: readonly ChartDatum[], labels: ChartLabels): ChartConfig {
     const theme = this.echarts.theme();
     const total = sumOf(data.map((datum) => datum.value));
-    const valueLabel = labels.value ?? 'Value';
+    const valueLabel = labels.value ?? '#';
 
     return {
       empty: total === 0,
@@ -46,7 +46,7 @@ export class DonutChartService {
         ],
       },
       table: {
-        columns: [labels.category, valueLabel, 'Share'],
+        columns: [labels.category, valueLabel, labels.share ?? '%'],
         rows: data.map((datum) => [datum.label, datum.value, percent(datum.value, total)]),
       },
     };

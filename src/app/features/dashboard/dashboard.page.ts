@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { LanguageService } from '../../core/i18n/language.service';
 import { toIsoDate } from '../../shared/utils/date.utils';
 import { TasksStore } from '../tasks/data-access/tasks.store';
 import { TaskBoardSection } from '../tasks/task-board-section/task-board-section';
@@ -26,9 +27,14 @@ import { computeTaskStats } from './data-access/task-stats';
 })
 export class DashboardPage {
   private readonly store = inject(TasksStore);
+  private readonly language = inject(LanguageService);
 
   /** Recomputed whenever a task changes, so the cards always agree with the board. */
   protected readonly stats = computed(() =>
-    this.store.hasLoaded() ? computeTaskStats(this.store.entities(), toIsoDate(new Date())) : null,
+    this.store.hasLoaded()
+      ? computeTaskStats(this.store.entities(), toIsoDate(new Date()), (key, params) =>
+          this.language.t(key, params),
+        )
+      : null,
   );
 }

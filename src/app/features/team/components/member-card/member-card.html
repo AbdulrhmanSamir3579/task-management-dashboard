@@ -10,26 +10,26 @@
 
   <dl class="member__stats">
     <div class="member__stat">
-      <dt>Open</dt>
+      <dt>{{ 'TEAM.OPEN' | translate }}</dt>
       <dd>{{ m.open }}</dd>
     </div>
     <div class="member__stat">
-      <dt>In progress</dt>
+      <dt>{{ 'TEAM.IN_PROGRESS' | translate }}</dt>
       <dd>{{ m.inProgress }}</dd>
     </div>
     <div class="member__stat">
-      <dt>Done</dt>
+      <dt>{{ 'TEAM.DONE' | translate }}</dt>
       <dd>{{ m.done }}</dd>
     </div>
     <div class="member__stat" [class.member__stat--alert]="m.overdue > 0">
-      <dt>Overdue</dt>
+      <dt>{{ 'TEAM.OVERDUE' | translate }}</dt>
       <dd>{{ m.overdue }}</dd>
     </div>
   </dl>
 
   <div class="member__progress">
     <div class="member__progress-label">
-      <span>Completed</span>
+      <span>{{ 'TEAM.COMPLETED' | translate }}</span>
       <span>{{ m.completion }}%</span>
     </div>
     <div
@@ -38,7 +38,7 @@
       aria-valuemin="0"
       aria-valuemax="100"
       [attr.aria-valuenow]="m.completion"
-      [attr.aria-label]="'Tasks completed by ' + m.user.name"
+      [attr.aria-label]="'TEAM.COMPLETED_BY' | translate: { name: m.user.name }"
     >
       <span class="member__bar-fill" [style.width.%]="m.completion"></span>
     </div>
@@ -49,15 +49,15 @@
       class="member__link"
       routerLink="/tasks"
       [queryParams]="{ assignee: m.user.id }"
-      [attr.aria-label]="'View tasks of ' + m.user.name"
+      [attr.aria-label]="'TEAM.VIEW_TASKS_OF' | translate: { name: m.user.name }"
     >
-      View tasks
+      {{ 'TEAM.VIEW_TASKS' | translate }}
     </a>
     <ui-button
-      label="Assign task"
+      [label]="'TEAM.ASSIGN' | translate"
       variant="outline"
       size="small"
-      [ariaLabel]="'Assign task to ' + m.user.name"
+      [ariaLabel]="'TEAM.ASSIGN_TO' | translate: { name: m.user.name }"
       (clicked)="assign.emit(m.user.id)"
     />
   </div>

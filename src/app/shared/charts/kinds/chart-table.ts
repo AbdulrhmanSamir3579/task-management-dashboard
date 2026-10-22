@@ -10,7 +10,7 @@ export function percent(value: number, total: number): string {
 /** One row per datum: label and value. */
 export function datumTable(data: readonly ChartDatum[], labels: ChartLabels): ChartTable {
   return {
-    columns: [labels.category, labels.value ?? 'Value'],
+    columns: [labels.category, labels.value ?? '#'],
     rows: data.map((datum) => [datum.label, datum.value]),
   };
 }

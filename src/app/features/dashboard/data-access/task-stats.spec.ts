@@ -1,10 +1,17 @@
 import { buildTask } from '../../../../testing/builders';
+import { TestBed } from '@angular/core/testing';
+import { LanguageService } from '../../../core/i18n/language.service';
 import { computeTaskStats } from './task-stats';
 
 const today = '2026-10-21';
 const at = (day: string) => `${day}T09:00:00`;
 
 describe('computeTaskStats', () => {
+  const t = () => {
+    const language = TestBed.inject(LanguageService);
+    return (key: Parameters<LanguageService['t']>[0]) => language.t(key);
+  };
+
   const tasks = [
     buildTask({ id: 'new', status: 'todo', dueDate: '2026-10-25', createdAt: at('2026-10-20') }),
     buildTask({ id: 'old', status: 'todo', dueDate: '2026-10-20', createdAt: at('2026-10-01') }),
@@ -43,10 +50,10 @@ describe('computeTaskStats', () => {
   ];
 
   const byId = () =>
-    Object.fromEntries(computeTaskStats(tasks, today).map((stat) => [stat.id, stat]));
+    Object.fromEntries(computeTaskStats(tasks, today, t()).map((stat) => [stat.id, stat]));
 
   it('returns the four dashboard cards in design order', () => {
-    expect(computeTaskStats(tasks, today).map((stat) => [stat.title, stat.icon])).toEqual([
+    expect(computeTaskStats(tasks, today, t()).map((stat) => [stat.title, stat.icon])).toEqual([
       ['Total Tasks', '📊'],
       ['Completed', '✅'],
       ['In Progress', '🔄'],
@@ -91,7 +98,7 @@ describe('computeTaskStats', () => {
   });
 
   it('shows neutral changes when nothing happened', () => {
-    const stats = computeTaskStats([], today);
+    const stats = computeTaskStats([], today, t());
 
     expect(stats.map((stat) => [stat.value, stat.change, stat.changeType])).toEqual([
       [0, '0', 'neutral'],

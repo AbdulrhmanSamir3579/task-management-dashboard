@@ -1,38 +1,50 @@
 @if (!store.hasLoaded() && store.loadError(); as error) {
-  <app-empty-state icon="⚠️" title="Analytics could not be loaded" [message]="error">
-    <ui-button label="Try again" (clicked)="store.reload()" />
+  <app-empty-state icon="⚠️" [title]="'ANALYTICS.LOAD_ERROR' | translate" [message]="error">
+    <ui-button [label]="'COMMON.TRY_AGAIN' | translate" (clicked)="store.reload()" />
   </app-empty-state>
 } @else {
   <div class="analytics">
-    <app-chart-card heading="Tasks by status" description="Where the work stands right now.">
+    <app-chart-card
+      [heading]="'ANALYTICS.BY_STATUS' | translate"
+      [description]="'ANALYTICS.BY_STATUS_HINT' | translate"
+    >
       @if (charts(); as c) {
-        <ui-chart label="Tasks by status" [config]="c.status" />
+        <ui-chart [label]="'ANALYTICS.BY_STATUS' | translate" [config]="c.status" />
       } @else {
         <ng-container [ngTemplateOutlet]="loading" />
       }
     </app-chart-card>
 
-    <app-chart-card heading="Tasks by priority" description="How urgent the work is.">
+    <app-chart-card
+      [heading]="'ANALYTICS.BY_PRIORITY' | translate"
+      [description]="'ANALYTICS.BY_PRIORITY_HINT' | translate"
+    >
       @if (charts(); as c) {
-        <ui-chart label="Tasks by priority" [config]="c.priority" />
+        <ui-chart [label]="'ANALYTICS.BY_PRIORITY' | translate" [config]="c.priority" />
       } @else {
         <ng-container [ngTemplateOutlet]="loading" />
       }
     </app-chart-card>
 
-    <app-chart-card heading="Workload by assignee" description="Each person’s tasks by status.">
+    <app-chart-card
+      [heading]="'ANALYTICS.WORKLOAD' | translate"
+      [description]="'ANALYTICS.WORKLOAD_HINT' | translate"
+    >
       @if (charts(); as c) {
-        <ui-chart label="Workload by assignee" [config]="c.workload" />
+        <ui-chart [label]="'ANALYTICS.WORKLOAD' | translate" [config]="c.workload" />
       } @else {
         <ng-container [ngTemplateOutlet]="loading" />
       }
     </app-chart-card>
 
-    <app-chart-card heading="Created vs completed" description="Tasks per day, last 14 days.">
+    <app-chart-card
+      [heading]="'ANALYTICS.TREND' | translate"
+      [description]="'ANALYTICS.TREND_HINT' | translate"
+    >
       @if (charts(); as c) {
         <ui-chart
-          label="Tasks created and completed per day"
-          emptyMessage="No tasks were created or completed in the last 14 days."
+          [label]="'ANALYTICS.TREND_LABEL' | translate"
+          [emptyMessage]="'ANALYTICS.TREND_EMPTY' | translate"
           [config]="c.trend"
         />
       } @else {
@@ -43,7 +55,7 @@
 }
 
 <ng-template #loading>
-  <div role="status" aria-label="Loading chart">
+  <div role="status" [attr.aria-label]="'ANALYTICS.LOADING_CHART' | translate">
     <ui-skeleton height="18rem" borderRadius="8px" />
   </div>
 </ng-template>

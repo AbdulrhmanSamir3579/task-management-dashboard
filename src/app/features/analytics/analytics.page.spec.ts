@@ -1,11 +1,12 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { ApplicationRef } from '@angular/core';
+import { ApplicationRef, type Provider } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { render, screen, within } from '@testing-library/angular';
 import { userEvent } from '@testing-library/user-event';
 import { buildTaskDto, buildUser } from '../../../testing/builders';
 import { provideChartsForTesting } from '../../../testing/charts';
+import { provideArabicForTesting } from '../../../testing/i18n';
 import { errorInterceptor } from '../../core/http/error.interceptor';
 import type { TasksResponse } from '../../core/models';
 import { NotificationService } from '../../shared/ui/notifications/notification.service';
@@ -28,13 +29,14 @@ const tasks: TasksResponse = {
 };
 
 describe('AnalyticsPage', () => {
-  async function setup() {
+  async function setup(extraProviders: Provider[] = []) {
     const charts = provideChartsForTesting();
     await render(AnalyticsPage, {
       providers: [
         provideHttpClient(withInterceptors([errorInterceptor])),
         provideHttpClientTesting(),
         { provide: NotificationService, useValue: { success: vi.fn(), error: vi.fn() } },
+        ...extraProviders,
       ],
       componentProviders: [charts.provider],
     });
@@ -101,5 +103,18 @@ describe('AnalyticsPage', () => {
     await respond(tasks);
 
     await expectNoAccessibilityViolations();
+  });
+
+  it('labels the charts and their tables in Arabic', async () => {
+    const { respond } = await setup([provideArabicForTesting()]);
+    await respond(tasks);
+
+    const statusTable = table('المهام حسب الحالة');
+    expect(
+      within(statusTable)
+        .getAllByRole('columnheader')
+        .map((th) => th.textContent),
+    ).toEqual(['الحالة', 'المهام', 'النسبة']);
+    expect(within(statusTable).getByRole('row', { name: 'مكتملة 1 33%' })).toBeTruthy();
   });
 });

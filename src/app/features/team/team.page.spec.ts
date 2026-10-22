@@ -1,10 +1,11 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { ApplicationRef } from '@angular/core';
+import { ApplicationRef, type Provider } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { render, screen, within } from '@testing-library/angular';
 import { userEvent } from '@testing-library/user-event';
 import { buildTaskDto, buildUser } from '../../../testing/builders';
+import { provideArabicForTesting } from '../../../testing/i18n';
 import { errorInterceptor } from '../../core/http/error.interceptor';
 import type { TasksResponse, User } from '../../core/models';
 import { NotificationService } from '../../shared/ui/notifications/notification.service';
@@ -29,13 +30,14 @@ describe('TeamPage', () => {
   const settle = () => TestBed.inject(ApplicationRef).whenStable();
   const serverError = { status: 500, statusText: 'Server Error' };
 
-  async function setup() {
+  async function setup(extraProviders: Provider[] = []) {
     const { navigate } = await render(TeamPage, {
       routes: [{ path: '**', children: [] }],
       providers: [
         provideHttpClient(withInterceptors([errorInterceptor])),
         provideHttpClientTesting(),
         { provide: NotificationService, useValue: { success: vi.fn(), error: vi.fn() } },
+        ...extraProviders,
       ],
     });
     await navigate('/team');
@@ -116,5 +118,13 @@ describe('TeamPage', () => {
     await respond([john, sarah], tasks);
 
     await expectNoAccessibilityViolations();
+  });
+
+  it('sums up the team in Arabic, with Arabic plural forms', async () => {
+    await setup([provideArabicForTesting()]);
+    await respond([john, sarah], tasks);
+
+    expect(screen.getByText('عضوان · مهمة مفتوحة واحدة · 1 متأخرة')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'إسناد مهمة إلى Sarah Smith' })).toBeInTheDocument();
   });
 });
