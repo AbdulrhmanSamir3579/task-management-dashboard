@@ -276,6 +276,17 @@ describe('InMemoryDataService', () => {
     });
   });
 
+  it('answers in the language the request asks for', async () => {
+    const attempt = firstValueFrom(
+      http.patch('api/tasks/task-999', { title: 'x' }, { headers: { 'Accept-Language': 'ar' } }),
+    );
+
+    await expect(attempt).rejects.toMatchObject({
+      status: 404,
+      error: { message: 'لم يتم العثور على المهمة task-999.' },
+    });
+  });
+
   it('keeps users and activities read-only', async () => {
     const attempts = [
       firstValueFrom(http.post('api/users', {})),
