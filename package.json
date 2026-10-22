@@ -6,7 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "smoke": "node scripts/smoke-test.mjs",
-    "build:pages": "ng build --base-href /task-management-dashboard/",
+    "build:pages": "ng build --base-href /task-management-dashboard/ && node scripts/prepare-pages.mjs",
     "lighthouse": "npm run lighthouse:desktop && npm run lighthouse:mobile",
     "lighthouse:desktop": "npx --yes @lhci/cli@0.15.1 autorun --config=lighthouserc.json",
     "lighthouse:mobile": "npx --yes @lhci/cli@0.15.1 autorun --config=lighthouserc.mobile.json",
