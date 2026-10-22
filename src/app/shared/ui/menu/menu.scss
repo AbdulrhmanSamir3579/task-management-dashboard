@@ -31,8 +31,3 @@
 .ui-menu-item-danger .p-menu-item-label {
   color: var(--p-red-500);
 }
-@media (prefers-reduced-motion: reduce) {
-  .ui-menu__trigger {
-    transition: none;
-  }
-}

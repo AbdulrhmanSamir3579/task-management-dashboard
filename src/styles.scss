@@ -68,6 +68,51 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/*
+ * Route changes (withViewTransitions): only the page content fades and rises a little;
+ * the header and sidebar stay still.
+ */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+}
+
+::view-transition-old(page) {
+  animation: 120ms ease-in both page-out;
+}
+
+::view-transition-new(page) {
+  animation: 200ms ease-out both page-in;
+}
+
+@keyframes page-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+}
+
+/* Users who ask for less motion get none, from the app and from PrimeNG. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after,
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /** Hides content visually while keeping it available to screen readers. */
 .visually-hidden {
   position: absolute;

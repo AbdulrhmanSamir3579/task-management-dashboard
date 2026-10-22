@@ -81,6 +81,7 @@
 
 .shell__main {
   padding: 2rem;
+  view-transition-name: page;
 
   &:focus {
     outline: none;
@@ -130,11 +131,5 @@
 
   .shell__main {
     padding: 1rem;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .shell__sidebar {
-    transition: none;
   }
 }

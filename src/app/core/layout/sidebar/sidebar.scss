@@ -53,9 +53,3 @@
 .sidebar__icon {
   font-size: 1rem;
 }
-
-@media (prefers-reduced-motion: reduce) {
-  .sidebar__link {
-    transition: none;
-  }
-}
