@@ -10,6 +10,7 @@ import {
 } from '@ngrx/signals';
 import { HttpBaseService } from '../../../core/http/http-base.service';
 import { type Activity, CURRENT_USER_ACTOR } from '../../../core/models';
+import { LanguageService } from '../../../core/i18n/language.service';
 import { BrowserStorage } from '../../../core/storage/browser-storage';
 import { TasksStore } from '../../tasks/data-access/tasks.store';
 
@@ -37,8 +38,9 @@ export const ActivityStore = signalStore(
     })),
     _storage: inject(BrowserStorage),
     _tasks: inject(TasksStore),
+    _language: inject(LanguageService),
   })),
-  withComputed(({ _resource, lastSeenAt }) => {
+  withComputed(({ _resource, lastSeenAt, _language }) => {
     const activities = computed(() => (_resource.hasValue() ? (_resource.value() ?? []) : []));
     return {
       /** Newest first. */
@@ -49,7 +51,7 @@ export const ActivityStore = signalStore(
         if (_resource.status() !== 'error') {
           return null;
         }
-        return _resource.error()?.message || 'Recent activity could not be loaded.';
+        return _resource.error()?.message || _language.t('ACTIVITY.LOAD_FAILED');
       }),
       unreadCount: computed(() => {
         const seen = lastSeenAt();

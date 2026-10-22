@@ -293,5 +293,29 @@
       "WEEK": "Next 7 days",
       "LATER": "Later"
     }
+  },
+  "ACTIVITY": {
+    "TITLE": "Recent activity",
+    "NOTIFICATIONS": "Notifications",
+    "NOTIFICATIONS_UNREAD": "Notifications, {{count}} unread",
+    "LOADING": "Loading recent activity",
+    "ENTRIES": "Recent activity entries",
+    "EMPTY": "No activity yet.",
+    "NEW": "New:",
+    "LOAD_FAILED": "Recent activity could not be loaded.",
+    "EVENT": {
+      "CREATED": "{{actor}} created {{title}}",
+      "UPDATED": "{{actor}} updated {{title}}",
+      "DELETED": "{{actor}} deleted {{title}}",
+      "MOVED": "{{actor}} moved {{title}} to {{status}}",
+      "MOVED_SOMEWHERE": "{{actor}} moved {{title}}"
+    },
+    "OWN_EVENT": {
+      "CREATED": "You created {{title}}",
+      "UPDATED": "You updated {{title}}",
+      "DELETED": "You deleted {{title}}",
+      "MOVED": "You moved {{title}} to {{status}}",
+      "MOVED_SOMEWHERE": "You moved {{title}}"
+    }
   }
 }

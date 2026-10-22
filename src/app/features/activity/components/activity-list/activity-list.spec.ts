@@ -1,5 +1,6 @@
 import { render, screen, within } from '@testing-library/angular';
 import { type Activity, CURRENT_USER_ACTOR } from '../../../../core/models';
+import { provideArabicForTesting } from '../../../../../testing/i18n';
 import { ActivityList } from './activity-list';
 import { describeActivity } from './describe-activity';
 
@@ -15,20 +16,26 @@ const entry = (overrides: Partial<Activity>): Activity => ({
 
 describe('describeActivity', () => {
   it.each<[Partial<Activity>, string, string]>([
-    [{ type: 'created' }, '➕', 'created'],
-    [{ type: 'updated' }, '✏️', 'updated'],
-    [{ type: 'deleted' }, '🗑️', 'deleted'],
-    [{ type: 'status_changed', toStatus: 'in_progress' }, '🔄', 'moved'],
-    [{ type: 'status_changed', toStatus: 'done' }, '✅', 'moved'],
-  ])('describes %j', (overrides, icon, action) => {
-    expect(describeActivity(entry(overrides))).toMatchObject({ icon, action });
+    [{ type: 'created' }, '➕', 'ACTIVITY.EVENT.CREATED'],
+    [{ type: 'updated' }, '✏️', 'ACTIVITY.EVENT.UPDATED'],
+    [{ type: 'deleted' }, '🗑️', 'ACTIVITY.EVENT.DELETED'],
+    [{ type: 'status_changed', toStatus: 'in_progress' }, '🔄', 'ACTIVITY.EVENT.MOVED'],
+    [{ type: 'status_changed', toStatus: 'done' }, '✅', 'ACTIVITY.EVENT.MOVED'],
+    [{ type: 'status_changed' }, '🔄', 'ACTIVITY.EVENT.MOVED_SOMEWHERE'],
+  ])('describes %j', (overrides, icon, sentence) => {
+    expect(describeActivity(entry(overrides))).toMatchObject({ icon, sentence });
   });
 
   it('names the new status of a moved task', () => {
-    expect(describeActivity(entry({ type: 'status_changed', toStatus: 'done' })).detail).toBe(
-      ' to Done',
+    expect(describeActivity(entry({ type: 'status_changed', toStatus: 'done' })).status).toBe(
+      'TASK.STATUS.DONE',
     );
-    expect(describeActivity(entry({ type: 'status_changed' })).detail).toBe('');
+  });
+
+  it('uses its own sentences for your changes', () => {
+    expect(describeActivity(entry({ actor: CURRENT_USER_ACTOR })).sentence).toBe(
+      'ACTIVITY.OWN_EVENT.CREATED',
+    );
   });
 });
 
@@ -73,5 +80,21 @@ describe('ActivityList', () => {
     await setup([]);
 
     expect(screen.getByText('No activity yet.')).toBeInTheDocument();
+  });
+
+  it('emphasises the person and the task in the Arabic word order', async () => {
+    await render(ActivityList, {
+      inputs: {
+        activities: [entry({ type: 'status_changed', toStatus: 'done' })],
+        now,
+        newSince: '2026-10-23T00:00:00.000Z',
+      },
+      providers: [provideArabicForTesting()],
+    });
+
+    const [item] = screen.getAllByRole('listitem');
+    expect(item).toHaveTextContent('نقل Sarah Smith المهمة Prepare budget إلى مكتملة');
+    expect(within(item!).getByText('Sarah Smith').tagName).toBe('STRONG');
+    expect(within(item!).getByText('Prepare budget').tagName).toBe('STRONG');
   });
 });

@@ -321,5 +321,29 @@
       "WEEK": "الأيام السبعة القادمة",
       "LATER": "لاحقًا"
     }
+  },
+  "ACTIVITY": {
+    "TITLE": "النشاط الأخير",
+    "NOTIFICATIONS": "الإشعارات",
+    "NOTIFICATIONS_UNREAD": "الإشعارات، {{count}} غير مقروءة",
+    "LOADING": "جارٍ تحميل النشاط الأخير",
+    "ENTRIES": "عناصر النشاط الأخير",
+    "EMPTY": "لا يوجد نشاط بعد.",
+    "NEW": "جديد:",
+    "LOAD_FAILED": "تعذر تحميل النشاط الأخير.",
+    "EVENT": {
+      "CREATED": "أنشأ {{actor}} المهمة {{title}}",
+      "UPDATED": "حدّث {{actor}} المهمة {{title}}",
+      "DELETED": "حذف {{actor}} المهمة {{title}}",
+      "MOVED": "نقل {{actor}} المهمة {{title}} إلى {{status}}",
+      "MOVED_SOMEWHERE": "نقل {{actor}} المهمة {{title}}"
+    },
+    "OWN_EVENT": {
+      "CREATED": "أنشأتَ المهمة {{title}}",
+      "UPDATED": "حدّثتَ المهمة {{title}}",
+      "DELETED": "حذفتَ المهمة {{title}}",
+      "MOVED": "نقلتَ المهمة {{title}} إلى {{status}}",
+      "MOVED_SOMEWHERE": "نقلتَ المهمة {{title}}"
+    }
   }
 }
