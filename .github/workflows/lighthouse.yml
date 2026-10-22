@@ -1,0 +1,45 @@
+name: Lighthouse
+
+# Started by hand from the Actions tab ("Run workflow"): audits the production build on desktop
+# and mobile against the minimums in lighthouserc.json and lighthouserc.mobile.json.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  HUSKY: 0
+
+jobs:
+  lighthouse:
+    name: Lighthouse
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Run Lighthouse
+        run: npm run lighthouse
+
+      - name: Publish scores
+        if: always()
+        run: node scripts/lighthouse-summary.mjs >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: lighthouse-report
+          path: lighthouse-report/
+          retention-days: 14
+          if-no-files-found: ignore

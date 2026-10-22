@@ -1,15 +1,18 @@
 name: CI
 
+# Lints, tests and builds every pull request and every merge to main. A merge to main is then
+# published to GitHub Pages, but only if all of that passed.
 on:
   pull_request:
     branches: [main]
   push:
     branches: [main]
 
-# A newer push to the same branch cancels the run that is still in progress.
+# A newer push to a pull request cancels its run still in progress; runs on main finish, so a
+# deployment is never cut off.
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
@@ -19,8 +22,8 @@ env:
   HUSKY: 0
 
 jobs:
-  lint:
-    name: Lint and format
+  check:
+    name: Lint, test and build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -32,97 +35,47 @@ jobs:
 
       - run: npm ci
 
+      # ESLint, plus the translation check: keys used in templates exist, no hard-coded text.
       - name: Lint
         run: npm run lint
 
       - name: Check formatting
         run: npm run format:check
 
-      # Every key used in a template exists, and no text is hard-coded in a template.
-      - name: Check translations
-        run: npm run i18n:check
-
-  test:
-    name: Unit tests
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-
-      - uses: actions/setup-node@v7
-        with:
-          node-version-file: .nvmrc
-          cache: npm
-
-      - run: npm ci
-
-      - name: Run tests with coverage gate
+      # Fails below 80% coverage.
+      - name: Test with coverage
         run: npm run test:ci
 
       - name: Publish coverage summary
         if: always()
         run: node scripts/coverage-summary.mjs >> "$GITHUB_STEP_SUMMARY"
 
-      # Uploaded even when tests fail, so the report can be inspected.
-      - name: Upload coverage report
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: coverage-report
-          path: coverage/
-          retention-days: 14
-          if-no-files-found: ignore
-
-  build:
-    name: Production build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-
-      - uses: actions/setup-node@v7
-        with:
-          node-version-file: .nvmrc
-          cache: npm
-
-      - run: npm ci
-
-      # Fails when a bundle exceeds the budgets defined in angular.json.
+      # Built for GitHub Pages, so a merge to main publishes exactly what was tested. Fails
+      # when a bundle exceeds the budgets in angular.json.
       - name: Build
-        run: npm run build
+        run: npm run build:pages
 
-      # Starts the optimised bundle, which unit tests do not run.
+      # Starts the optimised bundle, which the unit tests do not run.
       - name: Smoke test
         run: npm run smoke
 
-  lighthouse:
-    name: Lighthouse
+      - name: Keep the build for deployment
+        if: github.event_name == 'push'
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist/task-management-dashboard/browser
+
+  deploy:
+    name: Deploy to GitHub Pages
+    if: github.event_name == 'push'
+    needs: check
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v7
-
-      - uses: actions/setup-node@v7
-        with:
-          node-version-file: .nvmrc
-          cache: npm
-
-      - run: npm ci
-
-      - name: Build
-        run: npm run build
-
-      # Audits the production build; fails when a score is below the minimums in
-      # lighthouserc.json.
-      - name: Run Lighthouse
-        run: npm run lighthouse
-
-      - name: Publish scores
-        if: always()
-        run: node scripts/lighthouse-summary.mjs >> "$GITHUB_STEP_SUMMARY"
-
-      - name: Upload Lighthouse reports
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: lighthouse-report
-          path: lighthouse-report/
-          retention-days: 14
-          if-no-files-found: ignore
+      - id: deployment
+        uses: actions/deploy-pages@v5

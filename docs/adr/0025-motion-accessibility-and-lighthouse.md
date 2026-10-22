@@ -1,6 +1,6 @@
 # 0025. Motion, accessibility checks and Lighthouse
 
-- Status: Accepted
+- Status: Accepted, amended by [0028](0028-simple-ci-cd-pipeline.md)
 - Date: 2026-10-22
 - Amends: [0007](0007-theming-from-design-tokens.md), [0011](0011-lazy-loading-and-bundle-budget.md)
 

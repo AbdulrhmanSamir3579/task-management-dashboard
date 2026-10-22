@@ -1,6 +1,6 @@
 # 0004. Code quality and delivery workflow
 
-- Status: Accepted
+- Status: Accepted, amended by [0028](0028-simple-ci-cd-pipeline.md)
 - Date: 2026-10-21
 
 ## Context

@@ -14,7 +14,7 @@
     "test": "ng test",
     "test:ci": "ng test --watch=false --coverage",
     "data:generate": "node data-fetching/generate-data.js",
-    "lint": "ng lint",
+    "lint": "ng lint && npm run i18n:check",
     "i18n:check": "node scripts/i18n-check.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

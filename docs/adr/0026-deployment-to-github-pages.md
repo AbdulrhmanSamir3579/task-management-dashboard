@@ -1,6 +1,6 @@
 # 0026. Deployment to GitHub Pages
 
-- Status: Accepted
+- Status: Accepted, amended by [0028](0028-simple-ci-cd-pipeline.md)
 - Date: 2026-10-22
 
 ## Context

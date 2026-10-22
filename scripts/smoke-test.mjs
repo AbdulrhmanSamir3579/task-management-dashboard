@@ -14,8 +14,10 @@ virtualConsole.on('jsdomError', (error) => errors.push(error.message));
 
 // The inline script in index.html is skipped; the bundle is imported below instead.
 const html = readFileSync(`${dist}/index.html`, 'utf8').replace(/<script[\s\S]*?<\/script>/g, '');
+// Opened under the build's base path, e.g. /task-management-dashboard/ for GitHub Pages.
+const base = html.match(/<base href="([^"]*)"/)?.[1] ?? '/';
 const { window } = new JSDOM(html, {
-  url: 'http://localhost/dashboard',
+  url: `http://localhost${base}dashboard`,
   pretendToBeVisual: true,
   virtualConsole,
 });
