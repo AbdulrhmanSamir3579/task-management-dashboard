@@ -1,17 +1,17 @@
 import { render, screen } from '@testing-library/angular';
 import { userEvent } from '@testing-library/user-event';
 import { EMPTY_TASK_FILTERS, type TaskFilters } from '../../data-access/task-filters';
-import { TaskFilterPanel } from './task-filter-panel';
+import { TaskFilterBar } from './task-filter-bar';
 
 const assignees = [
   { label: 'John Doe', value: 'user-001' },
   { label: 'Sarah Smith', value: 'user-002' },
 ];
 
-describe('TaskFilterPanel', () => {
+describe('TaskFilterBar', () => {
   async function setup(filters: TaskFilters = EMPTY_TASK_FILTERS) {
     const filtersChange = vi.fn();
-    const view = await render(TaskFilterPanel, {
+    const view = await render(TaskFilterBar, {
       inputs: { filters, assignees },
       on: { filtersChange },
     });

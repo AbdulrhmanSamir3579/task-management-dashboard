@@ -49,7 +49,7 @@ describe('app routes', () => {
   it('lazy loads the Calendar page and sets the tab title', async () => {
     await visit('/calendar');
 
-    expect(await screen.findByRole('status', { name: 'Loading the agenda' })).toBeInTheDocument();
+    expect(await screen.findByRole('status', { name: 'Loading the calendar' })).toBeInTheDocument();
     expect(TestBed.inject(Title).getTitle()).toBe('Calendar · Task Manager');
   });
 

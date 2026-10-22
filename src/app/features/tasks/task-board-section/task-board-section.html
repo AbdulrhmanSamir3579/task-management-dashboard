@@ -1,10 +1,9 @@
 <div class="section">
   <app-board-toolbar [status]="selectedStatus()" (statusChange)="selectStatus($event)">
-    <ui-button
-      variant="outline"
-      size="small"
-      [label]="filterLabel()"
-      (clicked)="filtersOpen.set(true)"
+    <app-task-filter-bar
+      [filters]="store.filters()"
+      [assignees]="users.options()"
+      (filtersChange)="store.setFilters($event)"
     />
     <ui-button label="+ New Task" size="small" (clicked)="editor.openCreate()" />
   </app-board-toolbar>
@@ -58,20 +57,3 @@
     />
   }
 </div>
-
-<ui-drawer heading="Filter tasks" [(visible)]="filtersOpen">
-  <app-task-filter-panel
-    [filters]="store.filters()"
-    [assignees]="users.options()"
-    (filtersChange)="store.setFilters($event)"
-  />
-  <div class="drawer-actions" uiDrawerFooter>
-    <ui-button
-      label="Clear"
-      variant="ghost"
-      [disabled]="panelFilterCount() === 0"
-      (clicked)="clearPanelFilters()"
-    />
-    <ui-button label="Done" (clicked)="filtersOpen.set(false)" />
-  </div>
-</ui-drawer>

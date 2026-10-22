@@ -1,0 +1,82 @@
+<table class="month">
+  <caption class="visually-hidden">
+    Tasks due each day
+  </caption>
+  <thead>
+    <tr>
+      @for (name of weekdays(); track name) {
+        <th scope="col" class="month__weekday">{{ name }}</th>
+      }
+    </tr>
+  </thead>
+  <tbody>
+    @for (week of rows(); track $index) {
+      <tr>
+        @for (day of week; track day.date) {
+          <td
+            class="month__day"
+            [class.month__day--outside]="!day.inMonth"
+            [class.month__day--today]="day.isToday"
+            [attr.aria-current]="day.isToday ? 'date' : null"
+          >
+            <div class="month__day-header">
+              <span class="month__date">
+                <span aria-hidden="true">{{ day.dayOfMonth }}</span>
+                <span class="visually-hidden">{{ day.fullDate }}</span>
+              </span>
+              @if (!day.isPast) {
+                <button
+                  type="button"
+                  class="month__add"
+                  [attr.aria-label]="'Add task on ' + day.fullDate"
+                  (click)="dayAdd.emit(day.date)"
+                >
+                  <span aria-hidden="true">+</span>
+                </button>
+              }
+            </div>
+            @if (day.visible.length) {
+              <ul class="month__tasks">
+                @for (task of day.visible; track task.id) {
+                  <li>
+                    <button
+                      type="button"
+                      [class]="'month__task month__task--' + task.priority"
+                      [class.month__task--done]="task.status === 'done'"
+                      [title]="task.title"
+                      [attr.aria-label]="task.status === 'done' ? task.title + ', done' : null"
+                      (click)="taskOpen.emit(task.id)"
+                    >
+                      {{ task.title }}
+                    </button>
+                  </li>
+                }
+              </ul>
+            }
+            @if (day.hidden) {
+              <button
+                type="button"
+                class="month__more"
+                [attr.aria-label]="'+' + day.hidden + ' more on ' + day.fullDate"
+                (click)="dayShow.emit(day.date)"
+              >
+                +{{ day.hidden }} more
+              </button>
+            }
+            @if (day.tasks.length) {
+              <!-- Phones: the chips do not fit, so the cell shows a count that opens the week. -->
+              <button
+                type="button"
+                class="month__count"
+                [attr.aria-label]="day.tasks.length + ' tasks on ' + day.fullDate"
+                (click)="dayShow.emit(day.date)"
+              >
+                {{ day.tasks.length }}
+              </button>
+            }
+          </td>
+        }
+      </tr>
+    }
+  </tbody>
+</table>

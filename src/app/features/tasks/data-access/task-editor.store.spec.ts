@@ -16,15 +16,15 @@ describe('TaskEditorStore', () => {
     expect([store.open(), store.taskId()]).toEqual([false, null]);
   });
 
-  it('remembers an assignee chosen for a new task until the dialog closes', () => {
+  it('remembers what was chosen for a new task until the dialog closes', () => {
     const store = TestBed.inject(TaskEditorStore);
 
-    store.openCreate({ assigneeId: 'user-002' });
-    expect(store.assigneeId()).toBe('user-002');
+    store.openCreate({ assigneeId: 'user-002', dueDate: '2026-10-30' });
+    expect([store.assigneeId(), store.dueDate()]).toEqual(['user-002', '2026-10-30']);
 
     store.close();
-    expect(store.assigneeId()).toBeNull();
+    expect([store.assigneeId(), store.dueDate()]).toEqual([null, null]);
     store.openCreate();
-    expect(store.assigneeId()).toBeNull();
+    expect([store.assigneeId(), store.dueDate()]).toEqual([null, null]);
   });
 });

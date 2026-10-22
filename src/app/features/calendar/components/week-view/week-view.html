@@ -1,0 +1,57 @@
+<ol class="week">
+  @for (day of columns(); track day.date) {
+    <li
+      class="week__day"
+      [class.week__day--today]="day.isToday"
+      [attr.aria-current]="day.isToday ? 'date' : null"
+    >
+      <div class="week__header">
+        <h3 class="week__title">
+          <span aria-hidden="true">
+            <span class="week__weekday">{{ day.weekday }}</span>
+            <span class="week__date">{{ day.dayOfMonth }}</span>
+          </span>
+          <span class="visually-hidden">{{ day.fullDate }}</span>
+        </h3>
+        @if (!day.isPast) {
+          <button
+            type="button"
+            class="week__add"
+            [attr.aria-label]="'Add task on ' + day.fullDate"
+            (click)="dayAdd.emit(day.date)"
+          >
+            <span aria-hidden="true">+</span>
+          </button>
+        }
+      </div>
+      @if (day.entries.length) {
+        <ul class="week__tasks">
+          @for (entry of day.entries; track entry.task.id) {
+            <li
+              [class]="'week__task week__task--' + entry.task.priority"
+              [class.week__task--done]="entry.done"
+            >
+              <button
+                type="button"
+                class="week__task-title"
+                [attr.aria-label]="entry.done ? entry.task.title + ', done' : null"
+                (click)="taskOpen.emit(entry.task.id)"
+              >
+                {{ entry.task.title }}
+              </button>
+              <div class="week__task-meta">
+                <ui-tag [label]="entry.priority" [tone]="entry.tone" />
+                <ui-avatar
+                  [initials]="entry.task.assignee.avatar"
+                  [name]="entry.task.assignee.name"
+                />
+              </div>
+            </li>
+          }
+        </ul>
+      } @else {
+        <p class="week__empty">No tasks</p>
+      }
+    </li>
+  }
+</ol>

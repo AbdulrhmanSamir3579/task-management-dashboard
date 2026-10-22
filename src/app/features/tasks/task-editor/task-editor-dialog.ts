@@ -23,28 +23,7 @@ const sameTitle = (a: string, b: string): boolean =>
 @Component({
   selector: 'app-task-editor-dialog',
   imports: [UiDialog, TaskForm],
-  template: `
-    <ui-dialog
-      width="40rem"
-      [heading]="task() ? 'Edit task' : 'New task'"
-      [dismissable]="!saving()"
-      [beforeClose]="confirmDiscard"
-      [visible]="editor.open()"
-      (visibleChange)="onVisibleChange($event)"
-    >
-      @if (editor.open()) {
-        <app-task-form
-          [task]="task()"
-          [defaultAssigneeId]="editor.assigneeId()"
-          [assignees]="users.options()"
-          [saving]="saving()"
-          [isTitleTaken]="isTitleTaken"
-          (saved)="save($event)"
-          (cancelled)="cancel()"
-        />
-      }
-    </ui-dialog>
-  `,
+  templateUrl: './task-editor-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskEditorDialog {

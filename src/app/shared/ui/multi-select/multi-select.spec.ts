@@ -25,6 +25,20 @@ describe('UiMultiSelect', () => {
     expect(control.value).toEqual(['todo', 'done']);
   });
 
+  it('sums up several choices in one line when compact', async () => {
+    const control = new FormControl<string[]>(['todo'], { nonNullable: true });
+    await render(
+      `<ui-multi-select ariaLabel="Status" [compact]="true" [options]="options" [formControl]="control" />`,
+      { imports: [UiMultiSelect, ReactiveFormsModule], componentProperties: { control, options } },
+    );
+    const field = screen.getByRole('combobox', { name: 'Status' });
+    await vi.waitFor(() => expect(field.closest('.p-multiselect')).toHaveTextContent('To Do'));
+
+    control.setValue(['todo', 'done']);
+
+    await vi.waitFor(() => expect(field.closest('.p-multiselect')).toHaveTextContent('2 selected'));
+  });
+
   it('treats a reset to null as no selection', async () => {
     const control = new FormControl<string[] | null>(['todo']);
     await render(

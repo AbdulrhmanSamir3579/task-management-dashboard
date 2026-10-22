@@ -8,25 +8,26 @@ import { UiSelect } from '../../../../shared/ui/select/select';
 import type { SelectOption } from '../../../../shared/ui/ui.types';
 import type { TaskFilters } from '../../data-access/task-filters';
 
-export type PanelFilters = Pick<TaskFilters, 'priorities' | 'assigneeId'>;
+export type BarFilters = Pick<TaskFilters, 'priorities' | 'assigneeId'>;
 
-/** Priority and assignee filters; every change is reported at once. */
+/** Priority and assignee dropdowns for the board toolbar; every change is reported at once. */
 @Component({
-  selector: 'app-task-filter-panel',
+  selector: 'app-task-filter-bar',
   imports: [ReactiveFormsModule, UiFormField, UiMultiSelect, UiSelect],
   template: `
-    <form class="filter-panel" [formGroup]="form">
-      <ui-form-field label="Priority" [control]="form.controls.priorities">
+    <form class="filter-bar" [formGroup]="form">
+      <ui-form-field label="Priority" [labelVisible]="false" [control]="form.controls.priorities">
         <ui-multi-select
           formControlName="priorities"
-          placeholder="Any priority"
+          placeholder="All priorities"
+          [compact]="true"
           [options]="priorityOptions"
         />
       </ui-form-field>
-      <ui-form-field label="Assignee" [control]="form.controls.assigneeId">
+      <ui-form-field label="Assignee" [labelVisible]="false" [control]="form.controls.assigneeId">
         <ui-select
           formControlName="assigneeId"
-          placeholder="Anyone"
+          placeholder="All assignees"
           [options]="assignees()"
           [clearable]="true"
           [searchable]="true"
@@ -35,18 +36,21 @@ export type PanelFilters = Pick<TaskFilters, 'priorities' | 'assigneeId'>;
     </form>
   `,
   styles: `
-    .filter-panel {
+    .filter-bar {
       display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    ui-form-field {
+      width: 11rem;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TaskFilterPanel {
+export class TaskFilterBar {
   readonly filters = input.required<TaskFilters>();
   readonly assignees = input.required<SelectOption<string>[]>();
-  readonly filtersChange = output<PanelFilters>();
+  readonly filtersChange = output<BarFilters>();
 
   protected readonly priorityOptions: SelectOption<TaskPriority>[] = TASK_PRIORITIES.map(
     (priority) => ({ label: TASK_PRIORITY_LABELS[priority], value: priority }),
