@@ -1,6 +1,6 @@
 # 0011. Lazy loading and bundle budget
 
-- Status: Accepted
+- Status: Accepted, amended by [0018](0018-chart-layer.md)
 - Date: 2026-10-21
 
 ## Context
@@ -21,4 +21,4 @@ Measured on a production build: the initial bundle is about 620 kB raw (about 14
 
 - First paint downloads about 149 kB of compressed JavaScript; everything else arrives on demand.
 - A toast or confirmation can only appear once the browser has been idle after start-up, which happens long before a user can trigger one.
-- Charts (ECharts) will load in their own chunk inside `@defer` blocks.
+- Charts (ECharts) load in their own chunk the first time a chart is drawn ([0018](0018-chart-layer.md)).
