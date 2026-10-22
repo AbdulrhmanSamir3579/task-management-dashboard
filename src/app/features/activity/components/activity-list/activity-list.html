@@ -6,17 +6,13 @@
         <div class="activity__body">
           <p class="activity__text">
             @if (entry.isNew) {
-              <span class="visually-hidden">New:</span>
+              <span class="visually-hidden">New: </span>
             }
             <strong>{{ entry.actor }}</strong> {{ entry.action }}
             <strong>{{ entry.taskTitle }}</strong
             >{{ entry.detail }}
           </p>
-          <time
-            class="activity__time"
-            [attr.datetime]="entry.timestamp"
-            [title]="entry.timestamp | date: 'medium'"
-          >
+          <time class="activity__time" [attr.datetime]="entry.timestamp" [title]="entry.fullDate">
             {{ entry.timestamp | relativeTime: now() }}
           </time>
         </div>

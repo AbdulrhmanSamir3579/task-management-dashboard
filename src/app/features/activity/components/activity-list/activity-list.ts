@@ -1,13 +1,14 @@
-import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { type Activity, CURRENT_USER_ACTOR } from '../../../../core/models';
 import { RelativeTimePipe } from '../../../../shared/pipes/relative-time.pipe';
 import { describeActivity } from './describe-activity';
 
+const fullDate = new Intl.DateTimeFormat('en', { dateStyle: 'medium', timeStyle: 'short' });
+
 /** Recent changes, newest first; entries by others since `newSince` are marked as new. */
 @Component({
   selector: 'app-activity-list',
-  imports: [DatePipe, RelativeTimePipe],
+  imports: [RelativeTimePipe],
   templateUrl: './activity-list.html',
   styleUrl: './activity-list.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,6 +25,7 @@ export class ActivityList {
     return this.activities().map((activity) => ({
       ...activity,
       ...describeActivity(activity),
+      fullDate: fullDate.format(new Date(activity.timestamp)),
       isNew:
         activity.actor !== CURRENT_USER_ACTOR && (since === null || activity.timestamp > since),
     }));

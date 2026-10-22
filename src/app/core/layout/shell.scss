@@ -54,6 +54,19 @@
   line-height: 1.25rem;
 }
 
+.header-actions {
+  display: inline-flex;
+}
+
+.bell-placeholder {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1.25rem;
+}
+
 .shell {
   display: grid;
   grid-template-columns: 15rem minmax(0, 1fr);

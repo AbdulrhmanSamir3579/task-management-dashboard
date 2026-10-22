@@ -1,0 +1,47 @@
+<button
+  type="button"
+  class="bell"
+  aria-haspopup="dialog"
+  [attr.aria-expanded]="panel.isOpen()"
+  [attr.aria-label]="buttonLabel()"
+  (click)="panel.toggle($event)"
+>
+  <span aria-hidden="true">🔔</span>
+  @if (store.unreadCount()) {
+    <span class="bell__badge" aria-hidden="true">{{ badge() }}</span>
+  }
+</button>
+
+<!-- Entries arriving while the panel is open are seen once it closes. -->
+<ui-popover
+  #panel
+  label="Recent activity"
+  [flush]="true"
+  (opened)="onOpened()"
+  (closed)="store.markAllSeen()"
+>
+  <div class="panel">
+    <h2 class="panel__title">Recent activity</h2>
+    @if (!store.hasLoaded() && store.loadError(); as error) {
+      <div class="panel__message" role="alert">
+        <p>{{ error }}</p>
+        <ui-button label="Try again" variant="secondary" size="small" (clicked)="store.reload()" />
+      </div>
+    } @else if (!store.hasLoaded()) {
+      <div class="panel__loading" role="status" aria-label="Loading recent activity">
+        @for (row of skeletonRows; track row) {
+          <ui-skeleton height="2.5rem" />
+        }
+      </div>
+    } @else {
+      <!-- Focusable so keyboard users can scroll a long list. -->
+      <div class="panel__list" tabindex="0" aria-label="Recent activity entries">
+        <app-activity-list
+          [activities]="store.activities()"
+          [now]="now()"
+          [newSince]="newSince()"
+        />
+      </div>
+    }
+  </div>
+</ui-popover>
