@@ -12,6 +12,9 @@ export const TASK_STATUS_LABELS: Readonly<Record<TaskStatus, string>> = {
   done: 'Done',
 };
 
+/** Priorities from most to least urgent. */
+export const TASK_PRIORITIES: readonly TaskPriority[] = ['high', 'medium', 'low'];
+
 export const TASK_PRIORITY_LABELS: Readonly<Record<TaskPriority, string>> = {
   high: 'High',
   medium: 'Medium',
