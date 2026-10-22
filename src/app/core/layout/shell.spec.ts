@@ -1,10 +1,11 @@
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import { DeferBlockBehavior, TestBed } from '@angular/core/testing';
 import { render, screen, within } from '@testing-library/angular';
 import { userEvent } from '@testing-library/user-event';
 import { TaskEditorStore } from '../../features/tasks/data-access/task-editor.store';
+import { ConfirmService } from '../../shared/ui/confirm/confirm.service';
 import { provideUi } from '../../shared/ui/provide-ui';
 import { Shell } from './shell';
 import { expectNoAccessibilityViolations } from '../../../testing/axe';
@@ -13,8 +14,10 @@ import { expectNoAccessibilityViolations } from '../../../testing/axe';
 class StubPage {}
 
 describe('Shell', () => {
-  async function setup(url: string) {
+  /** `Playthrough` loads `@defer` blocks for real when they trigger; by default they stay put. */
+  async function setup(url: string, deferBlockBehavior = DeferBlockBehavior.Manual) {
     const { navigate } = await render(Shell, {
+      deferBlockBehavior,
       providers: [provideUi(), provideHttpClient(), provideHttpClientTesting()],
       routes: [
         { path: 'dashboard', title: 'Dashboard', component: StubPage },
@@ -96,12 +99,22 @@ describe('Shell', () => {
     });
   });
 
-  it('opens the task form from the sidebar', async () => {
-    await setup('/dashboard');
+  it('loads and opens the task form from the sidebar only when asked', async () => {
+    await setup('/dashboard', DeferBlockBehavior.Playthrough);
+    expect(screen.queryByRole('dialog', { name: 'New task' })).not.toBeInTheDocument();
 
     await userEvent.click(screen.getByRole('button', { name: '+ New Task' }));
 
     expect(TestBed.inject(TaskEditorStore).open()).toBe(true);
+    expect(await screen.findByRole('dialog', { name: 'New task' })).toBeInTheDocument();
+  });
+
+  it('loads the confirm dialog the first time a question is asked', async () => {
+    await setup('/dashboard', DeferBlockBehavior.Playthrough);
+
+    void TestBed.inject(ConfirmService).confirm({ title: 'Delete task?', message: 'Sure?' });
+
+    expect(await screen.findByRole('dialog', { name: 'Delete task?' })).toBeInTheDocument();
   });
 
   it('moves focus to the page content with the skip link', async () => {

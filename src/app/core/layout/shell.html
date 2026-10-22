@@ -45,9 +45,17 @@
     <router-outlet />
   </main>
 </div>
-<!-- Loaded right after first paint to keep PrimeNG's overlays out of the initial bundle. -->
+<!--
+  Overlays load outside the initial bundle. Toasts load right after first paint, so they are
+  ready before a message appears. The task form and the confirm dialog load the first time
+  they are needed: running their code on start-up blocked the main thread for no benefit.
+-->
 @defer (on idle) {
   <ui-toast-outlet />
+}
+@defer (when confirm.question() !== null) {
   <ui-confirm-outlet />
+}
+@defer (when taskEditor.open()) {
   <app-task-editor-dialog />
 }
