@@ -10,6 +10,19 @@
       content="Plan, track and analyse team tasks with filters, a drag and drop board and live statistics."
     />
     <meta name="theme-color" content="#1976d2" />
+    <script>
+      // Applies a saved dark theme before the app starts, so the page does not flash light.
+      // Keep in step with ThemeService (storage key and class name).
+      try {
+        var theme = localStorage.getItem('task-manager.theme');
+        if (
+          theme === 'dark' ||
+          (theme === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)
+        ) {
+          document.documentElement.classList.add('app-dark');
+        }
+      } catch (error) {}
+    </script>
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
