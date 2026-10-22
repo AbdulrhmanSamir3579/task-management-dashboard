@@ -181,5 +181,43 @@
     "SEARCHING": "جارٍ البحث…",
     "NO_RESULTS": "لم يتم العثور على مهام",
     "UNAVAILABLE": "البحث غير متاح حاليًا. يرجى المحاولة مرة أخرى."
+  },
+  "TASK_FORM": {
+    "TITLE": "العنوان",
+    "TITLE_PLACEHOLDER": "ما الذي يجب إنجازه؟",
+    "CHECKING_TITLE": "جارٍ التحقق من العنوان…",
+    "DESCRIPTION": "الوصف",
+    "OPTIONAL": "اختياري",
+    "DESCRIPTION_PLACEHOLDER": "أضف تفاصيل",
+    "STATUS": "الحالة",
+    "PRIORITY": "الأولوية",
+    "DUE_DATE": "تاريخ الاستحقاق",
+    "DUE_DATE_PLACEHOLDER": "اختر تاريخًا",
+    "ASSIGNEE": "المسؤول",
+    "ASSIGNEE_PLACEHOLDER": "اختر شخصًا",
+    "COMPLETED_ON": "تاريخ الإنجاز",
+    "TAGS": "الوسوم",
+    "TAGS_HINT": "اضغط Enter أو الفاصلة لإضافة وسم، بحد أقصى {{max}}",
+    "TAGS_PLACEHOLDER": "أضف وسمًا",
+    "CHECKLIST": "قائمة الخطوات",
+    "CHECKLIST_PROGRESS": "{{done}}/{{total}} مكتملة",
+    "CHECKLIST_ITEM_DONE": "تم: {{item}}",
+    "CHECKLIST_ITEM_FALLBACK": "الخطوة {{number}}",
+    "CHECKLIST_ITEM": "الخطوة {{number}}",
+    "CHECKLIST_ITEM_PLACEHOLDER": "صف الخطوة",
+    "REMOVE_CHECKLIST_ITEM": "إزالة الخطوة {{number}}",
+    "CHECKLIST_EMPTY": "قسّم المهمة إلى خطوات.",
+    "ADD_ITEM": "+ إضافة خطوة",
+    "CHECKLIST_FULL": "الحد الأقصى لعدد الخطوات: {{max}}.",
+    "SAVE": "حفظ التغييرات",
+    "CREATE": "إنشاء المهمة"
+  },
+  "EDITOR": {
+    "NEW": "مهمة جديدة",
+    "EDIT": "تعديل المهمة",
+    "DISCARD_TITLE": "تجاهل التغييرات؟",
+    "DISCARD_MESSAGE": "ستفقد التغييرات التي أجريتها على هذه المهمة.",
+    "DISCARD": "تجاهل",
+    "KEEP_EDITING": "متابعة التعديل"
   }
 }

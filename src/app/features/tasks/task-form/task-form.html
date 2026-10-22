@@ -1,50 +1,54 @@
 <form class="task-form" novalidate [formGroup]="form" (ngSubmit)="submit()">
   <ui-form-field
-    label="Title"
+    [label]="'TASK_FORM.TITLE' | translate"
     [control]="form.controls.title"
-    [hint]="form.controls.title.pending ? 'Checking the title…' : undefined"
+    [hint]="form.controls.title.pending ? ('TASK_FORM.CHECKING_TITLE' | translate) : undefined"
   >
     <ui-input-text
       formControlName="title"
-      placeholder="What needs to be done?"
+      [placeholder]="'TASK_FORM.TITLE_PLACEHOLDER' | translate"
       [maxLength]="limits.title"
     />
   </ui-form-field>
 
-  <ui-form-field label="Description" [control]="form.controls.description" hint="Optional">
+  <ui-form-field
+    [label]="'TASK_FORM.DESCRIPTION' | translate"
+    [control]="form.controls.description"
+    [hint]="'TASK_FORM.OPTIONAL' | translate"
+  >
     <ui-textarea
       formControlName="description"
-      placeholder="Add details"
+      [placeholder]="'TASK_FORM.DESCRIPTION_PLACEHOLDER' | translate"
       [rows]="3"
       [maxLength]="limits.description"
     />
   </ui-form-field>
 
   <div class="task-form__row">
-    <ui-form-field label="Status" [control]="form.controls.status">
-      <ui-select formControlName="status" [options]="statusOptions" />
+    <ui-form-field [label]="'TASK_FORM.STATUS' | translate" [control]="form.controls.status">
+      <ui-select formControlName="status" [options]="statusOptions()" />
     </ui-form-field>
-    <ui-form-field label="Priority" [control]="form.controls.priority">
-      <ui-select formControlName="priority" [options]="priorityOptions" />
+    <ui-form-field [label]="'TASK_FORM.PRIORITY' | translate" [control]="form.controls.priority">
+      <ui-select formControlName="priority" [options]="priorityOptions()" />
     </ui-form-field>
   </div>
 
   <div class="task-form__row">
-    <ui-form-field label="Due date" [control]="form.controls.dueDate">
+    <ui-form-field [label]="'TASK_FORM.DUE_DATE' | translate" [control]="form.controls.dueDate">
       <ui-date-picker
         formControlName="dueDate"
-        placeholder="Pick a date"
+        [placeholder]="'TASK_FORM.DUE_DATE_PLACEHOLDER' | translate"
         [minDate]="minDueDate()"
       />
     </ui-form-field>
     <ui-form-field
-      label="Assignee"
+      [label]="'TASK_FORM.ASSIGNEE' | translate"
       [control]="form.controls.assigneeId"
       [messages]="{ required: 'VALIDATION.ASSIGNEE_REQUIRED' }"
     >
       <ui-select
         formControlName="assigneeId"
-        placeholder="Choose a person"
+        [placeholder]="'TASK_FORM.ASSIGNEE_PLACEHOLDER' | translate"
         [options]="assignees()"
         [searchable]="true"
       />
@@ -52,24 +56,32 @@
   </div>
 
   @if (showCompletedOn() && completedOn; as completedOnControl) {
-    <ui-form-field label="Completed on" [control]="completedOnControl">
+    <ui-form-field [label]="'TASK_FORM.COMPLETED_ON' | translate" [control]="completedOnControl">
       <ui-date-picker formControlName="completedOn" />
     </ui-form-field>
   }
 
   <ui-form-field
-    label="Tags"
+    [label]="'TASK_FORM.TAGS' | translate"
     [control]="form.controls.tags"
-    [hint]="'Press Enter or comma to add a tag, up to ' + limits.tags"
+    [hint]="'TASK_FORM.TAGS_HINT' | translate: { max: limits.tags }"
   >
-    <ui-tags-input formControlName="tags" placeholder="Add a tag" [max]="limits.tags" />
+    <ui-tags-input
+      formControlName="tags"
+      [listLabel]="'TASK_FORM.TAGS' | translate"
+      [placeholder]="'TASK_FORM.TAGS_PLACEHOLDER' | translate"
+      [max]="limits.tags"
+    />
   </ui-form-field>
 
   <fieldset class="checklist" formArrayName="checklist">
     <legend class="checklist__legend">
-      Checklist
+      {{ 'TASK_FORM.CHECKLIST' | translate }}
       @if (checklist.length) {
-        <span class="checklist__progress">{{ checklistDone() }}/{{ checklist.length }} done</span>
+        <span class="checklist__progress">{{
+          'TASK_FORM.CHECKLIST_PROGRESS'
+            | translate: { done: checklistDone(), total: checklist.length }
+        }}</span>
       }
     </legend>
 
@@ -78,51 +90,66 @@
         <ui-checkbox
           class="checklist__done"
           formControlName="done"
-          [ariaLabel]="'Done: ' + (item.controls.text.value || 'item ' + ($index + 1))"
+          [ariaLabel]="
+            'TASK_FORM.CHECKLIST_ITEM_DONE'
+              | translate
+                : {
+                    item:
+                      item.controls.text.value ||
+                      ('TASK_FORM.CHECKLIST_ITEM_FALLBACK' | translate: { number: $index + 1 }),
+                  }
+          "
         />
         <ui-form-field
           class="checklist__text"
-          [label]="'Checklist item ' + ($index + 1)"
+          [label]="'TASK_FORM.CHECKLIST_ITEM' | translate: { number: $index + 1 }"
           [labelVisible]="false"
           [control]="item.controls.text"
         >
           <ui-input-text
             formControlName="text"
-            placeholder="Describe a step"
+            [placeholder]="'TASK_FORM.CHECKLIST_ITEM_PLACEHOLDER' | translate"
             [maxLength]="limits.checklistItem"
           />
         </ui-form-field>
         <ui-button
           variant="ghost"
           size="small"
-          [ariaLabel]="'Remove checklist item ' + ($index + 1)"
+          [ariaLabel]="'TASK_FORM.REMOVE_CHECKLIST_ITEM' | translate: { number: $index + 1 }"
           (clicked)="removeChecklistItem($index)"
         >
           <span aria-hidden="true">✕</span>
         </ui-button>
       </div>
     } @empty {
-      <p class="checklist__note">Break the task into steps.</p>
+      <p class="checklist__note">{{ 'TASK_FORM.CHECKLIST_EMPTY' | translate }}</p>
     }
 
     @if (checklist.length < limits.checklist) {
       <ui-button
         class="checklist__add"
-        label="+ Add item"
+        [label]="'TASK_FORM.ADD_ITEM' | translate"
         variant="secondary"
         size="small"
         (clicked)="addChecklistItem()"
       />
     } @else {
-      <p class="checklist__note">A checklist can have up to {{ limits.checklist }} items.</p>
+      <p class="checklist__note">
+        {{ 'TASK_FORM.CHECKLIST_FULL' | translate: { max: limits.checklist } }}
+      </p>
     }
   </fieldset>
 
   <div class="task-form__actions">
-    <ui-button label="Cancel" variant="ghost" [disabled]="saving()" (clicked)="cancelled.emit()" />
+    <ui-button
+      variant="ghost"
+      [label]="'COMMON.CANCEL' | translate"
+      [disabled]="saving()"
+      (clicked)="cancelled.emit()"
+    />
     <ui-button
       type="submit"
-      [label]="task() ? 'Save changes' : 'Create task'"
+      [label]="(task() ? 'TASK_FORM.SAVE' : 'TASK_FORM.CREATE') | translate"
       [loading]="saving()"
     />
   </div>

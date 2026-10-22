@@ -1,6 +1,6 @@
 <ui-dialog
   width="40rem"
-  [heading]="task() ? 'Edit task' : 'New task'"
+  [heading]="(task() ? 'EDITOR.EDIT' : 'EDITOR.NEW') | translate"
   [dismissable]="!saving()"
   [beforeClose]="confirmDiscard"
   [visible]="editor.open()"

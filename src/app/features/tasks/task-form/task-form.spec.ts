@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/angular';
 import { userEvent } from '@testing-library/user-event';
 import { type Observable, of } from 'rxjs';
 import { buildTask, buildUser } from '../../../../testing/builders';
+import { provideArabicForTesting } from '../../../../testing/i18n';
 import type { Task } from '../../../core/models';
 import { provideUi } from '../../../shared/ui/provide-ui';
 import { toIsoDate } from '../../../shared/utils/date.utils';
@@ -268,5 +269,18 @@ describe('TaskForm', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
 
     expect(cancelled).toHaveBeenCalled();
+  });
+
+  it('shows its labels and validation messages in Arabic', async () => {
+    await render(TaskForm, {
+      providers: [provideUi(), provideArabicForTesting()],
+      inputs: { assignees },
+    });
+
+    expect(screen.getByRole('textbox', { name: 'العنوان' })).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'إنشاء المهمة' }));
+
+    expect(await screen.findByText('اختر من سيعمل على هذه المهمة.')).toBeInTheDocument();
+    expect(screen.getAllByText('هذا الحقل مطلوب.').length).toBeGreaterThan(0);
   });
 });
