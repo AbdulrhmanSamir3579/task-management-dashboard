@@ -1,7 +1,17 @@
-import { ChangeDetectionStrategy, Component, effect, inject, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  output,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { TASK_PRIORITIES, TASK_PRIORITY_LABELS, type TaskPriority } from '../../../../core/models';
+import { TranslatePipe } from '@ngx-translate/core';
+import { LanguageService } from '../../../../core/i18n/language.service';
+import { TASK_PRIORITIES, TASK_PRIORITY_KEYS, type TaskPriority } from '../../../../core/models';
 import { UiFormField } from '../../../../shared/ui/form-field/form-field';
 import { UiMultiSelect } from '../../../../shared/ui/multi-select/multi-select';
 import { UiSelect } from '../../../../shared/ui/select/select';
@@ -13,38 +23,9 @@ export type BarFilters = Pick<TaskFilters, 'priorities' | 'assigneeId'>;
 /** Priority and assignee dropdowns for the board toolbar; every change is reported at once. */
 @Component({
   selector: 'app-task-filter-bar',
-  imports: [ReactiveFormsModule, UiFormField, UiMultiSelect, UiSelect],
-  template: `
-    <form class="filter-bar" [formGroup]="form">
-      <ui-form-field label="Priority" [labelVisible]="false" [control]="form.controls.priorities">
-        <ui-multi-select
-          formControlName="priorities"
-          placeholder="All priorities"
-          [compact]="true"
-          [options]="priorityOptions"
-        />
-      </ui-form-field>
-      <ui-form-field label="Assignee" [labelVisible]="false" [control]="form.controls.assigneeId">
-        <ui-select
-          formControlName="assigneeId"
-          placeholder="All assignees"
-          [options]="assignees()"
-          [clearable]="true"
-          [searchable]="true"
-        />
-      </ui-form-field>
-    </form>
-  `,
-  styles: `
-    .filter-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-    ui-form-field {
-      width: 11rem;
-    }
-  `,
+  imports: [ReactiveFormsModule, TranslatePipe, UiFormField, UiMultiSelect, UiSelect],
+  templateUrl: './task-filter-bar.html',
+  styleUrl: './task-filter-bar.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskFilterBar {
@@ -52,8 +33,13 @@ export class TaskFilterBar {
   readonly assignees = input.required<SelectOption<string>[]>();
   readonly filtersChange = output<BarFilters>();
 
-  protected readonly priorityOptions: SelectOption<TaskPriority>[] = TASK_PRIORITIES.map(
-    (priority) => ({ label: TASK_PRIORITY_LABELS[priority], value: priority }),
+  private readonly language = inject(LanguageService);
+
+  protected readonly priorityOptions = computed<SelectOption<TaskPriority>[]>(() =>
+    TASK_PRIORITIES.map((priority) => ({
+      label: this.language.t(TASK_PRIORITY_KEYS[priority]),
+      value: priority,
+    })),
   );
 
   protected readonly form = inject(NonNullableFormBuilder).group({

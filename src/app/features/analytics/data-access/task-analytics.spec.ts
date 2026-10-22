@@ -1,4 +1,7 @@
+import { TestBed } from '@angular/core/testing';
 import { buildTask, buildUser } from '../../../../testing/builders';
+import { LanguageService } from '../../../core/i18n/language.service';
+import type { TranslationKey } from '../../../core/i18n/translation-key';
 import {
   completionTrend,
   tasksByPriority,
@@ -18,8 +21,10 @@ const tasks = [
 ];
 
 describe('task analytics', () => {
+  const t = (key: TranslationKey) => TestBed.inject(LanguageService).t(key);
+
   it('counts tasks per status in board order, with the board colours', () => {
-    expect(tasksByStatus(tasks)).toEqual([
+    expect(tasksByStatus(tasks, t)).toEqual([
       { label: 'To Do', value: 1, tone: 'primary' },
       { label: 'In Progress', value: 1, tone: 'warning' },
       { label: 'Done', value: 2, tone: 'success' },
@@ -27,7 +32,7 @@ describe('task analytics', () => {
   });
 
   it('counts tasks per priority from high to low', () => {
-    expect(tasksByPriority(tasks)).toEqual([
+    expect(tasksByPriority(tasks, t)).toEqual([
       { label: 'High', value: 2, tone: 'danger' },
       { label: 'Medium', value: 1, tone: 'warning' },
       { label: 'Low', value: 1, tone: 'success' },
@@ -35,7 +40,7 @@ describe('task analytics', () => {
   });
 
   it('splits each assignee’s tasks by status, busiest first and then by name', () => {
-    expect(workloadByAssignee(tasks)).toEqual({
+    expect(workloadByAssignee(tasks, t)).toEqual({
       categories: ['Sarah Smith', 'John Doe', 'Mike Johnson'],
       series: [
         { name: 'To Do', tone: 'primary', values: [0, 1, 0] },
@@ -54,6 +59,8 @@ describe('task analytics', () => {
         buildTask({ createdAt: local('2026-10-01') }),
       ],
       '2026-10-22',
+      t,
+      'en',
       3,
     );
 
@@ -66,7 +73,15 @@ describe('task analytics', () => {
     });
   });
 
+  it('formats day labels for the language', () => {
+    expect(completionTrend([], '2026-10-22', t, 'ar-u-nu-latn', 1).categories).toEqual([
+      new Intl.DateTimeFormat('ar-u-nu-latn', { month: 'short', day: 'numeric' }).format(
+        new Date(2026, 9, 22),
+      ),
+    ]);
+  });
+
   it('covers the last 14 days by default', () => {
-    expect(completionTrend([], '2026-10-22').categories).toHaveLength(14);
+    expect(completionTrend([], '2026-10-22', t, 'en').categories).toHaveLength(14);
   });
 });

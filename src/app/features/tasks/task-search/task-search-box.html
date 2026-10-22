@@ -1,8 +1,8 @@
 <form role="search" (submit)="$event.preventDefault()">
-  <label for="global-search" class="visually-hidden">Search tasks</label>
+  <label for="global-search" class="visually-hidden">{{ 'SEARCH.LABEL' | translate }}</label>
   <ui-autocomplete
     inputId="global-search"
-    placeholder="🔍 Search tasks..."
+    [placeholder]="'HEADER.SEARCH_PLACEHOLDER' | translate"
     optionLabel="title"
     [suggestions]="state().results"
     [emptyMessage]="emptyMessage()"

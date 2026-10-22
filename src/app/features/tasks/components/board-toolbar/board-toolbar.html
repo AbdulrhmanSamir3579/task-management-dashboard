@@ -1,5 +1,5 @@
 <div class="toolbar">
-  <div class="toolbar__tabs" role="group" aria-label="Show tasks by status">
+  <div class="toolbar__tabs" role="group" [attr.aria-label]="'BOARD.STATUS_TABS' | translate">
     <button
       type="button"
       class="tab"
@@ -7,7 +7,7 @@
       [attr.aria-pressed]="status() === null"
       (click)="statusChange.emit(null)"
     >
-      All
+      {{ 'BOARD.ALL' | translate }}
     </button>
     @for (option of statuses; track option) {
       <button
@@ -17,7 +17,7 @@
         [attr.aria-pressed]="status() === option"
         (click)="statusChange.emit(option)"
       >
-        {{ labels[option] }}
+        {{ labels[option] | translate }}
       </button>
     }
   </div>

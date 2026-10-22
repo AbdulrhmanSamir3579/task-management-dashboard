@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { UiButton } from '../button/button';
 import { UiDialog } from '../dialog/dialog';
 import { ConfirmService } from './confirm.service';
@@ -9,7 +10,7 @@ import { ConfirmService } from './confirm.service';
  */
 @Component({
   selector: 'ui-confirm-outlet',
-  imports: [UiButton, UiDialog],
+  imports: [TranslatePipe, UiButton, UiDialog],
   templateUrl: './confirm-outlet.html',
   styleUrl: './confirm-outlet.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

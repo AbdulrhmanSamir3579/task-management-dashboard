@@ -1,0 +1,367 @@
+{
+  "APP": {
+    "NAME": "مدير المهام"
+  },
+  "COMMON": {
+    "CANCEL": "إلغاء",
+    "CONFIRM": "تأكيد",
+    "CLOSE": "إغلاق",
+    "SAVE": "حفظ",
+    "DELETE": "حذف",
+    "EDIT": "تعديل",
+    "TRY_AGAIN": "حاول مرة أخرى",
+    "NEW_TASK": "+ مهمة جديدة",
+    "DAYS": {
+      "zero": "{{count}} يوم",
+      "one": "يوم واحد",
+      "two": "يومان",
+      "few": "{{count}} أيام",
+      "many": "{{count}} يومًا",
+      "other": "{{count}} يوم"
+    }
+  },
+  "LANGUAGE": {
+    "SWITCH_TO": "التبديل إلى {{language}}"
+  },
+  "NAV": {
+    "LABEL": "القائمة الرئيسية",
+    "DASHBOARD": "لوحة التحكم",
+    "TASKS": "المهام",
+    "CALENDAR": "التقويم",
+    "ANALYTICS": "التحليلات",
+    "TEAM": "الفريق",
+    "SETTINGS": "الإعدادات",
+    "NOT_FOUND": "الصفحة غير موجودة",
+    "OPEN": "فتح القائمة",
+    "CLOSE": "إغلاق القائمة",
+    "SKIP_TO_CONTENT": "الانتقال إلى المحتوى الرئيسي"
+  },
+  "HEADER": {
+    "SEARCH_PLACEHOLDER": "🔍 ابحث في المهام..."
+  },
+  "NOT_FOUND": {
+    "TITLE": "الصفحة غير موجودة",
+    "MESSAGE": "الصفحة التي تبحث عنها غير موجودة أو تم نقلها.",
+    "BACK": "العودة إلى لوحة التحكم"
+  },
+  "UI": {
+    "CLOSE_DIALOG": "إغلاق النافذة",
+    "REMOVE_ITEM": "إزالة {{item}}",
+    "TAGS": "الوسوم",
+    "NO_RESULTS": "لا توجد نتائج",
+    "SELECTED_COUNT": "تم اختيار {0}",
+    "TODAY": "اليوم",
+    "CLEAR": "مسح",
+    "PREVIOUS_MONTH": "الشهر السابق",
+    "NEXT_MONTH": "الشهر التالي",
+    "PREVIOUS_YEAR": "السنة السابقة",
+    "NEXT_YEAR": "السنة التالية",
+    "CHOOSE_DATE": "اختر التاريخ",
+    "CLEAR_SELECTION": "مسح الاختيار",
+    "PREVIOUS_DECADE": "العقد السابق",
+    "NEXT_DECADE": "العقد التالي"
+  },
+  "TOAST": {
+    "SUCCESS": "تم",
+    "INFO": "معلومة",
+    "WARNING": "تنبيه",
+    "ERROR": "حدث خطأ"
+  },
+  "ERRORS": {
+    "NETWORK": "تعذر الوصول إلى الخادم. تحقق من اتصالك وحاول مرة أخرى.",
+    "VALIDATION": "بعض البيانات غير صحيحة. راجعها وحاول مرة أخرى.",
+    "UNAUTHORIZED": "انتهت جلستك. يرجى تسجيل الدخول مرة أخرى.",
+    "FORBIDDEN": "ليست لديك صلاحية للقيام بذلك.",
+    "NOT_FOUND": "تعذر العثور على العنصر المطلوب.",
+    "CONFLICT": "تم تغيير هذا العنصر في مكان آخر. حدّث الصفحة وحاول مرة أخرى.",
+    "RATE_LIMITED": "طلبات كثيرة جدًا. انتظر قليلًا وحاول مرة أخرى.",
+    "SERVER": "حدث خطأ من جهتنا. يرجى المحاولة مرة أخرى.",
+    "UNKNOWN": "حدث خطأ. يرجى المحاولة مرة أخرى."
+  },
+  "VALIDATION": {
+    "REQUIRED": "هذا الحقل مطلوب.",
+    "MIN_LENGTH": "يجب ألا يقل عدد الأحرف عن {{count}}.",
+    "MAX_LENGTH": "يجب ألا يزيد عدد الأحرف على {{count}}.",
+    "EMAIL": "أدخل بريدًا إلكترونيًا صحيحًا.",
+    "INVALID": "أدخل قيمة صحيحة.",
+    "BLANK": "استخدم حروفًا أو أرقامًا، وليس مسافات فقط.",
+    "DATE_IN_PAST": "اختر تاريخ اليوم أو تاريخًا لاحقًا.",
+    "DATE_IN_FUTURE": "لا يمكن أن يكون هذا التاريخ في المستقبل.",
+    "TITLE_TAKEN": "توجد مهمة أخرى بهذا العنوان.",
+    "ITEM_TOO_LONG": "الحد الأقصى لطول الوسم: {{max}} حرفًا.",
+    "MAX_TAGS": "الحد الأقصى لعدد الوسوم: {{max}}.",
+    "MAX_CHECKLIST_ITEMS": "الحد الأقصى لعدد خطوات القائمة: {{max}}.",
+    "ASSIGNEE_REQUIRED": "اختر من سيعمل على هذه المهمة."
+  },
+  "CHART": {
+    "EMPTY": "لا توجد بيانات لعرضها بعد."
+  },
+  "TASK": {
+    "STATUS": {
+      "TODO": "للتنفيذ",
+      "IN_PROGRESS": "قيد التنفيذ",
+      "DONE": "مكتملة"
+    },
+    "PRIORITY": {
+      "HIGH": "عالية",
+      "MEDIUM": "متوسطة",
+      "LOW": "منخفضة"
+    },
+    "COUNT": {
+      "zero": "لا توجد مهام",
+      "one": "مهمة واحدة",
+      "two": "مهمتان",
+      "few": "{{count}} مهام",
+      "many": "{{count}} مهمة",
+      "other": "{{count}} مهمة"
+    }
+  },
+  "DUE": {
+    "COMPLETED": "مكتملة",
+    "TODAY": "مستحقة اليوم",
+    "TOMORROW": "مستحقة غدًا",
+    "OVERDUE_BY": {
+      "zero": "متأخرة",
+      "one": "متأخرة يومًا واحدًا",
+      "two": "متأخرة يومين",
+      "few": "متأخرة {{count}} أيام",
+      "many": "متأخرة {{count}} يومًا",
+      "other": "متأخرة {{count}} يوم"
+    },
+    "IN": {
+      "zero": "مستحقة اليوم",
+      "one": "مستحقة خلال يوم واحد",
+      "two": "مستحقة خلال يومين",
+      "few": "مستحقة خلال {{count}} أيام",
+      "many": "مستحقة خلال {{count}} يومًا",
+      "other": "مستحقة خلال {{count}} يوم"
+    }
+  },
+  "BOARD": {
+    "STATUS_TABS": "عرض المهام حسب الحالة",
+    "ALL": "الكل",
+    "NO_TASKS": "لا توجد مهام",
+    "SEARCH_RESULTS": "نتائج البحث عن «{{search}}»",
+    "CLEAR_SEARCH": "مسح البحث",
+    "LOAD_ERROR": "تعذر تحميل المهام",
+    "LOADING": "جارٍ تحميل المهام",
+    "NO_MATCH_TITLE": "لا توجد مهام تطابق عوامل التصفية",
+    "NO_MATCH_MESSAGE": "جرّب بحثًا آخر أو امسح عوامل التصفية.",
+    "CLEAR_FILTERS": "مسح عوامل التصفية",
+    "DELETE_TITLE": "حذف المهمة؟",
+    "DELETE_MESSAGE": "ستُحذف «{{title}}» من اللوحة. لا يمكن التراجع عن ذلك."
+  },
+  "CARD": {
+    "ACTIONS": "إجراءات «{{title}}»",
+    "MOVE_TO": "نقل إلى {{status}}",
+    "CHECKLIST_DONE": "من خطوات القائمة مكتملة"
+  },
+  "FILTERS": {
+    "PRIORITY": "الأولوية",
+    "ALL_PRIORITIES": "كل الأولويات",
+    "ASSIGNEE": "المسؤول",
+    "ALL_ASSIGNEES": "كل المسؤولين"
+  },
+  "TASK_MESSAGES": {
+    "LOAD_FAILED": "تعذر تحميل المهام.",
+    "CREATED_TITLE": "تمت إضافة المهمة",
+    "CREATED": "تمت إضافة «{{title}}» إلى اللوحة.",
+    "CREATE_FAILED": "تعذر إنشاء المهمة.",
+    "UPDATED_TITLE": "تم تحديث المهمة",
+    "UPDATED": "تم حفظ تغييراتك.",
+    "UPDATE_FAILED": "تعذر حفظ المهمة.",
+    "DELETED_TITLE": "تم حذف المهمة",
+    "DELETED": "تم حذف «{{title}}».",
+    "MOVE_FAILED": "تعذر نقل «{{title}}».",
+    "DELETE_FAILED": "تعذر حذف «{{title}}»."
+  },
+  "SEARCH": {
+    "LABEL": "البحث في المهام",
+    "MIN_CHARS": "اكتب حرفين على الأقل",
+    "SEARCHING": "جارٍ البحث…",
+    "NO_RESULTS": "لم يتم العثور على مهام",
+    "UNAVAILABLE": "البحث غير متاح حاليًا. يرجى المحاولة مرة أخرى."
+  },
+  "TASK_FORM": {
+    "TITLE": "العنوان",
+    "TITLE_PLACEHOLDER": "ما الذي يجب إنجازه؟",
+    "CHECKING_TITLE": "جارٍ التحقق من العنوان…",
+    "DESCRIPTION": "الوصف",
+    "OPTIONAL": "اختياري",
+    "DESCRIPTION_PLACEHOLDER": "أضف تفاصيل",
+    "STATUS": "الحالة",
+    "PRIORITY": "الأولوية",
+    "DUE_DATE": "تاريخ الاستحقاق",
+    "DUE_DATE_PLACEHOLDER": "اختر تاريخًا",
+    "ASSIGNEE": "المسؤول",
+    "ASSIGNEE_PLACEHOLDER": "اختر شخصًا",
+    "COMPLETED_ON": "تاريخ الإنجاز",
+    "TAGS": "الوسوم",
+    "TAGS_HINT": "اضغط Enter أو الفاصلة لإضافة وسم، بحد أقصى {{max}}",
+    "TAGS_PLACEHOLDER": "أضف وسمًا",
+    "CHECKLIST": "قائمة الخطوات",
+    "CHECKLIST_PROGRESS": "{{done}}/{{total}} مكتملة",
+    "CHECKLIST_ITEM_DONE": "تم: {{item}}",
+    "CHECKLIST_ITEM_FALLBACK": "الخطوة {{number}}",
+    "CHECKLIST_ITEM": "الخطوة {{number}}",
+    "CHECKLIST_ITEM_PLACEHOLDER": "صف الخطوة",
+    "REMOVE_CHECKLIST_ITEM": "إزالة الخطوة {{number}}",
+    "CHECKLIST_EMPTY": "قسّم المهمة إلى خطوات.",
+    "ADD_ITEM": "+ إضافة خطوة",
+    "CHECKLIST_FULL": "الحد الأقصى لعدد الخطوات: {{max}}.",
+    "SAVE": "حفظ التغييرات",
+    "CREATE": "إنشاء المهمة"
+  },
+  "EDITOR": {
+    "NEW": "مهمة جديدة",
+    "EDIT": "تعديل المهمة",
+    "DISCARD_TITLE": "تجاهل التغييرات؟",
+    "DISCARD_MESSAGE": "ستفقد التغييرات التي أجريتها على هذه المهمة.",
+    "DISCARD": "تجاهل",
+    "KEEP_EDITING": "متابعة التعديل"
+  },
+  "STATS": {
+    "TOTAL": "إجمالي المهام",
+    "COMPLETED": "المكتملة",
+    "IN_PROGRESS": "قيد التنفيذ",
+    "OVERDUE": "المتأخرة",
+    "THIS_WEEK": "هذا الأسبوع",
+    "TODAY": "اليوم",
+    "DUE_THIS_WEEK": "مستحقة هذا الأسبوع",
+    "LABEL": "إحصاءات المهام",
+    "LOADING": "جارٍ تحميل الإحصاءات"
+  },
+  "ANALYTICS": {
+    "LOAD_ERROR": "تعذر تحميل التحليلات",
+    "BY_STATUS": "المهام حسب الحالة",
+    "BY_STATUS_HINT": "أين وصل العمل الآن.",
+    "BY_PRIORITY": "المهام حسب الأولوية",
+    "BY_PRIORITY_HINT": "مدى إلحاح العمل.",
+    "WORKLOAD": "عبء العمل لكل مسؤول",
+    "WORKLOAD_HINT": "مهام كل شخص حسب الحالة.",
+    "TREND": "المُنشأة مقابل المكتملة",
+    "TREND_HINT": "عدد المهام يوميًا خلال آخر 14 يومًا.",
+    "TREND_LABEL": "المهام المُنشأة والمكتملة يوميًا",
+    "TREND_EMPTY": "لم تُنشأ أو تكتمل أي مهام خلال آخر 14 يومًا.",
+    "LOADING_CHART": "جارٍ تحميل المخطط",
+    "STATUS": "الحالة",
+    "PRIORITY": "الأولوية",
+    "ASSIGNEE": "المسؤول",
+    "DAY": "اليوم",
+    "TASKS": "المهام",
+    "SHARE": "النسبة",
+    "CREATED": "المُنشأة",
+    "COMPLETED": "المكتملة"
+  },
+  "TEAM": {
+    "LOAD_ERROR": "تعذر تحميل الفريق",
+    "LOAD_ERROR_MESSAGE": "تحقق من اتصالك وحاول مرة أخرى.",
+    "EMPTY_TITLE": "لا يوجد أعضاء في الفريق بعد",
+    "EMPTY_MESSAGE": "يظهر الأشخاص هنا عندما يمكن إسناد المهام إليهم.",
+    "LOADING": "جارٍ تحميل الفريق",
+    "MEMBERS": {
+      "zero": "لا يوجد أعضاء",
+      "one": "عضو واحد",
+      "two": "عضوان",
+      "few": "{{count}} أعضاء",
+      "many": "{{count}} عضوًا",
+      "other": "{{count}} عضو"
+    },
+    "OPEN_TASKS": {
+      "zero": "لا توجد مهام مفتوحة",
+      "one": "مهمة مفتوحة واحدة",
+      "two": "مهمتان مفتوحتان",
+      "few": "{{count}} مهام مفتوحة",
+      "many": "{{count}} مهمة مفتوحة",
+      "other": "{{count}} مهمة مفتوحة"
+    },
+    "OVERDUE_COUNT": "{{count}} متأخرة",
+    "OPEN": "مفتوحة",
+    "IN_PROGRESS": "قيد التنفيذ",
+    "DONE": "مكتملة",
+    "OVERDUE": "متأخرة",
+    "COMPLETED": "نسبة الإنجاز",
+    "COMPLETED_BY": "المهام التي أنجزها {{name}}",
+    "VIEW_TASKS": "عرض المهام",
+    "VIEW_TASKS_OF": "عرض المهام الخاصة بـ {{name}}",
+    "ASSIGN": "إسناد مهمة",
+    "ASSIGN_TO": "إسناد مهمة إلى {{name}}"
+  },
+  "CALENDAR": {
+    "VIEW_LABEL": "طريقة عرض التقويم",
+    "MONTH": "شهر",
+    "WEEK": "أسبوع",
+    "AGENDA": "جدول الأعمال",
+    "TODAY": "اليوم",
+    "PREVIOUS_MONTH": "الشهر السابق",
+    "NEXT_MONTH": "الشهر التالي",
+    "PREVIOUS_WEEK": "الأسبوع السابق",
+    "NEXT_WEEK": "الأسبوع التالي",
+    "AGENDA_TITLE": "المهام المفتوحة حسب تاريخ الاستحقاق",
+    "LOAD_ERROR": "تعذر تحميل التقويم",
+    "LOADING": "جارٍ تحميل التقويم",
+    "NOTHING_DUE": "لا توجد مهام مستحقة",
+    "ALL_DONE": "كل المهام مكتملة.",
+    "TABLE_CAPTION": "المهام المستحقة في كل يوم",
+    "ADD_TASK_ON": "إضافة مهمة في {{date}}",
+    "MORE": "+{{count}} أخرى",
+    "MORE_ON": "+{{count}} أخرى في {{date}}",
+    "TASKS_ON": {
+      "zero": "لا توجد مهام في {{date}}",
+      "one": "مهمة واحدة في {{date}}",
+      "two": "مهمتان في {{date}}",
+      "few": "{{count}} مهام في {{date}}",
+      "many": "{{count}} مهمة في {{date}}",
+      "other": "{{count}} مهمة في {{date}}"
+    },
+    "TASK_DONE": "{{title}}، مكتملة",
+    "GROUP": {
+      "OVERDUE": "متأخرة",
+      "TODAY": "اليوم",
+      "WEEK": "الأيام السبعة القادمة",
+      "LATER": "لاحقًا"
+    }
+  },
+  "ACTIVITY": {
+    "TITLE": "النشاط الأخير",
+    "NOTIFICATIONS": "الإشعارات",
+    "NOTIFICATIONS_UNREAD": "الإشعارات، {{count}} غير مقروءة",
+    "LOADING": "جارٍ تحميل النشاط الأخير",
+    "ENTRIES": "عناصر النشاط الأخير",
+    "EMPTY": "لا يوجد نشاط بعد.",
+    "NEW": "جديد:",
+    "LOAD_FAILED": "تعذر تحميل النشاط الأخير.",
+    "EVENT": {
+      "CREATED": "أنشأ {{actor}} المهمة {{title}}",
+      "UPDATED": "حدّث {{actor}} المهمة {{title}}",
+      "DELETED": "حذف {{actor}} المهمة {{title}}",
+      "MOVED": "نقل {{actor}} المهمة {{title}} إلى {{status}}",
+      "MOVED_SOMEWHERE": "نقل {{actor}} المهمة {{title}}"
+    },
+    "OWN_EVENT": {
+      "CREATED": "أنشأتَ المهمة {{title}}",
+      "UPDATED": "حدّثتَ المهمة {{title}}",
+      "DELETED": "حذفتَ المهمة {{title}}",
+      "MOVED": "نقلتَ المهمة {{title}} إلى {{status}}",
+      "MOVED_SOMEWHERE": "نقلتَ المهمة {{title}}"
+    }
+  },
+  "SETTINGS": {
+    "APPEARANCE": "المظهر",
+    "THEME": "السمة",
+    "LIGHT": "فاتح",
+    "LIGHT_HINT": "مشرق، كما في التصميم",
+    "DARK": "داكن",
+    "DARK_HINT": "أريح للعين ليلًا",
+    "SYSTEM": "النظام",
+    "SYSTEM_HINT": "يتبع إعدادات جهازك",
+    "LANGUAGE": "اللغة",
+    "LEFT_TO_RIGHT": "من اليسار إلى اليمين",
+    "RIGHT_TO_LEFT": "من اليمين إلى اليسار",
+    "DEMO_DATA": "بيانات تجريبية",
+    "DEMO_TEXT": "تأتي المهام من واجهة برمجية تجريبية تعمل داخل متصفحك. تبقى التغييرات حتى إعادة تحميل الصفحة، فتعود البيانات الأصلية.",
+    "CHAOS_TEXT": "لمعرفة كيف يتعامل التطبيق مع الأخطاء، أضف المعامل التالي إلى العنوان: سيفشل نحو 30% من الطلبات، وتُعاد محاولة طلبات القراءة قبل عرض الخطأ.",
+    "TRY_CHAOS": "جرّب مع أعطال محاكاة",
+    "BACK_TO_NORMAL": "العودة إلى الوضع الطبيعي"
+  }
+}

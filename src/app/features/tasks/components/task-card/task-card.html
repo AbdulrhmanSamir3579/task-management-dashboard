@@ -1,9 +1,12 @@
 <article class="card" [attr.aria-label]="task().title">
   <div class="card__top">
     <span class="card__priority" [class]="'card__priority--' + task().priority">
-      {{ priorityLabel() }}
+      {{ priorityKey() | translate }}
     </span>
-    <ui-menu [actions]="actions()" [triggerLabel]="'Actions for ' + task().title" />
+    <ui-menu
+      [actions]="actions()"
+      [triggerLabel]="'CARD.ACTIONS' | translate: { title: task().title }"
+    />
   </div>
   <h3 class="card__title">{{ task().title }}</h3>
   @if (task().description) {
@@ -11,7 +14,7 @@
   }
   <p class="card__meta">
     <span aria-hidden="true">{{ due().icon }}</span>
-    {{ due().label }}
+    {{ due().text | text }}
   </p>
   @if (task().tags.length) {
     <p class="card__meta">
@@ -23,7 +26,7 @@
     <p class="card__meta">
       <span aria-hidden="true">☑️</span>
       {{ checklistDone() }}/{{ task().checklist.length }}
-      <span class="visually-hidden">checklist items done</span>
+      <span class="visually-hidden">{{ 'CARD.CHECKLIST_DONE' | translate }}</span>
     </p>
   }
   <footer class="card__footer">

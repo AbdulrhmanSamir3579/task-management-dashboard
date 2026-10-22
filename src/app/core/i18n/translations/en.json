@@ -1,0 +1,339 @@
+{
+  "APP": {
+    "NAME": "Task Manager"
+  },
+  "COMMON": {
+    "CANCEL": "Cancel",
+    "CONFIRM": "Confirm",
+    "CLOSE": "Close",
+    "SAVE": "Save",
+    "DELETE": "Delete",
+    "EDIT": "Edit",
+    "TRY_AGAIN": "Try again",
+    "NEW_TASK": "+ New Task",
+    "DAYS": {
+      "one": "{{count}} day",
+      "other": "{{count}} days"
+    }
+  },
+  "LANGUAGE": {
+    "SWITCH_TO": "Switch to {{language}}"
+  },
+  "NAV": {
+    "LABEL": "Main",
+    "DASHBOARD": "Dashboard",
+    "TASKS": "Tasks",
+    "CALENDAR": "Calendar",
+    "ANALYTICS": "Analytics",
+    "TEAM": "Team",
+    "SETTINGS": "Settings",
+    "NOT_FOUND": "Page not found",
+    "OPEN": "Open navigation",
+    "CLOSE": "Close navigation",
+    "SKIP_TO_CONTENT": "Skip to main content"
+  },
+  "HEADER": {
+    "SEARCH_PLACEHOLDER": "🔍 Search tasks..."
+  },
+  "NOT_FOUND": {
+    "TITLE": "Page not found",
+    "MESSAGE": "The page you are looking for does not exist or has moved.",
+    "BACK": "Back to the dashboard"
+  },
+  "UI": {
+    "CLOSE_DIALOG": "Close dialog",
+    "REMOVE_ITEM": "Remove {{item}}",
+    "TAGS": "Tags",
+    "NO_RESULTS": "No results",
+    "SELECTED_COUNT": "{0} selected",
+    "TODAY": "Today",
+    "CLEAR": "Clear",
+    "PREVIOUS_MONTH": "Previous month",
+    "NEXT_MONTH": "Next month",
+    "PREVIOUS_YEAR": "Previous year",
+    "NEXT_YEAR": "Next year",
+    "CHOOSE_DATE": "Choose date",
+    "CLEAR_SELECTION": "Clear selection",
+    "PREVIOUS_DECADE": "Previous decade",
+    "NEXT_DECADE": "Next decade"
+  },
+  "TOAST": {
+    "SUCCESS": "Done",
+    "INFO": "Info",
+    "WARNING": "Heads up",
+    "ERROR": "Something went wrong"
+  },
+  "ERRORS": {
+    "NETWORK": "Unable to reach the server. Check your connection and try again.",
+    "VALIDATION": "Some of the information is invalid. Please review it and try again.",
+    "UNAUTHORIZED": "Your session has expired. Please sign in again.",
+    "FORBIDDEN": "You do not have permission to do that.",
+    "NOT_FOUND": "The requested item could not be found.",
+    "CONFLICT": "This item was changed elsewhere. Refresh and try again.",
+    "RATE_LIMITED": "Too many requests. Please wait a moment and try again.",
+    "SERVER": "Something went wrong on our side. Please try again.",
+    "UNKNOWN": "Something went wrong. Please try again."
+  },
+  "VALIDATION": {
+    "REQUIRED": "This field is required.",
+    "MIN_LENGTH": "Use at least {{count}} characters.",
+    "MAX_LENGTH": "Use at most {{count}} characters.",
+    "EMAIL": "Enter a valid email address.",
+    "INVALID": "Enter a valid value.",
+    "BLANK": "Use letters or numbers, not only spaces.",
+    "DATE_IN_PAST": "Pick today or a later date.",
+    "DATE_IN_FUTURE": "This date cannot be in the future.",
+    "TITLE_TAKEN": "A task with this title already exists.",
+    "ITEM_TOO_LONG": "Each tag can have at most {{max}} characters.",
+    "MAX_TAGS": "Use at most {{max}} tags.",
+    "MAX_CHECKLIST_ITEMS": "Use at most {{max}} checklist items.",
+    "ASSIGNEE_REQUIRED": "Choose who will work on this task."
+  },
+  "CHART": {
+    "EMPTY": "Nothing to show yet."
+  },
+  "TASK": {
+    "STATUS": {
+      "TODO": "To Do",
+      "IN_PROGRESS": "In Progress",
+      "DONE": "Done"
+    },
+    "PRIORITY": {
+      "HIGH": "High",
+      "MEDIUM": "Medium",
+      "LOW": "Low"
+    },
+    "COUNT": {
+      "one": "{{count}} task",
+      "other": "{{count}} tasks"
+    }
+  },
+  "DUE": {
+    "COMPLETED": "Completed",
+    "TODAY": "Due today",
+    "TOMORROW": "Due tomorrow",
+    "OVERDUE_BY": {
+      "one": "Overdue by {{count}} day",
+      "other": "Overdue by {{count}} days"
+    },
+    "IN": {
+      "one": "Due in {{count}} day",
+      "other": "Due in {{count}} days"
+    }
+  },
+  "BOARD": {
+    "STATUS_TABS": "Show tasks by status",
+    "ALL": "All",
+    "NO_TASKS": "No tasks",
+    "SEARCH_RESULTS": "Showing results for “{{search}}”",
+    "CLEAR_SEARCH": "Clear search",
+    "LOAD_ERROR": "Tasks could not be loaded",
+    "LOADING": "Loading tasks",
+    "NO_MATCH_TITLE": "No tasks match your filters",
+    "NO_MATCH_MESSAGE": "Try another search or clear the filters.",
+    "CLEAR_FILTERS": "Clear filters",
+    "DELETE_TITLE": "Delete task?",
+    "DELETE_MESSAGE": "\"{{title}}\" will be removed from the board. This cannot be undone."
+  },
+  "CARD": {
+    "ACTIONS": "Actions for {{title}}",
+    "MOVE_TO": "Move to {{status}}",
+    "CHECKLIST_DONE": "checklist items done"
+  },
+  "FILTERS": {
+    "PRIORITY": "Priority",
+    "ALL_PRIORITIES": "All priorities",
+    "ASSIGNEE": "Assignee",
+    "ALL_ASSIGNEES": "All assignees"
+  },
+  "TASK_MESSAGES": {
+    "LOAD_FAILED": "Tasks could not be loaded.",
+    "CREATED_TITLE": "Task created",
+    "CREATED": "\"{{title}}\" was added to the board.",
+    "CREATE_FAILED": "The task could not be created.",
+    "UPDATED_TITLE": "Task updated",
+    "UPDATED": "Your changes were saved.",
+    "UPDATE_FAILED": "The task could not be saved.",
+    "DELETED_TITLE": "Task deleted",
+    "DELETED": "\"{{title}}\" was deleted.",
+    "MOVE_FAILED": "\"{{title}}\" could not be moved.",
+    "DELETE_FAILED": "\"{{title}}\" could not be deleted."
+  },
+  "SEARCH": {
+    "LABEL": "Search tasks",
+    "MIN_CHARS": "Type at least 2 characters",
+    "SEARCHING": "Searching…",
+    "NO_RESULTS": "No tasks found",
+    "UNAVAILABLE": "Search is unavailable right now. Please try again."
+  },
+  "TASK_FORM": {
+    "TITLE": "Title",
+    "TITLE_PLACEHOLDER": "What needs to be done?",
+    "CHECKING_TITLE": "Checking the title…",
+    "DESCRIPTION": "Description",
+    "OPTIONAL": "Optional",
+    "DESCRIPTION_PLACEHOLDER": "Add details",
+    "STATUS": "Status",
+    "PRIORITY": "Priority",
+    "DUE_DATE": "Due date",
+    "DUE_DATE_PLACEHOLDER": "Pick a date",
+    "ASSIGNEE": "Assignee",
+    "ASSIGNEE_PLACEHOLDER": "Choose a person",
+    "COMPLETED_ON": "Completed on",
+    "TAGS": "Tags",
+    "TAGS_HINT": "Press Enter or comma to add a tag, up to {{max}}",
+    "TAGS_PLACEHOLDER": "Add a tag",
+    "CHECKLIST": "Checklist",
+    "CHECKLIST_PROGRESS": "{{done}}/{{total}} done",
+    "CHECKLIST_ITEM_DONE": "Done: {{item}}",
+    "CHECKLIST_ITEM_FALLBACK": "item {{number}}",
+    "CHECKLIST_ITEM": "Checklist item {{number}}",
+    "CHECKLIST_ITEM_PLACEHOLDER": "Describe a step",
+    "REMOVE_CHECKLIST_ITEM": "Remove checklist item {{number}}",
+    "CHECKLIST_EMPTY": "Break the task into steps.",
+    "ADD_ITEM": "+ Add item",
+    "CHECKLIST_FULL": "A checklist can have up to {{max}} items.",
+    "SAVE": "Save changes",
+    "CREATE": "Create task"
+  },
+  "EDITOR": {
+    "NEW": "New task",
+    "EDIT": "Edit task",
+    "DISCARD_TITLE": "Discard changes?",
+    "DISCARD_MESSAGE": "Your changes to this task will be lost.",
+    "DISCARD": "Discard",
+    "KEEP_EDITING": "Keep editing"
+  },
+  "STATS": {
+    "TOTAL": "Total Tasks",
+    "COMPLETED": "Completed",
+    "IN_PROGRESS": "In Progress",
+    "OVERDUE": "Overdue",
+    "THIS_WEEK": "this week",
+    "TODAY": "today",
+    "DUE_THIS_WEEK": "due this week",
+    "LABEL": "Task statistics",
+    "LOADING": "Loading statistics"
+  },
+  "ANALYTICS": {
+    "LOAD_ERROR": "Analytics could not be loaded",
+    "BY_STATUS": "Tasks by status",
+    "BY_STATUS_HINT": "Where the work stands right now.",
+    "BY_PRIORITY": "Tasks by priority",
+    "BY_PRIORITY_HINT": "How urgent the work is.",
+    "WORKLOAD": "Workload by assignee",
+    "WORKLOAD_HINT": "Each person’s tasks by status.",
+    "TREND": "Created vs completed",
+    "TREND_HINT": "Tasks per day, last 14 days.",
+    "TREND_LABEL": "Tasks created and completed per day",
+    "TREND_EMPTY": "No tasks were created or completed in the last 14 days.",
+    "LOADING_CHART": "Loading chart",
+    "STATUS": "Status",
+    "PRIORITY": "Priority",
+    "ASSIGNEE": "Assignee",
+    "DAY": "Day",
+    "TASKS": "Tasks",
+    "SHARE": "Share",
+    "CREATED": "Created",
+    "COMPLETED": "Completed"
+  },
+  "TEAM": {
+    "LOAD_ERROR": "The team could not be loaded",
+    "LOAD_ERROR_MESSAGE": "Check your connection and try again.",
+    "EMPTY_TITLE": "No team members yet",
+    "EMPTY_MESSAGE": "People appear here once they can be assigned tasks.",
+    "LOADING": "Loading the team",
+    "MEMBERS": {
+      "one": "{{count}} member",
+      "other": "{{count}} members"
+    },
+    "OPEN_TASKS": {
+      "one": "{{count}} open task",
+      "other": "{{count}} open tasks"
+    },
+    "OVERDUE_COUNT": "{{count}} overdue",
+    "OPEN": "Open",
+    "IN_PROGRESS": "In progress",
+    "DONE": "Done",
+    "OVERDUE": "Overdue",
+    "COMPLETED": "Completed",
+    "COMPLETED_BY": "Tasks completed by {{name}}",
+    "VIEW_TASKS": "View tasks",
+    "VIEW_TASKS_OF": "View tasks of {{name}}",
+    "ASSIGN": "Assign task",
+    "ASSIGN_TO": "Assign task to {{name}}"
+  },
+  "CALENDAR": {
+    "VIEW_LABEL": "Calendar view",
+    "MONTH": "Month",
+    "WEEK": "Week",
+    "AGENDA": "Agenda",
+    "TODAY": "Today",
+    "PREVIOUS_MONTH": "Previous month",
+    "NEXT_MONTH": "Next month",
+    "PREVIOUS_WEEK": "Previous week",
+    "NEXT_WEEK": "Next week",
+    "AGENDA_TITLE": "Open tasks by due date",
+    "LOAD_ERROR": "The calendar could not be loaded",
+    "LOADING": "Loading the calendar",
+    "NOTHING_DUE": "Nothing due",
+    "ALL_DONE": "Every task is done.",
+    "TABLE_CAPTION": "Tasks due each day",
+    "ADD_TASK_ON": "Add task on {{date}}",
+    "MORE": "+{{count}} more",
+    "MORE_ON": "+{{count}} more on {{date}}",
+    "TASKS_ON": {
+      "one": "{{count}} task on {{date}}",
+      "other": "{{count}} tasks on {{date}}"
+    },
+    "TASK_DONE": "{{title}}, done",
+    "GROUP": {
+      "OVERDUE": "Overdue",
+      "TODAY": "Today",
+      "WEEK": "Next 7 days",
+      "LATER": "Later"
+    }
+  },
+  "ACTIVITY": {
+    "TITLE": "Recent activity",
+    "NOTIFICATIONS": "Notifications",
+    "NOTIFICATIONS_UNREAD": "Notifications, {{count}} unread",
+    "LOADING": "Loading recent activity",
+    "ENTRIES": "Recent activity entries",
+    "EMPTY": "No activity yet.",
+    "NEW": "New:",
+    "LOAD_FAILED": "Recent activity could not be loaded.",
+    "EVENT": {
+      "CREATED": "{{actor}} created {{title}}",
+      "UPDATED": "{{actor}} updated {{title}}",
+      "DELETED": "{{actor}} deleted {{title}}",
+      "MOVED": "{{actor}} moved {{title}} to {{status}}",
+      "MOVED_SOMEWHERE": "{{actor}} moved {{title}}"
+    },
+    "OWN_EVENT": {
+      "CREATED": "You created {{title}}",
+      "UPDATED": "You updated {{title}}",
+      "DELETED": "You deleted {{title}}",
+      "MOVED": "You moved {{title}} to {{status}}",
+      "MOVED_SOMEWHERE": "You moved {{title}}"
+    }
+  },
+  "SETTINGS": {
+    "APPEARANCE": "Appearance",
+    "THEME": "Theme",
+    "LIGHT": "Light",
+    "LIGHT_HINT": "Bright, as in the design",
+    "DARK": "Dark",
+    "DARK_HINT": "Easier on the eyes at night",
+    "SYSTEM": "System",
+    "SYSTEM_HINT": "Follows your device",
+    "LANGUAGE": "Language",
+    "LEFT_TO_RIGHT": "Left to right",
+    "RIGHT_TO_LEFT": "Right to left",
+    "DEMO_DATA": "Demo data",
+    "DEMO_TEXT": "Tasks are served by a mock API that runs in your browser. Changes last until the page is reloaded, which brings the original data back.",
+    "CHAOS_TEXT": "To see how the app handles errors, add the parameter below to the address: about 30% of requests then fail, and reads are retried before an error is shown.",
+    "TRY_CHAOS": "Try with simulated failures",
+    "BACK_TO_NORMAL": "Back to normal"
+  }
+}

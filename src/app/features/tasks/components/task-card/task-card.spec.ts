@@ -1,6 +1,7 @@
 import { render, screen, within } from '@testing-library/angular';
 import { userEvent } from '@testing-library/user-event';
 import { buildTask, buildUser } from '../../../../../testing/builders';
+import { provideArabicForTesting } from '../../../../../testing/i18n';
 import type { Task } from '../../../../core/models';
 import type { TaskChangeState } from '../../data-access/tasks.store';
 import { TaskCard } from './task-card';
@@ -114,5 +115,29 @@ describe('TaskCard', () => {
     await chooseAction('Delete');
 
     expect(deleteRequest).toHaveBeenCalled();
+  });
+
+  it('shows its texts in Arabic, with Arabic plural forms', async () => {
+    await render(TaskCard, {
+      inputs: {
+        task: buildTask({
+          title: 'Prepare Q4 budget report',
+          priority: 'high',
+          dueDate: '2026-10-19',
+        }),
+        today: '2026-10-21',
+      },
+      providers: [provideArabicForTesting()],
+    });
+
+    expect(screen.getByText('عالية')).toBeInTheDocument();
+    // Two days late: Arabic uses its dual form here, not "2 days".
+    expect(screen.getByText(/متأخرة يومين/)).toBeInTheDocument();
+    await userEvent.click(
+      screen.getByRole('button', { name: 'إجراءات «Prepare Q4 budget report»' }),
+    );
+    expect(
+      await screen.findByRole('menuitem', { name: 'نقل إلى قيد التنفيذ' }),
+    ).toBeInTheDocument();
   });
 });

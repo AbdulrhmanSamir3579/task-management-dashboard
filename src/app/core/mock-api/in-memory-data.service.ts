@@ -17,6 +17,7 @@ import {
 import { moveOnBoard, removeFromBoard } from '../../shared/utils/board-order';
 import { rankByText } from '../../shared/utils/text-search';
 import { type MockDb, cleanChecklist, createMockDb, nextTaskId } from './mock-db';
+import { mockMessage } from './mock-messages';
 
 /**
  * In-memory "server" for the demo. angular-in-memory-web-api serves the collections;
@@ -67,7 +68,7 @@ export class InMemoryDataService implements InMemoryDbService {
       const payload = this.body<CreateTaskPayload>(reqInfo);
       const assignee = db.users.find((user) => user.id === payload.assigneeId);
       if (!payload.title?.trim() || !assignee) {
-        return this.error(STATUS.UNPROCESSABLE_ENTRY, 'A task needs a title and a known assignee.');
+        return this.error(STATUS.UNPROCESSABLE_ENTRY, mockMessage(reqInfo, 'titleAndAssignee'));
       }
 
       const timestamp = new Date().toISOString();
@@ -102,7 +103,10 @@ export class InMemoryDataService implements InMemoryDbService {
       const db = this.db(reqInfo);
       const current = db.tasks.find((task) => task.id === reqInfo.id);
       if (!current) {
-        return this.error(STATUS.NOT_FOUND, `Task ${reqInfo.id} was not found.`);
+        return this.error(
+          STATUS.NOT_FOUND,
+          mockMessage(reqInfo, 'taskNotFound', String(reqInfo.id)),
+        );
       }
 
       const {
@@ -117,7 +121,10 @@ export class InMemoryDataService implements InMemoryDbService {
           ? current.assignee
           : db.users.find((user) => user.id === assigneeId);
       if (!assignee) {
-        return this.error(STATUS.UNPROCESSABLE_ENTRY, `Assignee ${assigneeId} does not exist.`);
+        return this.error(
+          STATUS.UNPROCESSABLE_ENTRY,
+          mockMessage(reqInfo, 'unknownAssignee', String(assigneeId)),
+        );
       }
 
       const timestamp = new Date().toISOString();
@@ -176,7 +183,10 @@ export class InMemoryDataService implements InMemoryDbService {
       const db = this.db(reqInfo);
       const task = db.tasks.find((existing) => existing.id === reqInfo.id);
       if (!task) {
-        return this.error(STATUS.NOT_FOUND, `Task ${reqInfo.id} was not found.`);
+        return this.error(
+          STATUS.NOT_FOUND,
+          mockMessage(reqInfo, 'taskNotFound', String(reqInfo.id)),
+        );
       }
 
       db.tasks = removeFromBoard(db.tasks, task.id);
@@ -215,7 +225,7 @@ export class InMemoryDataService implements InMemoryDbService {
   private readOnly(reqInfo: RequestInfo): ResponseOptions {
     return this.error(
       STATUS.METHOD_NOT_ALLOWED,
-      `The ${reqInfo.collectionName} collection is read-only.`,
+      mockMessage(reqInfo, 'readOnly', reqInfo.collectionName),
     );
   }
 

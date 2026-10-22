@@ -17,7 +17,7 @@
           <button
             type="button"
             class="week__add"
-            [attr.aria-label]="'Add task on ' + day.fullDate"
+            [attr.aria-label]="'CALENDAR.ADD_TASK_ON' | translate: { date: day.fullDate }"
             (click)="dayAdd.emit(day.date)"
           >
             <span aria-hidden="true">+</span>
@@ -34,13 +34,17 @@
               <button
                 type="button"
                 class="week__task-title"
-                [attr.aria-label]="entry.done ? entry.task.title + ', done' : null"
+                [attr.aria-label]="
+                  entry.done
+                    ? ('CALENDAR.TASK_DONE' | translate: { title: entry.task.title })
+                    : null
+                "
                 (click)="taskOpen.emit(entry.task.id)"
               >
                 {{ entry.task.title }}
               </button>
               <div class="week__task-meta">
-                <ui-tag [label]="entry.priority" [tone]="entry.tone" />
+                <ui-tag [label]="entry.priority | translate" [tone]="entry.tone" />
                 <ui-avatar
                   [initials]="entry.task.assignee.avatar"
                   [name]="entry.task.assignee.name"
@@ -50,7 +54,7 @@
           }
         </ul>
       } @else {
-        <p class="week__empty">No tasks</p>
+        <p class="week__empty">{{ 'BOARD.NO_TASKS' | translate }}</p>
       }
     </li>
   }

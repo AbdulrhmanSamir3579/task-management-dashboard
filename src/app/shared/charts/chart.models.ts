@@ -47,8 +47,12 @@ export interface ChartConfig {
   empty: boolean;
 }
 
-/** Column headings of the accessible table, e.g. `{ category: 'Priority', value: 'Tasks' }`. */
+/**
+ * Column headings of the accessible table, already translated, e.g.
+ * `{ category: 'Priority', value: 'Tasks' }`. `share` heads the percentage column of donuts.
+ */
 export interface ChartLabels {
   category: string;
   value?: string;
+  share?: string;
 }

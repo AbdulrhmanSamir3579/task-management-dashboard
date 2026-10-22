@@ -5,7 +5,7 @@ describe('formatRelativeTime', () => {
   const ago = (seconds: number) => new Date(now.getTime() - seconds * 1000).toISOString();
 
   it.each([
-    [10, 'just now'],
+    [10, 'now'],
     [60, '1 minute ago'],
     [5 * 60 + 40, '5 minutes ago'],
     [2 * 60 * 60, '2 hours ago'],
@@ -16,6 +16,10 @@ describe('formatRelativeTime', () => {
     [400 * 24 * 60 * 60, 'last year'],
   ])('describes %i seconds ago as "%s"', (seconds, text) => {
     expect(formatRelativeTime(ago(seconds), now)).toBe(text);
+  });
+
+  it('speaks the given language', () => {
+    expect(formatRelativeTime(ago(30 * 60 * 60), now, 'ar')).toBe('أمس');
   });
 
   it('handles timestamps slightly in the future', () => {

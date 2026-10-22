@@ -10,7 +10,7 @@ export interface ConfirmOptions {
 }
 
 interface PendingQuestion {
-  options: Required<ConfirmOptions>;
+  options: ConfirmOptions;
   resolve: (confirmed: boolean) => void;
 }
 
@@ -28,7 +28,7 @@ export class ConfirmService {
     this.pending()?.resolve(false);
     return new Promise((resolve) => {
       this.pending.set({
-        options: { confirmLabel: 'Confirm', cancelLabel: 'Cancel', tone: 'primary', ...options },
+        options,
         resolve,
       });
     });

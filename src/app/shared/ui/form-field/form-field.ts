@@ -1,20 +1,35 @@
-import { ChangeDetectionStrategy, Component, computed, forwardRef, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  forwardRef,
+  inject,
+  input,
+} from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { type AbstractControl, type ValidationErrors, Validators } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 import { map, startWith, switchMap } from 'rxjs';
 import { FORM_FIELD_CONTEXT, type FormFieldContext } from '../forms/form-control';
 
-type MessageFactory = (error: unknown) => string;
+/** What a custom validator puts in its error: a translation key and its parameters. */
+export interface ValidationMessage {
+  key: string;
+  params?: Record<string, unknown>;
+}
 
 const lengthOf = (error: unknown): number =>
   (error as { requiredLength?: number } | null)?.requiredLength ?? 0;
 
-const DEFAULT_MESSAGES: Readonly<Record<string, MessageFactory>> = {
-  required: () => 'This field is required.',
-  minlength: (error) => `Use at least ${lengthOf(error)} characters.`,
-  maxlength: (error) => `Use at most ${lengthOf(error)} characters.`,
-  email: () => 'Enter a valid email address.',
+const DEFAULT_MESSAGES: Readonly<Record<string, (error: unknown) => ValidationMessage>> = {
+  required: () => ({ key: 'VALIDATION.REQUIRED' }),
+  minlength: (error) => ({ key: 'VALIDATION.MIN_LENGTH', params: { count: lengthOf(error) } }),
+  maxlength: (error) => ({ key: 'VALIDATION.MAX_LENGTH', params: { count: lengthOf(error) } }),
+  email: () => ({ key: 'VALIDATION.EMAIL' }),
 };
+
+const isValidationMessage = (error: unknown): error is ValidationMessage =>
+  typeof (error as ValidationMessage | null)?.key === 'string';
 
 let nextId = 0;
 
@@ -28,8 +43,9 @@ interface ControlState {
  * Label, hint and validation message around one form control. The control inside picks
  * up the generated id, invalid state and description through `FORM_FIELD_CONTEXT`.
  *
- * Messages resolve in this order: `messages` input, a string returned by the validator
- * (e.g. `{ dueDateInPast: 'Pick a future date.' }`), the defaults above, a generic text.
+ * Messages are translation keys, resolved in this order: the `messages` input, the
+ * `{ key, params }` a validator returned, the defaults above, then a generic message.
+ * They follow language changes.
  */
 @Component({
   selector: 'ui-form-field',
@@ -80,7 +96,7 @@ export class UiFormField implements FormFieldContext {
   readonly hint = input<string>();
   /** Hide the label visually (e.g. in repeated rows) while keeping it for screen readers. */
   readonly labelVisible = input(true);
-  /** Overrides per error key, e.g. `{ required: 'Give the task a title.' }`. */
+  /** Translation keys per error, e.g. `{ required: 'TASK_FORM.ASSIGNEE_REQUIRED' }`. */
   readonly messages = input<Readonly<Record<string, string>>>({});
 
   readonly controlId = `ui-field-${nextId++}`;
@@ -110,17 +126,22 @@ export class UiFormField implements FormFieldContext {
     this.invalid() ? this.errorId : this.hint() ? this.hintId : undefined,
   );
 
+  private readonly translate = inject(TranslateService);
+
   protected readonly isRequired = computed(() => this.control().hasValidator(Validators.required));
   protected readonly errorMessage = computed(() => {
-    const [key, error] = Object.entries(this.state().errors ?? {})[0] ?? [];
-    if (key === undefined) {
+    // Read so the message is translated again when the language changes.
+    this.translate.currentLang();
+    const [errorKey, error] = Object.entries(this.state().errors ?? {})[0] ?? [];
+    if (errorKey === undefined) {
       return '';
     }
-    return (
-      this.messages()[key] ??
-      (typeof error === 'string' ? error : undefined) ??
-      DEFAULT_MESSAGES[key]?.(error) ??
-      'Enter a valid value.'
-    );
+    const custom = this.messages()[errorKey];
+    const message: ValidationMessage = custom
+      ? { key: custom }
+      : isValidationMessage(error)
+        ? error
+        : (DEFAULT_MESSAGES[errorKey]?.(error) ?? { key: 'VALIDATION.INVALID' });
+    return this.translate.instant(message.key, message.params) as string;
   });
 }

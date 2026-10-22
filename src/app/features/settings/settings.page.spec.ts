@@ -42,6 +42,21 @@ describe('SettingsPage', () => {
     expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe('dark');
   });
 
+  it('switches the language, right to left for Arabic', async () => {
+    await setup();
+    const languages = within(screen.getByRole('group', { name: 'Language' }));
+    expect(languages.getByRole('radio', { name: 'English' })).toBeChecked();
+    expect(languages.getByRole('radio', { name: 'العربية' })).toHaveAccessibleDescription(
+      'Right to left',
+    );
+
+    await userEvent.click(languages.getByRole('radio', { name: 'العربية' }));
+    TestBed.tick();
+
+    await vi.waitFor(() => expect(document.documentElement.dir).toBe('rtl'));
+    expect(languages.getByRole('radio', { name: 'العربية' })).toBeChecked();
+  });
+
   it('explains the demo data and links to a run with simulated failures', async () => {
     await setup();
 

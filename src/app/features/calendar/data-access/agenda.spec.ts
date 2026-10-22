@@ -23,10 +23,10 @@ describe('buildAgenda', () => {
       ['later', ['far']],
     ]);
     expect(groups.map((group) => group.title)).toEqual([
-      'Overdue',
-      'Today',
-      'Next 7 days',
-      'Later',
+      'CALENDAR.GROUP.OVERDUE',
+      'CALENDAR.GROUP.TODAY',
+      'CALENDAR.GROUP.WEEK',
+      'CALENDAR.GROUP.LATER',
     ]);
   });
 

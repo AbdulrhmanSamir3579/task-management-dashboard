@@ -67,6 +67,22 @@ describe('BarChartService', () => {
     });
   });
 
+  it('mirrors horizontal bars on a right-to-left page: names on the right, bars growing left', () => {
+    document.documentElement.dir = 'rtl';
+
+    const { options } = service().buildStacked(
+      ['John'],
+      [{ name: 'Done', values: [3] }],
+      { category: 'Assignee' },
+      { horizontal: true },
+    );
+
+    expect(options).toMatchObject({
+      xAxis: { type: 'value', inverse: true },
+      yAxis: { type: 'category', position: 'right' },
+    });
+  });
+
   it('is empty when there is nothing to count', () => {
     expect(service().build([], { category: 'Priority' }).empty).toBe(true);
     expect(

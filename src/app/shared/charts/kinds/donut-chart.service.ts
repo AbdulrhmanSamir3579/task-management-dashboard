@@ -11,14 +11,17 @@ export class DonutChartService {
   build(data: readonly ChartDatum[], labels: ChartLabels): ChartConfig {
     const theme = this.echarts.theme();
     const total = sumOf(data.map((datum) => datum.value));
-    const valueLabel = labels.value ?? 'Value';
+    const valueLabel = labels.value ?? '#';
 
     return {
       empty: total === 0,
       options: {
         ...this.echarts.base(theme),
         tooltip: { ...this.echarts.tooltip(theme, 'item'), formatter: '{b}: {c} ({d}%)' },
-        legend: this.echarts.legend(theme),
+        legend: this.echarts.legend(
+          theme,
+          data.map((datum) => datum.label),
+        ),
         title: {
           text: String(total),
           subtext: valueLabel,
@@ -46,7 +49,7 @@ export class DonutChartService {
         ],
       },
       table: {
-        columns: [labels.category, valueLabel, 'Share'],
+        columns: [labels.category, valueLabel, labels.share ?? '%'],
         rows: data.map((datum) => [datum.label, datum.value, percent(datum.value, total)]),
       },
     };

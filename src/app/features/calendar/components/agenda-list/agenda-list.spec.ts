@@ -7,7 +7,7 @@ import { AgendaList } from './agenda-list';
 const groups: AgendaGroup[] = [
   {
     id: 'overdue',
-    title: 'Overdue',
+    title: 'CALENDAR.GROUP.OVERDUE',
     tasks: [
       buildTask({
         id: 'task-001',
@@ -20,7 +20,7 @@ const groups: AgendaGroup[] = [
   },
   {
     id: 'week',
-    title: 'Next 7 days',
+    title: 'CALENDAR.GROUP.WEEK',
     tasks: [
       buildTask({ id: 'task-002', title: 'Write docs', dueDate: '2026-10-24', priority: 'low' }),
       buildTask({ id: 'task-003', title: 'Plan sprint', dueDate: '2026-10-25' }),

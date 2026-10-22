@@ -60,23 +60,23 @@ describe('UiFormField', () => {
     await vi.waitFor(() => expect(screen.queryByRole('alert')).not.toBeInTheDocument());
   });
 
-  it('prefers custom messages, then validator strings, then defaults', async () => {
+  it('translates custom messages, then validator messages, then defaults', async () => {
     const control = new FormControl('ab', {
       nonNullable: true,
       validators: Validators.minLength(3),
     });
     control.markAsTouched();
-    await setup(control, { messages: { required: 'Give the task a title.' } });
+    await setup(control, { messages: { required: 'VALIDATION.ASSIGNEE_REQUIRED' } });
     expect(await screen.findByRole('alert')).toHaveTextContent('Use at least 3 characters.');
 
     control.setErrors({ required: true });
     await vi.waitFor(() =>
-      expect(screen.getByRole('alert')).toHaveTextContent('Give the task a title.'),
+      expect(screen.getByRole('alert')).toHaveTextContent('Choose who will work on this task.'),
     );
 
-    control.setErrors({ titleTaken: 'A task with this title already exists.' });
+    control.setErrors({ maxItems: { key: 'VALIDATION.MAX_TAGS', params: { max: 5 } } });
     await vi.waitFor(() =>
-      expect(screen.getByRole('alert')).toHaveTextContent('A task with this title already exists.'),
+      expect(screen.getByRole('alert')).toHaveTextContent('Use at most 5 tags.'),
     );
 
     control.setErrors({ somethingElse: true });

@@ -35,6 +35,15 @@ describe('LineChartService', () => {
     });
   });
 
+  it('runs time from right to left on a right-to-left page', () => {
+    document.documentElement.dir = 'rtl';
+
+    expect(build([1, 2], [0, 1]).options).toMatchObject({
+      xAxis: { inverse: true },
+      yAxis: { position: 'right' },
+    });
+  });
+
   it('is empty when every value is zero', () => {
     expect(build([0, 0], [0, 0]).empty).toBe(true);
   });

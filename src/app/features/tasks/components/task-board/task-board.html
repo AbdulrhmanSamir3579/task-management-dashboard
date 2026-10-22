@@ -2,8 +2,13 @@
   @for (status of statuses(); track status) {
     <section class="column" [attr.aria-labelledby]="'column-title-' + status">
       <header class="column__header">
-        <h2 class="column__title" [id]="'column-title-' + status">{{ labels[status] }}</h2>
-        <span class="column__count" [attr.aria-label]="countLabel(columns()[status].length)">
+        <h2 class="column__title" [id]="'column-title-' + status">
+          {{ labels[status] | translate }}
+        </h2>
+        <span
+          class="column__count"
+          [attr.aria-label]="'TASK.COUNT' | plural: columns()[status].length"
+        >
           {{ columns()[status].length }}
         </span>
       </header>
@@ -28,7 +33,7 @@
             <div *cdkDragPlaceholder class="column__placeholder"></div>
           </app-task-card>
         } @empty {
-          <p class="column__empty">No tasks</p>
+          <p class="column__empty">{{ 'BOARD.NO_TASKS' | translate }}</p>
         }
       </div>
     </section>

@@ -6,8 +6,10 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { type Observable, map, of } from 'rxjs';
 import { UsersStore } from '../../../core/data-access/users.store';
+import { LanguageService } from '../../../core/i18n/language.service';
 import type { CreateTaskPayload } from '../../../core/models';
 import { ConfirmService } from '../../../shared/ui/confirm/confirm.service';
 import { UiDialog } from '../../../shared/ui/dialog/dialog';
@@ -22,7 +24,7 @@ const sameTitle = (a: string, b: string): boolean =>
 /** The one task dialog of the app, opened through `TaskEditorStore`. */
 @Component({
   selector: 'app-task-editor-dialog',
-  imports: [UiDialog, TaskForm],
+  imports: [TaskForm, TranslatePipe, UiDialog],
   templateUrl: './task-editor-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -32,6 +34,7 @@ export class TaskEditorDialog {
   private readonly tasks = inject(TasksStore);
   private readonly api = inject(TasksApi);
   private readonly confirm = inject(ConfirmService);
+  private readonly language = inject(LanguageService);
   private readonly form = viewChild(TaskForm);
 
   protected readonly saving = signal(false);
@@ -54,10 +57,10 @@ export class TaskEditorDialog {
   protected readonly confirmDiscard = async (): Promise<boolean> =>
     !this.form()?.hasChanges() ||
     this.confirm.confirm({
-      title: 'Discard changes?',
-      message: 'Your changes to this task will be lost.',
-      confirmLabel: 'Discard',
-      cancelLabel: 'Keep editing',
+      title: this.language.t('EDITOR.DISCARD_TITLE'),
+      message: this.language.t('EDITOR.DISCARD_MESSAGE'),
+      confirmLabel: this.language.t('EDITOR.DISCARD'),
+      cancelLabel: this.language.t('EDITOR.KEEP_EDITING'),
       tone: 'danger',
     });
 

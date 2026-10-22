@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import type { NavItem } from '../navigation';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive, TranslatePipe],
   template: `
-    <nav class="sidebar" aria-label="Main">
+    <nav class="sidebar" [attr.aria-label]="'NAV.LABEL' | translate">
       <ul class="sidebar__list">
         @for (item of items(); track item.path) {
           <li>
@@ -18,7 +19,7 @@ import type { NavItem } from '../navigation';
               (click)="navigated.emit()"
             >
               <span class="sidebar__icon" aria-hidden="true">{{ item.icon }}</span>
-              {{ item.label }}
+              {{ item.label | translate }}
             </a>
           </li>
         }

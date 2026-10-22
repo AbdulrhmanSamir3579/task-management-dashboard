@@ -38,6 +38,10 @@ jobs:
       - name: Check formatting
         run: npm run format:check
 
+      # Every key used in a template exists, and no text is hard-coded in a template.
+      - name: Check translations
+        run: npm run i18n:check
+
   test:
     name: Unit tests
     runs-on: ubuntu-latest
@@ -84,6 +88,10 @@ jobs:
       # Fails when a bundle exceeds the budgets defined in angular.json.
       - name: Build
         run: npm run build
+
+      # Starts the optimised bundle, which unit tests do not run.
+      - name: Smoke test
+        run: npm run smoke
 
   lighthouse:
     name: Lighthouse

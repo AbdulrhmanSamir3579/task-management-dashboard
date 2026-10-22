@@ -4,6 +4,7 @@ import {
   ElementRef,
   Injector,
   afterNextRender,
+  computed,
   effect,
   inject,
   input,
@@ -20,18 +21,20 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 import { type Observable, filter, firstValueFrom, of } from 'rxjs';
 import {
   type ChecklistItem,
   type CreateTaskPayload,
   TASK_PRIORITIES,
-  TASK_PRIORITY_LABELS,
+  TASK_PRIORITY_KEYS,
   TASK_STATUSES,
-  TASK_STATUS_LABELS,
+  TASK_STATUS_KEYS,
   type Task,
   type TaskPriority,
   type TaskStatus,
 } from '../../../core/models';
+import { LanguageService } from '../../../core/i18n/language.service';
 import { UiButton } from '../../../shared/ui/button/button';
 import { UiCheckbox } from '../../../shared/ui/checkbox/checkbox';
 import { UiDatePicker } from '../../../shared/ui/date-picker/date-picker';
@@ -98,6 +101,7 @@ const toTimestamp = (day: string): string => new Date(`${day}T12:00:00`).toISOSt
     UiTagsInput,
     UiCheckbox,
     UiButton,
+    TranslatePipe,
   ],
   templateUrl: './task-form.html',
   styleUrl: './task-form.scss',
@@ -121,12 +125,19 @@ export class TaskForm {
   readonly saved = output<CreateTaskPayload>();
   readonly cancelled = output<void>();
 
-  protected readonly statusOptions: SelectOption<TaskStatus>[] = TASK_STATUSES.map((status) => ({
-    label: TASK_STATUS_LABELS[status],
-    value: status,
-  }));
-  protected readonly priorityOptions: SelectOption<TaskPriority>[] = TASK_PRIORITIES.map(
-    (priority) => ({ label: TASK_PRIORITY_LABELS[priority], value: priority }),
+  private readonly language = inject(LanguageService);
+
+  protected readonly statusOptions = computed<SelectOption<TaskStatus>[]>(() =>
+    TASK_STATUSES.map((status) => ({
+      label: this.language.t(TASK_STATUS_KEYS[status]),
+      value: status,
+    })),
+  );
+  protected readonly priorityOptions = computed<SelectOption<TaskPriority>[]>(() =>
+    TASK_PRIORITIES.map((priority) => ({
+      label: this.language.t(TASK_PRIORITY_KEYS[priority]),
+      value: priority,
+    })),
   );
   protected readonly limits = {
     title: TITLE_MAX_LENGTH,
@@ -150,11 +161,11 @@ export class TaskForm {
     assigneeId: this.fb.control<string | null>(null, Validators.required),
     tags: this.fb.control<string[]>(
       [],
-      [maxItems(MAX_TAGS, 'tags'), maxItemLength(TAG_MAX_LENGTH)],
+      [maxItems(MAX_TAGS, 'VALIDATION.MAX_TAGS'), maxItemLength(TAG_MAX_LENGTH)],
     ),
     checklist: this.fb.array<FormGroup<ChecklistItemControls>>(
       [],
-      maxItems(MAX_CHECKLIST_ITEMS, 'checklist items'),
+      maxItems(MAX_CHECKLIST_ITEMS, 'VALIDATION.MAX_CHECKLIST_ITEMS'),
     ),
   });
 

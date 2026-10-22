@@ -60,7 +60,26 @@ describe('EchartsService', () => {
   });
 
   it('leaves room for the legend under bar and line charts', () => {
-    expect(service().grid(true).bottom).toBeGreaterThan(service().grid(false).bottom as number);
+    const theme = service().theme();
+    expect(service().grid(theme, true).bottom).toBeGreaterThan(
+      service().grid(theme, false).bottom as number,
+    );
+  });
+
+  it('lays the legend out from the right on a right-to-left page', () => {
+    const names = ['To Do', 'Done'];
+    expect(service().legend(service().theme(), names)).toMatchObject({
+      align: 'left',
+      data: ['To Do', 'Done'],
+    });
+
+    document.documentElement.dir = 'rtl';
+
+    expect(service().legend(service().theme(), names)).toMatchObject({
+      align: 'right',
+      data: ['Done', 'To Do'],
+    });
+    expect(service().tooltip(service().theme(), 'item').extraCssText).toContain('direction: rtl');
   });
 
   it('builds category and value axes', () => {

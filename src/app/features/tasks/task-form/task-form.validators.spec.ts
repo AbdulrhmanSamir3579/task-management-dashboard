@@ -14,7 +14,7 @@ const today = () => '2026-10-21';
 describe('task form validators', () => {
   describe('notBlank', () => {
     it.each([
-      ['   ', { blank: 'Use letters or numbers, not only spaces.' }],
+      ['   ', { blank: { key: 'VALIDATION.BLANK' } }],
       ['', null],
       [' Write docs ', null],
       [null, null],
@@ -26,7 +26,7 @@ describe('task form validators', () => {
   describe('dateNotBefore', () => {
     it('rejects a date before today', () => {
       expect(dateNotBefore(today)(new FormControl('2026-10-20'))).toEqual({
-        dateInPast: 'Pick today or a later date.',
+        dateInPast: { key: 'VALIDATION.DATE_IN_PAST' },
       });
     });
 
@@ -47,7 +47,7 @@ describe('task form validators', () => {
     it('rejects a future date and accepts today or earlier', () => {
       const validator = dateNotAfter(today);
       expect(validator(new FormControl('2026-10-22'))).toEqual({
-        dateInFuture: 'This date cannot be in the future.',
+        dateInFuture: { key: 'VALIDATION.DATE_IN_FUTURE' },
       });
       expect(validator(new FormControl('2026-10-21'))).toBeNull();
       expect(validator(new FormControl(null))).toBeNull();
@@ -56,19 +56,17 @@ describe('task form validators', () => {
 
   describe('tag limits', () => {
     it('limits the number of tags', () => {
-      expect(maxItems(2, 'tags')(new FormControl(['a', 'b', 'c']))).toEqual({
-        maxItems: 'Use at most 2 tags.',
+      const validator = maxItems(2, 'VALIDATION.MAX_TAGS');
+      expect(validator(new FormControl(['a', 'b', 'c']))).toEqual({
+        maxItems: { key: 'VALIDATION.MAX_TAGS', params: { max: 2 } },
       });
-      expect(maxItems(1)(new FormControl(['a', 'b']))).toEqual({
-        maxItems: 'Use at most 1 items.',
-      });
-      expect(maxItems(2)(new FormControl(['a', 'b']))).toBeNull();
-      expect(maxItems(2)(new FormControl(null))).toBeNull();
+      expect(validator(new FormControl(['a', 'b']))).toBeNull();
+      expect(validator(new FormControl(null))).toBeNull();
     });
 
     it('limits the length of each tag', () => {
       expect(maxItemLength(3)(new FormControl(['abcd']))).toEqual({
-        itemTooLong: 'Each tag can have at most 3 characters.',
+        itemTooLong: { key: 'VALIDATION.ITEM_TOO_LONG', params: { max: 3 } },
       });
       expect(maxItemLength(3)(new FormControl(['abc']))).toBeNull();
       expect(maxItemLength(3)(new FormControl(null))).toBeNull();
@@ -87,7 +85,7 @@ describe('task form validators', () => {
       await vi.advanceTimersByTimeAsync(300);
 
       expect(isTaken).toHaveBeenCalledWith('Write docs');
-      expect(control.errors).toEqual({ titleTaken: 'A task with this title already exists.' });
+      expect(control.errors).toEqual({ titleTaken: { key: 'VALIDATION.TITLE_TAKEN' } });
     });
 
     it('only checks the latest value', async () => {

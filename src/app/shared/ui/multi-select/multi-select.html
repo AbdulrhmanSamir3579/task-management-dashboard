@@ -1,6 +1,6 @@
 <p-multiselect
   fluid
-  selectedItemsLabel="{0} selected"
+  [selectedItemsLabel]="'UI.SELECTED_COUNT' | translate"
   [display]="compact() ? 'comma' : 'chip'"
   [maxSelectedLabels]="compact() ? 1 : null"
   appendTo="body"

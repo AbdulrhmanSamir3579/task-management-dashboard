@@ -28,3 +28,12 @@ if (!window.ResizeObserver) {
     disconnect = (): undefined => undefined;
   };
 }
+
+// Every test starts from a clean browser: saved preferences (language, theme, seen
+// activity) and the page language and direction would otherwise leak into tests that
+// run later in the same worker, in an order that differs between machines.
+afterEach(() => {
+  localStorage.clear();
+  document.documentElement.lang = 'en';
+  document.documentElement.dir = 'ltr';
+});

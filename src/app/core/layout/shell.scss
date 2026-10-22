@@ -124,6 +124,11 @@
       visibility 0.2s;
   }
 
+  // Right to left the drawer sits on the right, so it slides out to the right.
+  .shell__sidebar:dir(rtl) {
+    transform: translateX(100%);
+  }
+
   .shell--nav-open .shell__sidebar {
     transform: none;
     visibility: visible;

@@ -11,6 +11,7 @@ import {
   model,
   output,
 } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { AutoComplete } from 'primeng/autocomplete';
 
@@ -39,7 +40,7 @@ export class UiAutocompleteItem<T> {
  */
 @Component({
   selector: 'ui-autocomplete',
-  imports: [AutoComplete, FormsModule, NgTemplateOutlet],
+  imports: [AutoComplete, FormsModule, NgTemplateOutlet, TranslatePipe],
   templateUrl: './autocomplete.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -50,8 +51,8 @@ export class UiAutocomplete<T extends object> {
   readonly inputId = input<string>();
   readonly placeholder = input('');
   readonly ariaLabel = input<string>();
-  /** Shown when there are no suggestions, e.g. "Searching..." or "No results". */
-  readonly emptyMessage = input('No results');
+  /** Shown when there are no suggestions, e.g. "Searching..."; a translated "No results" by default. */
+  readonly emptyMessage = input<string>();
   readonly queryChange = output<string>();
   readonly selected = output<T>();
   /** Enter pressed without choosing a suggestion; carries the typed text. */

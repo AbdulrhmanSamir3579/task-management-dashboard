@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { NgxEchartsDirective } from 'ngx-echarts';
 import type { ChartConfig } from '../chart.models';
 
@@ -8,7 +9,7 @@ import type { ChartConfig } from '../chart.models';
  */
 @Component({
   selector: 'ui-chart',
-  imports: [NgxEchartsDirective],
+  imports: [NgxEchartsDirective, TranslatePipe],
   host: { role: 'figure', '[attr.aria-label]': 'label()' },
   templateUrl: './chart.html',
   styleUrl: './chart.scss',
@@ -19,7 +20,8 @@ export class UiChart {
   /** Names the chart and captions its data table. */
   readonly label = input.required<string>();
   readonly height = input('18rem');
-  readonly emptyMessage = input('Nothing to show yet.');
+  /** A translated "Nothing to show yet." by default. */
+  readonly emptyMessage = input<string>();
 
   /** SVG keeps text sharp at any zoom level and is light for a few small charts. */
   protected readonly initOpts = { renderer: 'svg' } as const;

@@ -87,28 +87,30 @@ export function shiftDate(view: CalendarView, date: string, step: -1 | 1): strin
   return view === 'week' ? addDaysToIsoDate(date, step * 7) : date;
 }
 
-const monthTitle = new Intl.DateTimeFormat('en', { month: 'long', year: 'numeric' });
-const weekRange = new Intl.DateTimeFormat('en', {
-  month: 'short',
-  day: 'numeric',
-  year: 'numeric',
-});
-const weekdayName = new Intl.DateTimeFormat('en', { weekday: 'short' });
-
-/** Title of the period on screen: "October 2026" or "Oct 19 – 25, 2026". */
-export function periodLabel(view: CalendarView, date: string): string {
+/**
+ * Title of the period on screen, formatted for `locale`: "October 2026" or
+ * "Oct 19 – 25, 2026". The agenda has no period, so it gets `null`.
+ */
+export function periodLabel(view: CalendarView, date: string, locale: string): string | null {
   if (view === 'month') {
-    return monthTitle.format(fromIsoDate(date));
+    return new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' }).format(
+      fromIsoDate(date),
+    );
   }
   if (view === 'week') {
     const start = startOfWeek(date, WEEK_STARTS_ON);
-    return weekRange.formatRange(fromIsoDate(start), fromIsoDate(addDaysToIsoDate(start, 6)));
+    return new Intl.DateTimeFormat(locale, {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    }).formatRange(fromIsoDate(start), fromIsoDate(addDaysToIsoDate(start, 6)));
   }
-  return 'Open tasks by due date';
+  return null;
 }
 
-/** Short weekday names in grid order, e.g. Mon … Sun. */
-export function weekdayLabels(): string[] {
+/** Short weekday names in grid order for `locale`, e.g. Mon … Sun. */
+export function weekdayLabels(locale: string): string[] {
+  const weekdayName = new Intl.DateTimeFormat(locale, { weekday: 'short' });
   // 2024-01-01 was a Monday.
   return Array.from({ length: 7 }, (_, index) =>
     weekdayName.format(fromIsoDate(addDaysToIsoDate('2024-01-01', index + WEEK_STARTS_ON - 1))),

@@ -10,7 +10,10 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Subject, filter, map, of } from 'rxjs';
+import { LanguageService } from '../../../core/i18n/language.service';
+import type { TranslationKey } from '../../../core/i18n/translation-key';
 import { HighlightPipe } from '../../../shared/pipes/highlight.pipe';
 import { UiAutocomplete, UiAutocompleteItem } from '../../../shared/ui/autocomplete/autocomplete';
 import { rankByText } from '../../../shared/utils/text-search';
@@ -32,11 +35,11 @@ export const TASK_SEARCH_OPTIONS = new InjectionToken<Partial<TaskSearchOptions>
 
 export const SEARCH_SUGGESTION_LIMIT = 6;
 
-const EMPTY_MESSAGES: Record<TaskSearchState['status'], string> = {
-  idle: 'Type at least 2 characters',
-  loading: 'Searching…',
-  success: 'No tasks found',
-  error: 'Search is unavailable right now. Please try again.',
+const EMPTY_MESSAGES: Record<TaskSearchState['status'], TranslationKey> = {
+  idle: 'SEARCH.MIN_CHARS',
+  loading: 'SEARCH.SEARCHING',
+  success: 'SEARCH.NO_RESULTS',
+  error: 'SEARCH.UNAVAILABLE',
 };
 
 const isTasksUrl = (url: string): boolean => url.split(/[?#]/)[0] === '/tasks';
@@ -53,7 +56,7 @@ const isTasksUrl = (url: string): boolean => url.split(/[?#]/)[0] === '/tasks';
  */
 @Component({
   selector: 'app-task-search-box',
-  imports: [UiAutocomplete, UiAutocompleteItem, HighlightPipe],
+  imports: [UiAutocomplete, UiAutocompleteItem, HighlightPipe, TranslatePipe],
   templateUrl: './task-search-box.html',
   styleUrl: './task-search-box.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -61,6 +64,7 @@ const isTasksUrl = (url: string): boolean => url.split(/[?#]/)[0] === '/tasks';
 export class TaskSearchBox {
   private readonly api = inject(TasksApi);
   private readonly store = inject(TasksStore);
+  private readonly language = inject(LanguageService);
   private readonly router = inject(Router);
   private readonly options = { ...DEFAULT_TASK_SEARCH_OPTIONS, ...inject(TASK_SEARCH_OPTIONS) };
   private readonly queries = new Subject<string>();
@@ -75,7 +79,9 @@ export class TaskSearchBox {
 
   protected readonly text = signal<TaskSuggestion | string | null>(null);
   protected readonly state = signal<TaskSearchState>({ query: '', status: 'idle', results: [] });
-  protected readonly emptyMessage = computed(() => EMPTY_MESSAGES[this.state().status]);
+  protected readonly emptyMessage = computed(() =>
+    this.language.t(EMPTY_MESSAGES[this.state().status]),
+  );
 
   constructor() {
     this.queries

@@ -1,3 +1,4 @@
+import type { Translate } from '../../../core/i18n/translate';
 import { type ChangeType, type Statistic, type Task, isTaskOverdue } from '../../../core/models';
 import { addDaysToIsoDate, toIsoDate } from '../../../shared/utils/date.utils';
 
@@ -10,9 +11,10 @@ const localDay = (timestamp: string): string => toIsoDate(new Date(timestamp));
 
 /**
  * Dashboard statistics computed from the tasks themselves, so they always agree with the
- * board. `today` is a `YYYY-MM-DD` date; "this week" means the last or next 7 days.
+ * board. `today` is a `YYYY-MM-DD` date; "this week" means the last or next 7 days. Titles
+ * and labels come from `t`, in the current language.
  */
-export function computeTaskStats(tasks: readonly Task[], today: string): Statistic[] {
+export function computeTaskStats(tasks: readonly Task[], today: string, t: Translate): Statistic[] {
   const weekAgo = addDaysToIsoDate(today, -6);
   const weekAhead = addDaysToIsoDate(today, 6);
   const yesterday = addDaysToIsoDate(today, -1);
@@ -33,41 +35,41 @@ export function computeTaskStats(tasks: readonly Task[], today: string): Statist
   return [
     {
       id: 'total',
-      title: 'Total Tasks',
+      title: t('STATS.TOTAL'),
       icon: '📊',
       value: tasks.length,
       change: signed(createdThisWeek),
-      changeLabel: 'this week',
+      changeLabel: t('STATS.THIS_WEEK'),
       changeType: toneFor(createdThisWeek, 'good'),
       color: '#1976D2',
     },
     {
       id: 'completed',
-      title: 'Completed',
+      title: t('STATS.COMPLETED'),
       icon: '✅',
       value: completed.length,
       change: signed(completedToday),
-      changeLabel: 'today',
+      changeLabel: t('STATS.TODAY'),
       changeType: toneFor(completedToday, 'good'),
       color: '#388E3C',
     },
     {
       id: 'in-progress',
-      title: 'In Progress',
+      title: t('STATS.IN_PROGRESS'),
       icon: '🔄',
       value: inProgress.length,
       change: String(dueThisWeek),
-      changeLabel: 'due this week',
+      changeLabel: t('STATS.DUE_THIS_WEEK'),
       changeType: 'neutral',
       color: '#FF6F00',
     },
     {
       id: 'overdue',
-      title: 'Overdue',
+      title: t('STATS.OVERDUE'),
       icon: '⚠️',
       value: overdue.length,
       change: signed(overdueToday),
-      changeLabel: 'today',
+      changeLabel: t('STATS.TODAY'),
       changeType: toneFor(overdueToday, 'bad'),
       color: '#D32F2F',
     },

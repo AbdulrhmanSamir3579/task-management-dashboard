@@ -20,10 +20,12 @@ export interface ChartTheme {
   tones: Record<ChartTone, string>;
   /** Used in order for series without a tone. */
   palette: string[];
+  /** Right-to-left page (Arabic): legends and axes are mirrored. */
+  rtl: boolean;
 }
 
 const FALLBACK = {
-  font: 'Inter, system-ui, sans-serif',
+  font: "Inter, 'IBM Plex Sans Arabic', system-ui, sans-serif",
   text: '#212121',
   muted: '#757575',
   border: '#e0e0e0',
@@ -43,7 +45,7 @@ const EXTRA_PALETTE = ['#7b1fa2', '#0097a7', '#c2185b', '#5d4037'];
 @Injectable({ providedIn: 'root' })
 export class EchartsService {
   private readonly document = inject(DOCUMENT);
-  /** Goes up whenever the theme class or inline styles on `<html>` change. */
+  /** Goes up whenever the theme class, inline styles or direction of `<html>` change. */
   private readonly themeVersion = signal(0);
 
   constructor() {
@@ -52,15 +54,15 @@ export class EchartsService {
       const observer = new MutationObserver(() => this.themeVersion.update((v) => v + 1));
       observer.observe(this.document.documentElement, {
         attributes: true,
-        attributeFilter: ['class', 'style'],
+        attributeFilter: ['class', 'style', 'dir'],
       });
       inject(DestroyRef).onDestroy(() => observer.disconnect());
     }
   }
 
   /**
-   * Colours read from the design tokens. It is a signal read: charts built in `computed()`
-   * are built again when the theme changes, e.g. to dark mode.
+   * Colours read from the design tokens, and the page direction. It is a signal read:
+   * charts built in `computed()` are built again when either changes (dark mode, Arabic).
    */
   theme(): ChartTheme {
     this.themeVersion();
@@ -83,6 +85,7 @@ export class EchartsService {
       surface: token('surface', FALLBACK.surface),
       tones,
       palette: [tones.primary, tones.success, tones.warning, tones.danger, ...EXTRA_PALETTE],
+      rtl: this.document.documentElement.dir === 'rtl',
     };
   }
 
@@ -106,25 +109,36 @@ export class EchartsService {
       backgroundColor: theme.surface,
       borderColor: theme.border,
       textStyle: { color: theme.text, fontFamily: theme.font },
+      ...(theme.rtl ? { extraCssText: 'direction: rtl; text-align: right;' } : {}),
       ...(trigger === 'axis' ? { axisPointer: { type: 'shadow' } } : {}),
     };
   }
 
-  legend(theme: ChartTheme): LegendComponentOption {
+  /**
+   * Legend under the chart for the given series or slice names. Right to left, the marker
+   * sits to the right of its label and the first name comes first from the right.
+   */
+  legend(theme: ChartTheme, names: readonly string[]): LegendComponentOption {
     return {
       bottom: 0,
       icon: 'circle',
       itemWidth: 10,
       itemHeight: 10,
-      textStyle: { color: theme.text },
+      itemGap: 24,
+      align: theme.rtl ? 'right' : 'left',
+      data: theme.rtl ? [...names].reverse() : [...names],
+      textStyle: { color: theme.text, fontFamily: theme.font, fontSize: 13 },
     };
   }
 
-  /** Plot area of bar and line charts; axis labels stay inside the chart. */
-  grid(withLegend: boolean): GridComponentOption {
+  /**
+   * Plot area of bar and line charts; axis labels stay inside the chart. The wider gap is at
+   * the end of the axis, mirrored right to left.
+   */
+  grid(theme: ChartTheme, withLegend: boolean): GridComponentOption {
     return {
-      left: 8,
-      right: 16,
+      left: theme.rtl ? 16 : 8,
+      right: theme.rtl ? 8 : 16,
       top: 16,
       bottom: withLegend ? 40 : 8,
       outerBoundsMode: 'same',

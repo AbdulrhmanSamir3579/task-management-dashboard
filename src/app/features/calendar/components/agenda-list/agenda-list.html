@@ -5,7 +5,7 @@
       [class.agenda-group__title--overdue]="section.id === 'overdue'"
       [id]="'agenda-' + section.id"
     >
-      {{ section.title }}
+      {{ section.title | translate }}
       <span class="agenda-group__count">{{ section.entries.length }}</span>
     </h2>
     <ul class="agenda-group__list">
@@ -25,11 +25,15 @@
               {{ entry.task.title }}
             </button>
             <span class="agenda-item__meta" [class]="'agenda-item__meta--' + entry.due.tone">
-              <span aria-hidden="true">{{ entry.due.icon }}</span> {{ entry.due.label }} ·
-              {{ entry.status }}
+              <span aria-hidden="true">{{ entry.due.icon }}</span> {{ entry.due.text | text }} ·
+              {{ entry.status | translate }}
             </span>
           </div>
-          <ui-tag [rounded]="true" [label]="entry.priority" [tone]="entry.priorityTone" />
+          <ui-tag
+            [rounded]="true"
+            [label]="entry.priority | translate"
+            [tone]="entry.priorityTone"
+          />
           <ui-avatar [initials]="entry.task.assignee.avatar" [name]="entry.task.assignee.name" />
         </li>
       }

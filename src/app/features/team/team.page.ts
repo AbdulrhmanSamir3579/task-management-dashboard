@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { UsersStore } from '../../core/data-access/users.store';
+import { LanguageService } from '../../core/i18n/language.service';
 import { EmptyState } from '../../shared/components/empty-state/empty-state';
 import { UiButton } from '../../shared/ui/button/button';
 import { UiSkeleton } from '../../shared/ui/skeleton/skeleton';
@@ -8,12 +10,10 @@ import { TasksStore } from '../tasks/data-access/tasks.store';
 import { MemberCard } from './components/member-card/member-card';
 import { summarizeTeam } from './data-access/team-summary';
 
-const plural = (count: number, word: string): string => `${count} ${word}${count === 1 ? '' : 's'}`;
-
 /** Everyone who can be assigned tasks, with their workload; follows changes on the board. */
 @Component({
   selector: 'app-team-page',
-  imports: [EmptyState, MemberCard, UiButton, UiSkeleton],
+  imports: [EmptyState, MemberCard, TranslatePipe, UiButton, UiSkeleton],
   templateUrl: './team.page.html',
   styleUrl: './team.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,6 +22,7 @@ export class TeamPage {
   private readonly users = inject(UsersStore);
   private readonly tasks = inject(TasksStore);
   private readonly editor = inject(TaskEditorStore);
+  private readonly language = inject(LanguageService);
 
   protected readonly skeletons = [0, 1, 2, 3];
 
@@ -42,7 +43,11 @@ export class TeamPage {
     const members = this.members() ?? [];
     const open = members.reduce((sum, member) => sum + member.open, 0);
     const overdue = members.reduce((sum, member) => sum + member.overdue, 0);
-    return `${plural(members.length, 'member')} · ${plural(open, 'open task')} · ${overdue} overdue`;
+    return [
+      this.language.plural('TEAM.MEMBERS', members.length),
+      this.language.plural('TEAM.OPEN_TASKS', open),
+      this.language.t('TEAM.OVERDUE_COUNT', { count: overdue }),
+    ].join(' · ');
   });
 
   protected retry(): void {

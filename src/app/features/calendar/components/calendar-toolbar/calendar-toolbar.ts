@@ -1,15 +1,18 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
+import type { TranslationKey } from '../../../../core/i18n/translation-key';
 import type { CalendarView } from '../../data-access/calendar-grid';
 
-const VIEW_OPTIONS: readonly { value: CalendarView; label: string }[] = [
-  { value: 'month', label: 'Month' },
-  { value: 'week', label: 'Week' },
-  { value: 'agenda', label: 'Agenda' },
+const VIEW_OPTIONS: readonly { value: CalendarView; label: TranslationKey }[] = [
+  { value: 'month', label: 'CALENDAR.MONTH' },
+  { value: 'week', label: 'CALENDAR.WEEK' },
+  { value: 'agenda', label: 'CALENDAR.AGENDA' },
 ];
 
 /** Period title, previous / today / next, and the Month / Week / Agenda switch. */
 @Component({
   selector: 'app-calendar-toolbar',
+  imports: [TranslatePipe],
   templateUrl: './calendar-toolbar.html',
   styleUrl: './calendar-toolbar.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

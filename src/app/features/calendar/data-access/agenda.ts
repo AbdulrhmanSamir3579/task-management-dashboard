@@ -1,3 +1,4 @@
+import type { TranslationKey } from '../../../core/i18n/translation-key';
 import { TASK_PRIORITIES, type Task } from '../../../core/models';
 import { addDaysToIsoDate } from '../../../shared/utils/date.utils';
 
@@ -5,15 +6,15 @@ export type AgendaGroupId = 'overdue' | 'today' | 'week' | 'later';
 
 export interface AgendaGroup {
   id: AgendaGroupId;
-  title: string;
+  title: TranslationKey;
   tasks: Task[];
 }
 
-const GROUPS: readonly { id: AgendaGroupId; title: string }[] = [
-  { id: 'overdue', title: 'Overdue' },
-  { id: 'today', title: 'Today' },
-  { id: 'week', title: 'Next 7 days' },
-  { id: 'later', title: 'Later' },
+const GROUPS: readonly { id: AgendaGroupId; title: TranslationKey }[] = [
+  { id: 'overdue', title: 'CALENDAR.GROUP.OVERDUE' },
+  { id: 'today', title: 'CALENDAR.GROUP.TODAY' },
+  { id: 'week', title: 'CALENDAR.GROUP.WEEK' },
+  { id: 'later', title: 'CALENDAR.GROUP.LATER' },
 ];
 
 const byDueDate = (a: Task, b: Task): number =>

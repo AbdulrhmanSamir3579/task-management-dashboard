@@ -8,7 +8,7 @@ describe('DonutChartService', () => {
         { label: 'To Do', value: values[0] ?? 0, tone: 'primary' },
         { label: 'Done', value: values[1] ?? 0 },
       ],
-      { category: 'Status', value: 'Tasks' },
+      { category: 'Status', value: 'Tasks', share: 'Share' },
     );
 
   it('draws one slice per datum with the total in the middle', () => {

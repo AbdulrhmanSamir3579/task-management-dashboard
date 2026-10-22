@@ -1,10 +1,10 @@
 @if (loadFailed()) {
   <app-empty-state
     icon="⚠️"
-    title="The team could not be loaded"
-    message="Check your connection and try again."
+    [title]="'TEAM.LOAD_ERROR' | translate"
+    [message]="'TEAM.LOAD_ERROR_MESSAGE' | translate"
   >
-    <ui-button label="Try again" (clicked)="retry()" />
+    <ui-button [label]="'COMMON.TRY_AGAIN' | translate" (clicked)="retry()" />
   </app-empty-state>
 } @else if (members(); as list) {
   @if (list.length) {
@@ -19,12 +19,12 @@
   } @else {
     <app-empty-state
       icon="👥"
-      title="No team members yet"
-      message="People appear here once they can be assigned tasks."
+      [title]="'TEAM.EMPTY_TITLE' | translate"
+      [message]="'TEAM.EMPTY_MESSAGE' | translate"
     />
   }
 } @else {
-  <ul class="team__grid" role="status" aria-label="Loading the team">
+  <ul class="team__grid" role="status" [attr.aria-label]="'TEAM.LOADING' | translate">
     @for (skeleton of skeletons; track skeleton) {
       <li class="team__skeleton">
         <ui-skeleton shape="circle" width="2.5rem" height="2.5rem" />
