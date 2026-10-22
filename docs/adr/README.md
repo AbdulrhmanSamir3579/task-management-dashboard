@@ -29,6 +29,7 @@ Short records of the decisions that shape this codebase: what was decided, why, 
 | [0023](0023-calendar-views.md)                          | Calendar views                              | Accepted                           |
 | [0024](0024-dark-mode-and-settings.md)                  | Dark mode and settings                      | Accepted                           |
 | [0025](0025-motion-accessibility-and-lighthouse.md)     | Motion, accessibility checks and Lighthouse | Accepted                           |
+| [0026](0026-deployment-to-github-pages.md)              | Deployment to GitHub Pages                  | Accepted                           |
 
 ## Template
 
