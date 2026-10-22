@@ -2,6 +2,7 @@ import { buildTask, buildUser } from '../../../../testing/builders';
 import {
   EMPTY_TASK_FILTERS,
   type TaskFilters,
+  countPanelFilters,
   filterTasks,
   groupByStatus,
   hasActiveFilters,
@@ -61,6 +62,15 @@ describe('hasActiveFilters', () => {
     { assigneeId: 'user-001' },
   ])('is true when %j is set', (filters) => {
     expect(hasActiveFilters({ ...EMPTY_TASK_FILTERS, ...filters })).toBe(true);
+  });
+});
+
+describe('countPanelFilters', () => {
+  it('counts chosen priorities and the assignee, not search or status', () => {
+    expect(countPanelFilters({ ...EMPTY_TASK_FILTERS, search: 'x', statuses: ['done'] })).toBe(0);
+    expect(
+      countPanelFilters({ ...EMPTY_TASK_FILTERS, priorities: ['high', 'low'], assigneeId: 'u' }),
+    ).toBe(3);
   });
 });
 

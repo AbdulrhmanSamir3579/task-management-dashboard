@@ -1,6 +1,6 @@
 # 0014. Local-first search
 
-- Status: Accepted
+- Status: Accepted, amended by [0017](0017-board-filters.md)
 - Date: 2026-10-21
 - Amends: [0012](0012-global-search-with-suggestions.md)
 

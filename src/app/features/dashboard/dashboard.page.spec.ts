@@ -38,6 +38,7 @@ describe('DashboardPage', () => {
       ],
       meta: { totalCount: 3, lastUpdated: '' },
     });
+    httpTesting.expectOne('api/users').flush([]);
     await TestBed.inject(ApplicationRef).whenStable();
 
     const stats = screen.getByRole('region', { name: 'Task statistics' });

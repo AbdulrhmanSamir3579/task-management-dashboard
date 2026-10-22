@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
-import { Subject, debounceTime, distinctUntilChanged, filter, map, of } from 'rxjs';
+import { Subject, filter, map, of } from 'rxjs';
 import { HighlightPipe } from '../../../shared/pipes/highlight.pipe';
 import { UiAutocomplete, UiAutocompleteItem } from '../../../shared/ui/autocomplete/autocomplete';
 import { rankByText } from '../../../shared/utils/text-search';
@@ -32,9 +32,6 @@ export const TASK_SEARCH_OPTIONS = new InjectionToken<Partial<TaskSearchOptions>
 
 export const SEARCH_SUGGESTION_LIMIT = 6;
 
-/** Delay before `?q=` follows the live filter, so typing does not flood the history. */
-export const URL_SYNC_DELAY_MS = 300;
-
 const EMPTY_MESSAGES: Record<TaskSearchState['status'], string> = {
   idle: 'Type at least 2 characters',
   loading: 'Searching…',
@@ -49,9 +46,10 @@ const isTasksUrl = (url: string): boolean => url.split(/[?#]/)[0] === '/tasks';
  * - Local first: once the tasks are loaded, suggestions come from them at once, with no
  *   request and no delay. Until then (or if loading failed) it asks the API, debounced,
  *   with stale requests cancelled.
- * - On the Tasks page the board itself is filtered on every keystroke, and `?q=` follows
- *   in the address bar.
- * - A suggestion or Enter opens the Tasks page filtered by the text.
+ * - On the Tasks page the board itself is filtered on every keystroke; the page keeps
+ *   `?q=` in step with it.
+ * - A suggestion or Enter opens the Tasks page filtered by the text. Enter on the Tasks
+ *   page keeps the other filters.
  */
 @Component({
   selector: 'app-task-search-box',
@@ -66,7 +64,6 @@ export class TaskSearchBox {
   private readonly router = inject(Router);
   private readonly options = { ...DEFAULT_TASK_SEARCH_OPTIONS, ...inject(TASK_SEARCH_OPTIONS) };
   private readonly queries = new Subject<string>();
-  private readonly urlQueries = new Subject<string>();
 
   private readonly onTasksPage = toSignal(
     this.router.events.pipe(
@@ -95,16 +92,6 @@ export class TaskSearchBox {
       )
       .subscribe((state) => this.state.set(state));
 
-    this.urlQueries
-      .pipe(debounceTime(URL_SYNC_DELAY_MS), distinctUntilChanged(), takeUntilDestroyed())
-      .subscribe((query) => {
-        void this.router.navigate([], {
-          queryParams: { q: query || null },
-          queryParamsHandling: 'merge',
-          replaceUrl: true,
-        });
-      });
-
     // A search cleared or changed elsewhere on the Tasks page (chip, Clear filters, link)
     // is reflected in the box.
     effect(() => {
@@ -118,9 +105,7 @@ export class TaskSearchBox {
   protected onQuery(query: string): void {
     this.queries.next(query);
     if (this.onTasksPage()) {
-      const search = query.trim();
-      this.store.setFilters({ search });
-      this.urlQueries.next(search);
+      this.store.setFilters({ search: query.trim() });
     }
   }
 
@@ -130,7 +115,10 @@ export class TaskSearchBox {
 
   protected search(text: string): void {
     const query = text.trim();
-    void this.router.navigate(['/tasks'], { queryParams: { q: query || null } });
+    void this.router.navigate(['/tasks'], {
+      queryParams: { q: query || null },
+      queryParamsHandling: this.onTasksPage() ? 'merge' : undefined,
+    });
   }
 
   private searchLoaded(query: string): TaskSuggestion[] {

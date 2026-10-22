@@ -148,14 +148,22 @@ describe('TaskSearchBox', () => {
   });
 
   describe('on the Tasks page', () => {
-    it('filters the board on every keystroke and keeps ?q= in step', async () => {
-      const { input, store, router, loadTasks } = await setup('/tasks');
+    it('filters the board on every keystroke', async () => {
+      const { input, store, loadTasks } = await setup('/tasks');
       await loadTasks();
 
       await userEvent.type(input, 'bud');
 
       expect(store.filters().search).toBe('bud');
-      await vi.waitFor(() => expect(router.url).toBe('/tasks?q=bud'));
+    });
+
+    it('keeps the other filters in the url on Enter', async () => {
+      const { input, router, loadTasks } = await setup('/tasks?priority=high');
+      await loadTasks();
+
+      await userEvent.type(input, 'budget{Enter}');
+
+      await vi.waitFor(() => expect(router.url).toBe('/tasks?priority=high&q=budget'));
     });
 
     it('clears the box when the search is cleared on the page', async () => {

@@ -24,6 +24,7 @@ import { type Observable, filter, firstValueFrom, of } from 'rxjs';
 import {
   type ChecklistItem,
   type CreateTaskPayload,
+  TASK_PRIORITIES,
   TASK_PRIORITY_LABELS,
   TASK_STATUSES,
   TASK_STATUS_LABELS,
@@ -120,9 +121,9 @@ export class TaskForm {
     label: TASK_STATUS_LABELS[status],
     value: status,
   }));
-  protected readonly priorityOptions: SelectOption<TaskPriority>[] = (
-    ['high', 'medium', 'low'] as const
-  ).map((priority) => ({ label: TASK_PRIORITY_LABELS[priority], value: priority }));
+  protected readonly priorityOptions: SelectOption<TaskPriority>[] = TASK_PRIORITIES.map(
+    (priority) => ({ label: TASK_PRIORITY_LABELS[priority], value: priority }),
+  );
   protected readonly limits = {
     title: TITLE_MAX_LENGTH,
     description: DESCRIPTION_MAX_LENGTH,

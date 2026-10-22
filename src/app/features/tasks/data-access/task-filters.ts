@@ -41,6 +41,11 @@ export function hasActiveFilters(filters: TaskFilters): boolean {
   );
 }
 
+/** Number of priority and assignee choices, shown on the board's Filter button. */
+export function countPanelFilters(filters: TaskFilters): number {
+  return filters.priorities.length + (filters.assigneeId ? 1 : 0);
+}
+
 /** Board columns, each ordered by the task's position in it. */
 export function groupByStatus(tasks: readonly Task[]): TaskColumns {
   const columns: TaskColumns = { todo: [], in_progress: [], done: [] };
