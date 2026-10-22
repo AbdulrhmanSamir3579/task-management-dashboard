@@ -21,6 +21,11 @@
   color: var(--app-text-muted);
   cursor: pointer;
 }
+.drawer-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
 .skeleton-board {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

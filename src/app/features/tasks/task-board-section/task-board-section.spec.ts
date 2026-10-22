@@ -1,11 +1,12 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { ApplicationRef } from '@angular/core';
+import { ApplicationRef, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { render, screen, within } from '@testing-library/angular';
 import { userEvent } from '@testing-library/user-event';
 import { buildTaskDto } from '../../../../testing/builders';
+import { UsersStore } from '../../../core/data-access/users.store';
 import { errorInterceptor } from '../../../core/http/error.interceptor';
 import type { TasksResponse } from '../../../core/models';
 import { ConfirmService } from '../../../shared/ui/confirm/confirm.service';
@@ -24,6 +25,11 @@ const tasks: TasksResponse = {
   meta: { totalCount: 3, lastUpdated: '2026-10-21T10:00:00.000Z' },
 };
 
+const assignees = [
+  { label: 'John Doe', value: 'user-001' },
+  { label: 'Sarah Smith', value: 'user-002' },
+];
+
 describe('TaskBoardSection', () => {
   let confirm: ReturnType<typeof vi.fn>;
 
@@ -36,6 +42,7 @@ describe('TaskBoardSection', () => {
         provideHttpClientTesting(),
         { provide: ConfirmService, useValue: { confirm } },
         { provide: NotificationService, useValue: { success: vi.fn(), error: vi.fn() } },
+        { provide: UsersStore, useValue: { options: signal(assignees) } },
       ],
     });
     const httpTesting = TestBed.inject(HttpTestingController);
@@ -89,6 +96,23 @@ describe('TaskBoardSection', () => {
       expect(screen.queryByRole('region', { name: 'To Do' })).not.toBeInTheDocument(),
     );
     expect(screen.getByRole('region', { name: 'Done' })).toBeInTheDocument();
+  });
+
+  it('filters by assignee from the Filter panel and shows the count', async () => {
+    const { store } = await loaded();
+
+    await userEvent.click(screen.getByRole('button', { name: 'Filter' }));
+    const panel = await screen.findByRole('dialog', { name: 'Filter tasks' });
+    await userEvent.click(within(panel).getByRole('combobox', { name: 'Assignee' }));
+    await userEvent.click(await screen.findByRole('option', { name: 'Sarah Smith' }));
+
+    expect(store.filters().assigneeId).toBe('user-002');
+    expect(await screen.findByRole('button', { name: 'Filter (1)' })).toBeInTheDocument();
+
+    await userEvent.click(within(panel).getByRole('button', { name: 'Clear' }));
+    expect(store.filters().assigneeId).toBeNull();
+    await userEvent.click(within(panel).getByRole('button', { name: 'Done' }));
+    await vi.waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
   });
 
   it('moves a dropped card through the store', async () => {
