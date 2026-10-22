@@ -14,7 +14,13 @@ import { UiPopover } from './popover';
     >
       Notifications
     </button>
-    <ui-popover #panel label="Recent activity" (opened)="opened()" (closed)="closed()">
+    <ui-popover
+      #panel
+      label="Recent activity"
+      [flush]="true"
+      (opened)="opened()"
+      (closed)="closed()"
+    >
       <p>Panel body</p>
       <button type="button" (click)="panel.hide()">Done</button>
     </ui-popover>
@@ -41,6 +47,7 @@ describe('UiPopover', () => {
     expect(panel).toHaveTextContent('Panel body');
     expect(trigger).toHaveAttribute('aria-expanded', 'true');
     expect(host.opened).toHaveBeenCalled();
+    expect(panel.style.getPropertyValue('--p-popover-content-padding')).toBe('0');
   });
 
   it('closes from inside and sends focus back to the trigger', async () => {

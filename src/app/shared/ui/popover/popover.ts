@@ -22,7 +22,13 @@ import { Popover } from 'primeng/popover';
   selector: 'ui-popover',
   imports: [Popover],
   template: `
-    <p-popover appendTo="body" [ariaLabel]="label()" (onShow)="onShow()" (onHide)="onHide()">
+    <p-popover
+      appendTo="body"
+      [ariaLabel]="label()"
+      [style]="flush() ? flushStyle : {}"
+      (onShow)="onShow()"
+      (onHide)="onHide()"
+    >
       <ng-content />
     </p-popover>
   `,
@@ -31,11 +37,15 @@ import { Popover } from 'primeng/popover';
 export class UiPopover {
   /** Accessible name of the panel. */
   readonly label = input.required<string>();
+  /** Removes the inner padding, for content with its own, e.g. a list running edge to edge. */
+  readonly flush = input(false);
   readonly opened = output<void>();
   readonly closed = output<void>();
 
   /** For the trigger's `aria-expanded`. */
   readonly isOpen = signal(false);
+
+  protected readonly flushStyle = { '--p-popover-content-padding': '0' };
 
   private readonly document = inject(DOCUMENT);
   private readonly injector = inject(Injector);
