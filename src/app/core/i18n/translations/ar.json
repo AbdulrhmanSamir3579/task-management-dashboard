@@ -1,0 +1,18 @@
+{
+  "APP": {
+    "NAME": "مدير المهام"
+  },
+  "COMMON": {
+    "CANCEL": "إلغاء",
+    "CONFIRM": "تأكيد",
+    "CLOSE": "إغلاق",
+    "SAVE": "حفظ",
+    "DELETE": "حذف",
+    "EDIT": "تعديل",
+    "TRY_AGAIN": "حاول مرة أخرى",
+    "NEW_TASK": "+ مهمة جديدة"
+  },
+  "LANGUAGE": {
+    "SWITCH_TO": "التبديل إلى {{language}}"
+  }
+}

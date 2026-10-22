@@ -1,0 +1,18 @@
+{
+  "APP": {
+    "NAME": "Task Manager"
+  },
+  "COMMON": {
+    "CANCEL": "Cancel",
+    "CONFIRM": "Confirm",
+    "CLOSE": "Close",
+    "SAVE": "Save",
+    "DELETE": "Delete",
+    "EDIT": "Edit",
+    "TRY_AGAIN": "Try again",
+    "NEW_TASK": "+ New Task"
+  },
+  "LANGUAGE": {
+    "SWITCH_TO": "Switch to {{language}}"
+  }
+}

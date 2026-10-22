@@ -11,9 +11,14 @@
     />
     <meta name="theme-color" content="#1976d2" />
     <script>
-      // Applies a saved dark theme before the app starts, so the page does not flash light.
-      // Keep in step with ThemeService (storage key and class name).
+      // Applies the saved theme and language direction before the app starts, so the page
+      // does not flash light or left to right. Keep in step with ThemeService and
+      // LanguageService (storage keys and class name).
       try {
+        if (localStorage.getItem('task-manager.language') === 'ar') {
+          document.documentElement.lang = 'ar';
+          document.documentElement.dir = 'rtl';
+        }
         var theme = localStorage.getItem('task-manager.theme');
         if (
           theme === 'dark' ||

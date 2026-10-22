@@ -14,6 +14,7 @@ import {
 } from '@angular/router';
 import { routes } from './app.routes';
 import { provideApiHttpClient } from './core/http/provide-api-http-client';
+import { provideI18n } from './core/i18n/provide-i18n';
 import { AppTitleStrategy } from './core/layout/app-title.strategy';
 import { IdlePreloadingStrategy } from './core/routing/idle-preloading.strategy';
 import { failureRateFromUrl, provideMockApi } from './core/mock-api/provide-mock-api';
@@ -34,6 +35,7 @@ export const appConfig: ApplicationConfig = {
     ),
     { provide: TitleStrategy, useClass: AppTitleStrategy },
     provideUi(),
+    provideI18n(),
     // Applies the saved theme and keeps following it (and the device, for "system").
     provideAppInitializer(() => {
       inject(ThemeService);
