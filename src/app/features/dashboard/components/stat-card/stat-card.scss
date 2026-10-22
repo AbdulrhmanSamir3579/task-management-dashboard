@@ -34,11 +34,11 @@
   font-size: 0.71875rem;
 }
 .stat__change--positive {
-  color: var(--app-success);
+  color: var(--app-success-text);
 }
 .stat__change--neutral {
   color: var(--app-text-muted);
 }
 .stat__change--negative {
-  color: var(--app-danger);
+  color: var(--app-danger-text);
 }

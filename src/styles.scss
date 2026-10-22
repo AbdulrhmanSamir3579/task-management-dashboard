@@ -9,11 +9,19 @@
   --app-background: #f5f7fa;
   --app-surface: #ffffff;
   --app-text: #212121;
-  --app-text-muted: #757575;
+  /* Darker than the design's #757575, which is under 4.5:1 on the tinted backgrounds. */
+  --app-text-muted: #666666;
   --app-border: #e0e0e0;
   --app-success: #388e3c;
   --app-warning: #f57c00;
   --app-danger: #d32f2f;
+  /*
+   * Status colours for small text: the design's green, orange and red are kept for
+   * borders, fills and charts, but are under 4.5:1 as text on white and on their tints.
+   */
+  --app-success-text: #2e7d32;
+  --app-warning-text: #a14e00;
+  --app-danger-text: #c62828;
   /** Text on a danger background, e.g. the unread badge. */
   --app-danger-contrast: #ffffff;
   --app-danger-surface: #ffebee;
@@ -38,6 +46,9 @@
   --app-success: #66bb6a;
   --app-warning: #ffa726;
   --app-danger: #ef5350;
+  --app-success-text: #66bb6a;
+  --app-warning-text: #ffa726;
+  --app-danger-text: #f87171;
   --app-danger-contrast: #121212;
   --app-background: #121212;
   --app-surface: #1e1e1e;
