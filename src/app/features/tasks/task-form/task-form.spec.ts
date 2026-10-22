@@ -69,6 +69,7 @@ describe('TaskForm', () => {
         dueDate: nextMonthOn15(),
         assigneeId: 'user-002',
         tags: [],
+        checklist: [],
       }),
     );
   });
@@ -132,10 +133,16 @@ describe('TaskForm', () => {
       completedAt: '2026-01-09T12:00:00.000Z',
       assignee: buildUser({ id: 'user-001', name: 'John Doe' }),
       tags: ['Security'],
+      checklist: [
+        { text: 'Scan dependencies', done: true },
+        { text: 'Write report', done: false },
+      ],
     });
     const { saved, form } = await setup({ task });
 
     expect(title()).toHaveValue('Security audit');
+    expect(screen.getByRole('textbox', { name: 'Checklist item 2' })).toHaveValue('Write report');
+    expect(screen.getByText('1/2 done')).toBeInTheDocument();
     expect(form.hasChanges()).toBe(false);
     await userEvent.type(title(), ' v2');
     expect(form.hasChanges()).toBe(true);
@@ -150,9 +157,74 @@ describe('TaskForm', () => {
         dueDate: '2026-01-10',
         assigneeId: 'user-001',
         tags: ['Security'],
+        checklist: [
+          { text: 'Scan dependencies', done: true },
+          { text: 'Write report', done: false },
+        ],
         completedAt: new Date('2026-01-09T12:00:00').toISOString(),
       }),
     );
+  });
+
+  describe('checklist', () => {
+    const addItem = () => userEvent.click(screen.getByRole('button', { name: '+ Add item' }));
+    const item = (position: number) =>
+      screen.getByRole('textbox', { name: `Checklist item ${position}` });
+
+    it('adds, ticks and removes rows, and sends the remaining items', async () => {
+      const { saved } = await setup();
+      await userEvent.type(title(), 'Plan sprint review');
+      await choose('Assignee', 'John Doe');
+      await pickDueDateNextMonth();
+
+      await addItem();
+      await vi.waitFor(() => expect(item(1)).toHaveFocus());
+      await userEvent.type(item(1), '  Draft outline ');
+      await addItem();
+      await userEvent.type(item(2), 'Temporary');
+      await userEvent.click(screen.getByRole('checkbox', { name: 'Done: Draft outline' }));
+      await userEvent.click(screen.getByRole('button', { name: 'Remove checklist item 2' }));
+
+      expect(screen.queryByRole('textbox', { name: 'Checklist item 2' })).not.toBeInTheDocument();
+      expect(screen.getByText('1/1 done')).toBeInTheDocument();
+
+      await userEvent.click(screen.getByRole('button', { name: 'Create task' }));
+      await vi.waitFor(() =>
+        expect(saved).toHaveBeenCalledWith(
+          expect.objectContaining({ checklist: [{ text: 'Draft outline', done: true }] }),
+        ),
+      );
+    });
+
+    it('requires text in every item', async () => {
+      await setup();
+
+      await addItem();
+      await userEvent.click(item(1));
+      await userEvent.tab();
+
+      expect(await screen.findByText('This field is required.')).toBeInTheDocument();
+      expect(item(1)).toHaveAttribute('aria-invalid', 'true');
+    });
+
+    it('stops offering new rows at the limit', async () => {
+      await setup();
+
+      for (let row = 0; row < 10; row++) {
+        await addItem();
+      }
+
+      expect(screen.queryByRole('button', { name: '+ Add item' })).not.toBeInTheDocument();
+      expect(screen.getByText('A checklist can have up to 10 items.')).toBeInTheDocument();
+    });
+
+    it('counts adding a row as a change', async () => {
+      const { form } = await setup();
+
+      await addItem();
+
+      expect(form.hasChanges()).toBe(true);
+    });
   });
 
   it('lets the user cancel', async () => {

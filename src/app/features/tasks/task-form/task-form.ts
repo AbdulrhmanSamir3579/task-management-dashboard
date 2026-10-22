@@ -13,13 +13,16 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
+  type FormArray,
   type FormControl,
+  type FormGroup,
   NonNullableFormBuilder,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
 import { type Observable, filter, firstValueFrom, of } from 'rxjs';
 import {
+  type ChecklistItem,
   type CreateTaskPayload,
   TASK_PRIORITY_LABELS,
   TASK_STATUSES,
@@ -29,6 +32,7 @@ import {
   type TaskStatus,
 } from '../../../core/models';
 import { UiButton } from '../../../shared/ui/button/button';
+import { UiCheckbox } from '../../../shared/ui/checkbox/checkbox';
 import { UiDatePicker } from '../../../shared/ui/date-picker/date-picker';
 import { UiFormField } from '../../../shared/ui/form-field/form-field';
 import { UiInputText } from '../../../shared/ui/input-text/input-text';
@@ -50,6 +54,13 @@ export const TITLE_MAX_LENGTH = 100;
 export const DESCRIPTION_MAX_LENGTH = 500;
 export const MAX_TAGS = 5;
 export const TAG_MAX_LENGTH = 20;
+export const MAX_CHECKLIST_ITEMS = 10;
+export const CHECKLIST_ITEM_MAX_LENGTH = 80;
+
+interface ChecklistItemControls {
+  text: FormControl<string>;
+  done: FormControl<boolean>;
+}
 
 interface TaskFormControls {
   title: FormControl<string>;
@@ -59,6 +70,8 @@ interface TaskFormControls {
   dueDate: FormControl<string | null>;
   assigneeId: FormControl<string | null>;
   tags: FormControl<string[]>;
+  /** Dynamic list of steps: rows are added and removed by the user. */
+  checklist: FormArray<FormGroup<ChecklistItemControls>>;
   /** Only present while the status is Done. */
   completedOn?: FormControl<string | null>;
 }
@@ -82,6 +95,7 @@ const toTimestamp = (day: string): string => new Date(`${day}T12:00:00`).toISOSt
     UiSelect,
     UiDatePicker,
     UiTagsInput,
+    UiCheckbox,
     UiButton,
   ],
   templateUrl: './task-form.html',
@@ -113,6 +127,8 @@ export class TaskForm {
     title: TITLE_MAX_LENGTH,
     description: DESCRIPTION_MAX_LENGTH,
     tags: MAX_TAGS,
+    checklist: MAX_CHECKLIST_ITEMS,
+    checklistItem: CHECKLIST_ITEM_MAX_LENGTH,
   };
   protected readonly minDueDate = signal(today());
   protected readonly showCompletedOn = signal(false);
@@ -127,7 +143,14 @@ export class TaskForm {
     priority: this.fb.control<TaskPriority>('medium'),
     dueDate: this.fb.control<string | null>(null),
     assigneeId: this.fb.control<string | null>(null, Validators.required),
-    tags: this.fb.control<string[]>([], [maxItems(MAX_TAGS), maxItemLength(TAG_MAX_LENGTH)]),
+    tags: this.fb.control<string[]>(
+      [],
+      [maxItems(MAX_TAGS, 'tags'), maxItemLength(TAG_MAX_LENGTH)],
+    ),
+    checklist: this.fb.array<FormGroup<ChecklistItemControls>>(
+      [],
+      maxItems(MAX_CHECKLIST_ITEMS, 'checklist items'),
+    ),
   });
 
   constructor() {
@@ -144,6 +167,26 @@ export class TaskForm {
 
   protected get completedOn(): FormControl<string | null> | undefined {
     return this.form.controls.completedOn;
+  }
+
+  protected get checklist(): FormArray<FormGroup<ChecklistItemControls>> {
+    return this.form.controls.checklist;
+  }
+
+  protected checklistDone(): number {
+    return this.checklist.controls.filter((item) => item.controls.done.value).length;
+  }
+
+  protected addChecklistItem(): void {
+    this.checklist.push(this.createChecklistItem());
+    this.checklist.markAsDirty();
+    this.focusAfterRender('.checklist__text input', 'last');
+  }
+
+  protected removeChecklistItem(index: number): void {
+    this.checklist.removeAt(index);
+    this.checklist.markAsDirty();
+    this.focusAfterRender('.checklist__add button', 'first');
   }
 
   /** True when the user changed something since the form was filled. */
@@ -171,6 +214,7 @@ export class TaskForm {
       dueDate: value.dueDate ?? today(),
       assigneeId: value.assigneeId ?? '',
       tags: value.tags,
+      checklist: value.checklist.map((item) => ({ text: item.text.trim(), done: item.done })),
     };
     if (value.status === 'done' && value.completedOn) {
       payload.completedAt = toTimestamp(value.completedOn);
@@ -184,6 +228,7 @@ export class TaskForm {
       Validators.required,
       dateNotBefore(today, task?.dueDate ?? null),
     ]);
+    this.checklist.clear();
     this.form.reset({
       title: task?.title ?? '',
       description: task?.description ?? '',
@@ -193,7 +238,22 @@ export class TaskForm {
       assigneeId: task?.assignee.id ?? null,
       tags: [...(task?.tags ?? [])],
     });
+    for (const item of task?.checklist ?? []) {
+      this.checklist.push(this.createChecklistItem(item));
+    }
     this.syncCompletedOn(this.form.controls.status.value, task?.completedAt ?? null);
+    this.form.markAsPristine();
+  }
+
+  private createChecklistItem(item?: ChecklistItem): FormGroup<ChecklistItemControls> {
+    return this.fb.group({
+      text: this.fb.control(item?.text ?? '', [
+        Validators.required,
+        notBlank,
+        Validators.maxLength(CHECKLIST_ITEM_MAX_LENGTH),
+      ]),
+      done: this.fb.control(item?.done ?? false),
+    });
   }
 
   private syncCompletedOn(status: TaskStatus, completedAt: string | null): void {
@@ -214,11 +274,14 @@ export class TaskForm {
 
   /** Errors render on the next frame; focus the first field that has one. */
   private focusFirstInvalid(): void {
+    this.focusAfterRender('[aria-invalid="true"], .ng-invalid [role="combobox"]', 'first');
+  }
+
+  private focusAfterRender(selector: string, which: 'first' | 'last'): void {
     afterNextRender(
       () => {
-        this.host.nativeElement
-          .querySelector<HTMLElement>('[aria-invalid="true"], .ng-invalid [role="combobox"]')
-          ?.focus();
+        const matches = this.host.nativeElement.querySelectorAll<HTMLElement>(selector);
+        matches[which === 'first' ? 0 : matches.length - 1]?.focus();
       },
       { injector: this.injector },
     );
