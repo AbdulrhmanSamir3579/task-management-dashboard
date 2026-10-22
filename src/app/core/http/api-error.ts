@@ -22,6 +22,7 @@ const KIND_BY_STATUS: Readonly<Record<number, ApiErrorKind>> = {
   429: 'rate_limited',
 };
 
+/** English fallback; the error interceptor shows these in the user's language. */
 const DEFAULT_MESSAGES: Readonly<Record<ApiErrorKind, string>> = {
   network: 'Unable to reach the server. Check your connection and try again.',
   validation: 'Some of the information is invalid. Please review it and try again.',
@@ -64,10 +65,13 @@ export function errorKindFor(status: number): ApiErrorKind {
  * Server-provided messages are kept for client errors (4xx), where they explain what to
  * fix; network and server failures use generic messages instead of technical details.
  */
-export function toApiError(error: HttpErrorResponse): ApiError {
+export function toApiError(
+  error: HttpErrorResponse,
+  defaultMessage: (kind: ApiErrorKind) => string = (kind) => DEFAULT_MESSAGES[kind],
+): ApiError {
   const kind = errorKindFor(error.status);
   const isClientError = error.status >= 400 && error.status < 500;
-  const message = (isClientError && messageFrom(error.error)) || DEFAULT_MESSAGES[kind];
+  const message = (isClientError && messageFrom(error.error)) || defaultMessage(kind);
   return new ApiError(kind, message, error.status, error.url);
 }
 

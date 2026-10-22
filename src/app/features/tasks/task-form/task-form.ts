@@ -150,11 +150,11 @@ export class TaskForm {
     assigneeId: this.fb.control<string | null>(null, Validators.required),
     tags: this.fb.control<string[]>(
       [],
-      [maxItems(MAX_TAGS, 'tags'), maxItemLength(TAG_MAX_LENGTH)],
+      [maxItems(MAX_TAGS, 'VALIDATION.MAX_TAGS'), maxItemLength(TAG_MAX_LENGTH)],
     ),
     checklist: this.fb.array<FormGroup<ChecklistItemControls>>(
       [],
-      maxItems(MAX_CHECKLIST_ITEMS, 'checklist items'),
+      maxItems(MAX_CHECKLIST_ITEMS, 'VALIDATION.MAX_CHECKLIST_ITEMS'),
     ),
   });
 

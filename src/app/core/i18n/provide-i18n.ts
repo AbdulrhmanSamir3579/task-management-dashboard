@@ -1,18 +1,22 @@
 import {
   type EnvironmentProviders,
+  effect,
   inject,
   isDevMode,
   makeEnvironmentProviders,
   provideAppInitializer,
+  provideEnvironmentInitializer,
 } from '@angular/core';
 import {
   type MissingTranslationHandler,
   type MissingTranslationHandlerParams,
   provideTranslateService,
 } from '@ngx-translate/core';
+import { UiLocaleService } from '../../shared/ui/locale/ui-locale.service';
 import { ImportTranslateLoader } from './import-translate-loader';
 import { LanguageService } from './language.service';
 import { DEFAULT_LANGUAGE } from './languages';
+import { uiLocaleFor } from './ui-locale';
 
 /** Shows the key, and in development says which one is missing. */
 export class ReportingMissingTranslationHandler implements MissingTranslationHandler {
@@ -33,5 +37,11 @@ export function provideI18n(): EnvironmentProviders {
       missingTranslationHandler: ReportingMissingTranslationHandler,
     }),
     provideAppInitializer(() => inject(LanguageService).start()),
+    // The UI library's own texts (date picker, empty lists) follow the language too.
+    provideEnvironmentInitializer(() => {
+      const language = inject(LanguageService);
+      const uiLocale = inject(UiLocaleService);
+      effect(() => uiLocale.apply(uiLocaleFor(language)));
+    }),
   ]);
 }

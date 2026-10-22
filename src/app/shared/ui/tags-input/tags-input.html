@@ -1,13 +1,13 @@
 <div class="tags-input">
   @if (tags().length) {
-    <ul class="tags-input__list" [attr.aria-label]="listLabel()">
+    <ul class="tags-input__list" [attr.aria-label]="listLabel() ?? ('UI.TAGS' | translate)">
       @for (tag of tags(); track tag) {
         <li class="tags-input__chip">
           <span class="tags-input__label">{{ tag }}</span>
           <button
             type="button"
             class="tags-input__remove"
-            [attr.aria-label]="'Remove ' + tag"
+            [attr.aria-label]="'UI.REMOVE_ITEM' | translate: { item: tag }"
             [disabled]="disabled()"
             (click)="remove(tag)"
           >

@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { InputText } from 'primeng/inputtext';
 import { UiFormControl, provideValueAccessor } from '../forms/form-control';
 
@@ -8,7 +9,7 @@ import { UiFormControl, provideValueAccessor } from '../forms/form-control';
  */
 @Component({
   selector: 'ui-tags-input',
-  imports: [InputText],
+  imports: [InputText, TranslatePipe],
   providers: [provideValueAccessor(() => UiTagsInput)],
   templateUrl: './tags-input.html',
   styleUrl: './tags-input.scss',
@@ -18,7 +19,8 @@ export class UiTagsInput extends UiFormControl<string[]> {
   readonly placeholder = input('');
   /** Maximum number of tags; the input is disabled once reached. */
   readonly max = input<number>();
-  readonly listLabel = input('Tags');
+  /** Accessible name of the list of tags; a translated "Tags" by default. */
+  readonly listLabel = input<string>();
 
   protected readonly emptyValue: string[] = [];
   protected readonly tags = computed(() => this.value() ?? []);

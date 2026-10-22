@@ -1,5 +1,7 @@
 @if (config().empty) {
-  <p class="chart__empty" [style.height]="height()">{{ emptyMessage() }}</p>
+  <p class="chart__empty" [style.height]="height()">
+    {{ emptyMessage() ?? ('CHART.EMPTY' | translate) }}
+  </p>
 } @else {
   <div
     echarts

@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input, model, output } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Dialog } from 'primeng/dialog';
 
 /** Return `false` (or a promise of it) to keep the dialog open, e.g. after "Keep editing". */
@@ -11,7 +12,7 @@ export type DialogCloseGuard = () => boolean | Promise<boolean>;
  */
 @Component({
   selector: 'ui-dialog',
-  imports: [Dialog],
+  imports: [Dialog, TranslatePipe],
   host: { '(document:keydown.escape)': 'onEscape()' },
   templateUrl: './dialog.html',
   styleUrl: './dialog.scss',

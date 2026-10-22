@@ -39,5 +39,57 @@
     "TITLE": "Page not found",
     "MESSAGE": "The page you are looking for does not exist or has moved.",
     "BACK": "Back to the dashboard"
+  },
+  "UI": {
+    "CLOSE_DIALOG": "Close dialog",
+    "REMOVE_ITEM": "Remove {{item}}",
+    "TAGS": "Tags",
+    "NO_RESULTS": "No results",
+    "SELECTED_COUNT": "{0} selected",
+    "TODAY": "Today",
+    "CLEAR": "Clear",
+    "PREVIOUS_MONTH": "Previous month",
+    "NEXT_MONTH": "Next month",
+    "PREVIOUS_YEAR": "Previous year",
+    "NEXT_YEAR": "Next year",
+    "CHOOSE_DATE": "Choose date",
+    "CLEAR_SELECTION": "Clear selection",
+    "PREVIOUS_DECADE": "Previous decade",
+    "NEXT_DECADE": "Next decade"
+  },
+  "TOAST": {
+    "SUCCESS": "Done",
+    "INFO": "Info",
+    "WARNING": "Heads up",
+    "ERROR": "Something went wrong"
+  },
+  "ERRORS": {
+    "NETWORK": "Unable to reach the server. Check your connection and try again.",
+    "VALIDATION": "Some of the information is invalid. Please review it and try again.",
+    "UNAUTHORIZED": "Your session has expired. Please sign in again.",
+    "FORBIDDEN": "You do not have permission to do that.",
+    "NOT_FOUND": "The requested item could not be found.",
+    "CONFLICT": "This item was changed elsewhere. Refresh and try again.",
+    "RATE_LIMITED": "Too many requests. Please wait a moment and try again.",
+    "SERVER": "Something went wrong on our side. Please try again.",
+    "UNKNOWN": "Something went wrong. Please try again."
+  },
+  "VALIDATION": {
+    "REQUIRED": "This field is required.",
+    "MIN_LENGTH": "Use at least {{count}} characters.",
+    "MAX_LENGTH": "Use at most {{count}} characters.",
+    "EMAIL": "Enter a valid email address.",
+    "INVALID": "Enter a valid value.",
+    "BLANK": "Use letters or numbers, not only spaces.",
+    "DATE_IN_PAST": "Pick today or a later date.",
+    "DATE_IN_FUTURE": "This date cannot be in the future.",
+    "TITLE_TAKEN": "A task with this title already exists.",
+    "ITEM_TOO_LONG": "Each tag can have at most {{max}} characters.",
+    "MAX_TAGS": "Use at most {{max}} tags.",
+    "MAX_CHECKLIST_ITEMS": "Use at most {{max}} checklist items.",
+    "ASSIGNEE_REQUIRED": "Choose who will work on this task."
+  },
+  "CHART": {
+    "EMPTY": "Nothing to show yet."
   }
 }

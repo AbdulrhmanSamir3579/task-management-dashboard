@@ -1,6 +1,6 @@
 <p-dialog
   appendTo="body"
-  closeAriaLabel="Close dialog"
+  [closeAriaLabel]="'UI.CLOSE_DIALOG' | translate"
   [header]="heading()"
   [(visible)]="visible"
   [modal]="true"
@@ -19,7 +19,7 @@
       <button
         type="button"
         class="ui-dialog__close"
-        aria-label="Close dialog"
+        [attr.aria-label]="'UI.CLOSE_DIALOG' | translate"
         (click)="requestClose()"
       >
         <span aria-hidden="true">✕</span>

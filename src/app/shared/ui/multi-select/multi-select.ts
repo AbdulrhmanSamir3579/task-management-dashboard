@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { MultiSelect } from 'primeng/multiselect';
 import { UiFormControl, provideValueAccessor } from '../forms/form-control';
@@ -6,7 +7,7 @@ import type { SelectOption } from '../ui.types';
 
 @Component({
   selector: 'ui-multi-select',
-  imports: [MultiSelect, FormsModule],
+  imports: [MultiSelect, FormsModule, TranslatePipe],
   providers: [provideValueAccessor(() => UiMultiSelect)],
   templateUrl: './multi-select.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

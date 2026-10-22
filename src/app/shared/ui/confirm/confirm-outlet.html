@@ -13,12 +13,12 @@
       <ui-button
         variant="ghost"
         [autofocus]="true"
-        [label]="question.cancelLabel"
+        [label]="question.cancelLabel ?? ('COMMON.CANCEL' | translate)"
         (clicked)="confirm.answer(false)"
       />
       <ui-button
         [variant]="question.tone === 'danger' ? 'danger' : 'primary'"
-        [label]="question.confirmLabel"
+        [label]="question.confirmLabel ?? ('COMMON.CONFIRM' | translate)"
         (clicked)="confirm.answer(true)"
       />
     </div>
