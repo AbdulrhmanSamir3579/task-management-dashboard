@@ -1,5 +1,5 @@
 import { render, screen, within } from '@testing-library/angular';
-import { provideEchartsCore } from 'ngx-echarts';
+import { provideChartsForTesting } from '../../../../testing/charts';
 import type { ChartConfig } from '../chart.models';
 import { UiChart } from './chart';
 
@@ -17,16 +17,10 @@ const config: ChartConfig = {
 
 describe('UiChart', () => {
   async function setup(chartConfig: ChartConfig = config) {
-    const chart = {
-      setOption: vi.fn(),
-      resize: vi.fn(),
-      dispose: vi.fn(),
-      isDisposed: () => false,
-    };
-    const init = vi.fn(() => chart);
+    const { provider, init, chart } = provideChartsForTesting();
     const view = await render(UiChart, {
       inputs: { config: chartConfig, label: 'Tasks by status' },
-      providers: [provideEchartsCore({ echarts: { init } })],
+      providers: [provider],
     });
     return { ...view, init, chart };
   }

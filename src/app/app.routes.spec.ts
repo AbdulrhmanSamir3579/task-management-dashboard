@@ -30,7 +30,16 @@ describe('app routes', () => {
     expect(await screen.findByRole('heading', { level: 1, name: 'Dashboard' })).toBeInTheDocument();
   });
 
-  it.each(['Calendar', 'Analytics', 'Team', 'Settings'])(
+  it('lazy loads the Analytics page and sets the tab title', async () => {
+    await visit('/analytics');
+
+    expect(
+      await screen.findByRole('heading', { level: 2, name: 'Tasks by status' }),
+    ).toBeInTheDocument();
+    expect(TestBed.inject(Title).getTitle()).toBe('Analytics · Task Manager');
+  });
+
+  it.each(['Calendar', 'Team', 'Settings'])(
     'lazy loads the %s page and sets the tab title',
     async (page) => {
       await visit(`/${page.toLowerCase()}`);
