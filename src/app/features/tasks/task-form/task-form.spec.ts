@@ -52,14 +52,24 @@ describe('TaskForm', () => {
     await userEvent.click(screen.getByText('15'));
   }
 
-  it('starts a new task with the assignee chosen in advance', async () => {
+  it('starts a new task with the assignee and due date chosen in advance', async () => {
+    const dueDate = nextMonthOn15();
+    const saved = vi.fn();
     const view = await render(TaskForm, {
       providers: [provideUi()],
-      inputs: { assignees, defaultAssigneeId: 'user-002' },
+      inputs: { assignees, defaultAssigneeId: 'user-002', defaultDueDate: dueDate },
+      on: { saved },
     });
 
     await vi.waitFor(() => expect(combobox('Assignee')).toHaveTextContent('Sarah Smith'));
     expect(view.fixture.componentInstance.hasChanges()).toBe(false);
+    await userEvent.type(title(), 'Plan sprint review');
+    await userEvent.click(screen.getByRole('button', { name: 'Create task' }));
+    await vi.waitFor(() =>
+      expect(saved).toHaveBeenCalledWith(
+        expect.objectContaining({ assigneeId: 'user-002', dueDate }),
+      ),
+    );
   });
 
   it('creates a task from the filled form', async () => {

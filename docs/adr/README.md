@@ -24,8 +24,9 @@ Short records of the decisions that shape this codebase: what was decided, why, 
 | [0018](0018-chart-layer.md)                             | Chart layer                                 | Accepted                  |
 | [0019](0019-activity-feed.md)                           | Activity feed                               | Accepted                  |
 | [0020](0020-team-page.md)                               | Team page                                   | Accepted                  |
-| [0021](0021-calendar-agenda.md)                         | Calendar as an agenda                       | Accepted                  |
+| [0021](0021-calendar-agenda.md)                         | Calendar as an agenda                       | Accepted, amended by 0023 |
 | [0022](0022-inline-board-filters.md)                    | Inline board filters                        | Accepted                  |
+| [0023](0023-calendar-views.md)                          | Calendar views                              | Accepted                  |
 
 ## Template
 

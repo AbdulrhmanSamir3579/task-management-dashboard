@@ -22,6 +22,36 @@ export function addDaysToIsoDate(isoDate: string, days: number): string {
 }
 
 /**
+ * Adds whole months to a `YYYY-MM-DD` date, keeping the day where the month allows it:
+ * January 31 plus one month is the last day of February.
+ */
+export function addMonthsToIsoDate(isoDate: string, months: number): string {
+  const date = fromIsoDate(isoDate);
+  const day = date.getDate();
+  date.setDate(1);
+  date.setMonth(date.getMonth() + months);
+  const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+  date.setDate(Math.min(day, lastDay));
+  return toIsoDate(date);
+}
+
+/** First day of the month of a `YYYY-MM-DD` date. */
+export function startOfMonth(isoDate: string): string {
+  return `${isoDate.slice(0, 8)}01`;
+}
+
+/** First day of the week of a `YYYY-MM-DD` date; weeks start on `weekStartsOn` (0 is Sunday). */
+export function startOfWeek(isoDate: string, weekStartsOn = 1): string {
+  const offset = (fromIsoDate(isoDate).getDay() - weekStartsOn + 7) % 7;
+  return addDaysToIsoDate(isoDate, -offset);
+}
+
+/** Whether a value is a real calendar day written as `YYYY-MM-DD`. */
+export function isIsoDate(value: string | null | undefined): value is string {
+  return !!value && /^\d{4}-\d{2}-\d{2}$/.test(value) && toIsoDate(fromIsoDate(value)) === value;
+}
+
+/**
  * Number of calendar days from `from` to `to`, ignoring the time of day.
  * Uses UTC midnights so daylight saving changes never produce fractional days.
  */

@@ -1,6 +1,6 @@
 # 0021. Calendar as an agenda
 
-- Status: Accepted
+- Status: Accepted, amended by [0023](0023-calendar-views.md) (Month and Week views added)
 - Date: 2026-10-22
 
 ## Context
