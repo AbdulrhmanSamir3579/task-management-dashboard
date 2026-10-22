@@ -1,7 +1,9 @@
 /* Design tokens from the Figma file. */
 :root {
   color-scheme: light;
-  --app-font: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  /* Inter for Latin text; IBM Plex Sans Arabic, downloaded only for Arabic text, after it. */
+  --app-font:
+    'Inter', 'IBM Plex Sans Arabic', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --app-primary: #1976d2;
   --app-primary-hover: #1565c0;
   /** Text on a primary background. */
