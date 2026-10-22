@@ -19,3 +19,12 @@ if (!window.matchMedia) {
 if (!Element.prototype.scrollIntoView) {
   Element.prototype.scrollIntoView = () => undefined;
 }
+
+// jsdom has no ResizeObserver; ngx-echarts refuses to start without one.
+if (!window.ResizeObserver) {
+  window.ResizeObserver = class {
+    observe = (): undefined => undefined;
+    unobserve = (): undefined => undefined;
+    disconnect = (): undefined => undefined;
+  };
+}

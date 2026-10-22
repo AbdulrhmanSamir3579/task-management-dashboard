@@ -1,0 +1,49 @@
+@if (!store.hasLoaded() && store.loadError(); as error) {
+  <app-empty-state icon="⚠️" title="Analytics could not be loaded" [message]="error">
+    <ui-button label="Try again" (clicked)="store.reload()" />
+  </app-empty-state>
+} @else {
+  <div class="analytics">
+    <app-chart-card heading="Tasks by status" description="Where the work stands right now.">
+      @if (charts(); as c) {
+        <ui-chart label="Tasks by status" [config]="c.status" />
+      } @else {
+        <ng-container [ngTemplateOutlet]="loading" />
+      }
+    </app-chart-card>
+
+    <app-chart-card heading="Tasks by priority" description="How urgent the work is.">
+      @if (charts(); as c) {
+        <ui-chart label="Tasks by priority" [config]="c.priority" />
+      } @else {
+        <ng-container [ngTemplateOutlet]="loading" />
+      }
+    </app-chart-card>
+
+    <app-chart-card heading="Workload by assignee" description="Each person’s tasks by status.">
+      @if (charts(); as c) {
+        <ui-chart label="Workload by assignee" [config]="c.workload" />
+      } @else {
+        <ng-container [ngTemplateOutlet]="loading" />
+      }
+    </app-chart-card>
+
+    <app-chart-card heading="Created vs completed" description="Tasks per day, last 14 days.">
+      @if (charts(); as c) {
+        <ui-chart
+          label="Tasks created and completed per day"
+          emptyMessage="No tasks were created or completed in the last 14 days."
+          [config]="c.trend"
+        />
+      } @else {
+        <ng-container [ngTemplateOutlet]="loading" />
+      }
+    </app-chart-card>
+  </div>
+}
+
+<ng-template #loading>
+  <div role="status" aria-label="Loading chart">
+    <ui-skeleton height="18rem" borderRadius="8px" />
+  </div>
+</ng-template>

@@ -1,0 +1,14 @@
+:host {
+  display: block;
+}
+
+.chart__canvas {
+  width: 100%;
+}
+
+.chart__empty {
+  display: grid;
+  place-items: center;
+  margin: 0;
+  color: var(--app-text-muted);
+}

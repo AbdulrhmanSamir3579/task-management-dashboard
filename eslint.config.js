@@ -93,6 +93,13 @@ module.exports = defineConfig([
     },
   },
   {
+    // Shared test helpers, e.g. a stand-in for ECharts, which jsdom cannot draw.
+    files: ['src/testing/**/*.ts'],
+    rules: {
+      'no-restricted-imports': restrictImports({ charts: false }),
+    },
+  },
+  {
     files: ['src/app/core/http/**/*.ts'],
     rules: {
       'no-restricted-imports': restrictImports({ http: false }),
