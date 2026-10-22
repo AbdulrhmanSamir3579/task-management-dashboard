@@ -182,11 +182,14 @@ describe('TaskForm', () => {
       await userEvent.type(item(1), '  Draft outline ');
       await addItem();
       await userEvent.type(item(2), 'Temporary');
-      await userEvent.click(screen.getByRole('checkbox', { name: 'Done: Draft outline' }));
-      await userEvent.click(screen.getByRole('button', { name: 'Remove checklist item 2' }));
+      // The checkbox is named after the row's text, which renders after typing.
+      await userEvent.click(await screen.findByRole('checkbox', { name: 'Done: Draft outline' }));
+      await userEvent.click(await screen.findByRole('button', { name: 'Remove checklist item 2' }));
 
-      expect(screen.queryByRole('textbox', { name: 'Checklist item 2' })).not.toBeInTheDocument();
-      expect(screen.getByText('1/1 done')).toBeInTheDocument();
+      await vi.waitFor(() =>
+        expect(screen.queryByRole('textbox', { name: 'Checklist item 2' })).not.toBeInTheDocument(),
+      );
+      expect(await screen.findByText('1/1 done')).toBeInTheDocument();
 
       await userEvent.click(screen.getByRole('button', { name: 'Create task' }));
       await vi.waitFor(() =>
