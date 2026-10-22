@@ -4,6 +4,7 @@ import { userEvent } from '@testing-library/user-event';
 import { THEME_STORAGE_KEY } from '../../core/theme/theme.service';
 import { DARK_MODE_CLASS } from '../../shared/ui/theme/dark-mode';
 import { SettingsPage } from './settings.page';
+import { expectNoAccessibilityViolations } from '../../../testing/axe';
 
 describe('SettingsPage', () => {
   afterEach(() => {
@@ -49,5 +50,11 @@ describe('SettingsPage', () => {
       'href',
       'dashboard?chaos=0.3',
     );
+  });
+
+  it('has no accessibility violations', async () => {
+    await setup();
+
+    await expectNoAccessibilityViolations();
   });
 });

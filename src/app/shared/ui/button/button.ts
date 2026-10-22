@@ -36,6 +36,7 @@ const SIZE = { small: 'small', medium: undefined, large: 'large' } as const sati
       [loading]="loading()"
       [disabled]="disabled()"
       [fluid]="fullWidth()"
+      [autofocus]="autofocus()"
       [ariaLabel]="ariaLabel()"
       (onClick)="clicked.emit($event)"
     >
@@ -52,6 +53,8 @@ export class UiButton {
   readonly loading = input(false);
   readonly disabled = input(false);
   readonly fullWidth = input(false);
+  /** Focuses the button once it is shown, e.g. the safe choice in a dialog. */
+  readonly autofocus = input(false);
   /** Required when the button has no visible label, e.g. icon-only buttons. */
   readonly ariaLabel = input<string>();
   readonly clicked = output<MouseEvent>();

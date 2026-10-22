@@ -1,11 +1,25 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ConfirmDialog } from 'primeng/confirmdialog';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { UiButton } from '../button/button';
+import { UiDialog } from '../dialog/dialog';
+import { ConfirmService } from './confirm.service';
 
-/** Place once in the app shell; shows dialogs opened through `ConfirmService`. */
+/**
+ * Place once in the app shell; shows questions asked through `ConfirmService`. Focus
+ * starts on Cancel, so Enter never confirms a destructive action by accident.
+ */
 @Component({
   selector: 'ui-confirm-outlet',
-  imports: [ConfirmDialog],
-  template: `<p-confirmdialog [style]="{ width: '28rem' }" [breakpoints]="{ '640px': '95vw' }" />`,
+  imports: [UiButton, UiDialog],
+  templateUrl: './confirm-outlet.html',
+  styleUrl: './confirm-outlet.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UiConfirmOutlet {}
+export class UiConfirmOutlet {
+  protected readonly confirm = inject(ConfirmService);
+
+  protected onVisibleChange(visible: boolean): void {
+    if (!visible) {
+      this.confirm.answer(false);
+    }
+  }
+}

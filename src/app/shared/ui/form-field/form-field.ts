@@ -66,10 +66,10 @@ interface ControlState {
     }
     .form-field__required,
     .form-field__error {
-      color: var(--p-red-500);
+      color: var(--app-danger-text);
     }
     .form-field__hint {
-      color: var(--p-text-muted-color);
+      color: var(--app-text-muted);
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

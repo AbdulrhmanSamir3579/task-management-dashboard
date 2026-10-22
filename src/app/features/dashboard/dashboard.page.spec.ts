@@ -7,6 +7,7 @@ import { buildTaskDto } from '../../../testing/builders';
 import { ConfirmService } from '../../shared/ui/confirm/confirm.service';
 import { NotificationService } from '../../shared/ui/notifications/notification.service';
 import { DashboardPage } from './dashboard.page';
+import { expectNoAccessibilityViolations } from '../../../testing/axe';
 
 describe('DashboardPage', () => {
   async function setup() {
@@ -48,5 +49,17 @@ describe('DashboardPage', () => {
     expect(value('In Progress')).toHaveTextContent('1');
     expect(value('Overdue')).toHaveTextContent('1');
     expect(screen.getByRole('region', { name: 'To Do' })).toBeInTheDocument();
+  });
+
+  it('has no accessibility violations', async () => {
+    const httpTesting = await setup();
+    TestBed.tick();
+    httpTesting
+      .expectOne('api/tasks')
+      .flush({ tasks: [buildTaskDto()], meta: { totalCount: 1, lastUpdated: '' } });
+    httpTesting.expectOne('api/users').flush([]);
+    await TestBed.inject(ApplicationRef).whenStable();
+
+    await expectNoAccessibilityViolations();
   });
 });

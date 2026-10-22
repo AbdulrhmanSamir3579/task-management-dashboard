@@ -19,7 +19,7 @@
   font-weight: 600;
 }
 .agenda-group__title--overdue {
-  color: var(--app-danger);
+  color: var(--app-danger-text);
 }
 .agenda-group__count {
   min-width: 1.5rem;
@@ -98,7 +98,7 @@
   font-size: 0.8125rem;
 }
 .agenda-item__meta--overdue {
-  color: var(--app-danger);
+  color: var(--app-danger-text);
 }
 @media (max-width: 599.98px) {
   .agenda-item {

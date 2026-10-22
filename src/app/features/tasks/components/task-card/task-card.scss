@@ -37,17 +37,17 @@
 
 .card__priority--high {
   background: var(--app-danger-surface);
-  color: var(--app-danger);
+  color: var(--app-danger-text);
 }
 
 .card__priority--medium {
   background: var(--app-warning-surface);
-  color: var(--app-warning);
+  color: var(--app-warning-text);
 }
 
 .card__priority--low {
   background: var(--app-success-surface);
-  color: var(--app-success);
+  color: var(--app-success-text);
 }
 
 .card__title {

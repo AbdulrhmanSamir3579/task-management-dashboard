@@ -11,6 +11,7 @@ import { NotificationService } from '../../../shared/ui/notifications/notificati
 import { provideUi } from '../../../shared/ui/provide-ui';
 import { TaskEditorStore } from '../data-access/task-editor.store';
 import { TaskEditorDialog } from './task-editor-dialog';
+import { expectNoAccessibilityViolations } from '../../../../testing/axe';
 
 describe('TaskEditorDialog', () => {
   let confirm: ReturnType<typeof vi.fn>;
@@ -118,5 +119,14 @@ describe('TaskEditorDialog', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
     await vi.waitFor(() => expect(editor.open()).toBe(false));
+  });
+
+  it('has no accessibility violations in the open form', async () => {
+    const { editor } = await setup();
+
+    editor.openEdit('task-002');
+    await screen.findByRole('dialog', { name: 'Edit task' });
+
+    await expectNoAccessibilityViolations();
   });
 });

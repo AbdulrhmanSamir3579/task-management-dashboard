@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 import { PrimeNG } from 'primeng/config';
 import { provideUi } from './provide-ui';
 import { DARK_MODE_CLASS } from './theme/dark-mode';
@@ -17,11 +17,10 @@ describe('provideUi', () => {
 });
 
 describe('provideUi services', () => {
-  it('registers the services behind notifications and confirmations', () => {
+  it('registers the service behind notifications', () => {
     TestBed.configureTestingModule({ providers: [provideUi()] });
 
     expect(TestBed.inject(MessageService)).toBeInstanceOf(MessageService);
-    expect(TestBed.inject(ConfirmationService)).toBeInstanceOf(ConfirmationService);
   });
 });
 

@@ -1,5 +1,5 @@
 import { type EnvironmentProviders, makeEnvironmentProviders } from '@angular/core';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 import { AppPreset } from './theme/app-preset';
 import { DARK_MODE_CLASS } from './theme/dark-mode';
@@ -15,6 +15,5 @@ export function provideUi(): EnvironmentProviders {
       },
     }),
     MessageService,
-    ConfirmationService,
   ]);
 }

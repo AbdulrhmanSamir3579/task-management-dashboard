@@ -1,5 +1,4 @@
-import { Injectable, inject } from '@angular/core';
-import { ConfirmationService } from 'primeng/api';
+import { Injectable, computed, signal } from '@angular/core';
 
 export interface ConfirmOptions {
   title: string;
@@ -10,27 +9,37 @@ export interface ConfirmOptions {
   tone?: 'primary' | 'danger';
 }
 
+interface PendingQuestion {
+  options: Required<ConfirmOptions>;
+  resolve: (confirmed: boolean) => void;
+}
+
 /** Confirmation dialog rendered by the single `<ui-confirm-outlet>` in the app shell. */
 @Injectable({ providedIn: 'root' })
 export class ConfirmService {
-  private readonly confirmation = inject(ConfirmationService);
+  private readonly pending = signal<PendingQuestion | null>(null);
+
+  /** The question on screen, for the outlet; `null` when there is none. */
+  readonly question = computed(() => this.pending()?.options ?? null);
 
   /** Resolves `true` when confirmed, `false` when cancelled or dismissed. */
   confirm(options: ConfirmOptions): Promise<boolean> {
+    // A new question replaces one still open, which counts as cancelled.
+    this.pending()?.resolve(false);
     return new Promise((resolve) => {
-      this.confirmation.confirm({
-        header: options.title,
-        message: options.message,
-        acceptLabel: options.confirmLabel ?? 'Confirm',
-        rejectLabel: options.cancelLabel ?? 'Cancel',
-        acceptButtonProps: { severity: options.tone === 'danger' ? 'danger' : 'primary' },
-        rejectButtonProps: { severity: 'secondary', variant: 'text' },
-        // Focus starts on Cancel so Enter never confirms a destructive action by accident.
-        defaultFocus: 'reject',
-        closeOnEscape: true,
-        accept: () => resolve(true),
-        reject: () => resolve(false),
+      this.pending.set({
+        options: { confirmLabel: 'Confirm', cancelLabel: 'Cancel', tone: 'primary', ...options },
+        resolve,
       });
     });
+  }
+
+  /** Called by the outlet with the user's answer. */
+  answer(confirmed: boolean): void {
+    const pending = this.pending();
+    if (pending) {
+      this.pending.set(null);
+      pending.resolve(confirmed);
+    }
   }
 }
