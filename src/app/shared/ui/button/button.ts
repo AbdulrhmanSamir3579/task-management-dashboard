@@ -5,9 +5,18 @@ import type { ButtonVariant, ControlSize } from '../ui.types';
 const SEVERITY = {
   primary: 'primary',
   secondary: 'secondary',
+  outline: 'secondary',
   danger: 'danger',
   ghost: 'secondary',
 } as const satisfies Record<ButtonVariant, string>;
+
+const PRIME_VARIANT = {
+  primary: undefined,
+  secondary: undefined,
+  outline: 'outlined',
+  danger: undefined,
+  ghost: 'text',
+} as const satisfies Record<ButtonVariant, string | undefined>;
 
 const SIZE = { small: 'small', medium: undefined, large: 'large' } as const satisfies Record<
   ControlSize,
@@ -22,7 +31,7 @@ const SIZE = { small: 'small', medium: undefined, large: 'large' } as const sati
       [label]="label()"
       [type]="type()"
       [severity]="severity()"
-      [variant]="variant() === 'ghost' ? 'text' : undefined"
+      [variant]="primeVariant()"
       [size]="primeSize()"
       [loading]="loading()"
       [disabled]="disabled()"
@@ -48,5 +57,6 @@ export class UiButton {
   readonly clicked = output<MouseEvent>();
 
   protected readonly severity = computed(() => SEVERITY[this.variant()]);
+  protected readonly primeVariant = computed(() => PRIME_VARIANT[this.variant()]);
   protected readonly primeSize = computed(() => SIZE[this.size()]);
 }

@@ -1,6 +1,6 @@
 /** Public types of the UI wrappers. Features use these, never PrimeNG types. */
 
-export type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'ghost';
+export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'danger' | 'ghost';
 
 export type ControlSize = 'small' | 'medium' | 'large';
 

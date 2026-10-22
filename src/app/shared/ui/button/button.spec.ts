@@ -32,6 +32,7 @@ describe('UiButton', () => {
     ['danger', 'p-button-danger'],
     ['secondary', 'p-button-secondary'],
     ['ghost', 'p-button-text'],
+    ['outline', 'p-button-outlined'],
   ] as const)('renders the %s variant', async (variant, cssClass) => {
     await render(UiButton, { inputs: { label: 'Go', variant } });
     expect(screen.getByRole('button', { name: 'Go' })).toHaveClass(cssClass);
