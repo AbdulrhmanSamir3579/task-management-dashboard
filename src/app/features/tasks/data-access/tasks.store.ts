@@ -54,6 +54,11 @@ export type TaskChangeState = 'saving' | 'saved' | 'failed';
 interface TasksState {
   filters: TaskFilters;
   changeStates: Record<string, TaskChangeState>;
+  /**
+   * How many changes the server has accepted in this session. Data derived from tasks on
+   * the server, such as the activity feed, refreshes when it goes up.
+   */
+  savedChanges: number;
 }
 
 /** One optimistic board change waiting for the server. */
@@ -87,7 +92,7 @@ function messageOf(error: unknown, fallback: string): string {
 export const TasksStore = signalStore(
   { providedIn: 'root' },
   withEntities<Task>(),
-  withState<TasksState>({ filters: EMPTY_TASK_FILTERS, changeStates: {} }),
+  withState<TasksState>({ filters: EMPTY_TASK_FILTERS, changeStates: {}, savedChanges: 0 }),
   withProps(() => {
     const api = inject(TasksApi);
     return {
@@ -131,6 +136,9 @@ export const TasksStore = signalStore(
     },
     reload(): void {
       store._resource.reload();
+    },
+    _countSaved(): void {
+      patchState(store, ({ savedChanges }) => ({ savedChanges: savedChanges + 1 }));
     },
   })),
   withMethods((store) => {
@@ -184,6 +192,7 @@ export const TasksStore = signalStore(
             return change.request().pipe(
               tap((response) => {
                 succeeded = true;
+                store._countSaved();
                 if (isLatestChange(change.taskId)) {
                   change.onSuccess(response);
                 }
@@ -229,6 +238,7 @@ export const TasksStore = signalStore(
         try {
           const dto = await firstValueFrom(store._api.create(payload));
           patchState(store, addEntity(toTask(dto, today())));
+          store._countSaved();
           store._notifications.success(`"${dto.title}" was added to the board.`, 'Task created');
           return true;
         } catch (error) {
@@ -241,6 +251,7 @@ export const TasksStore = signalStore(
       async update(id: string, changes: UpdateTaskPayload): Promise<boolean> {
         try {
           saveFromServer(await firstValueFrom(store._api.update(id, changes)));
+          store._countSaved();
           store._notifications.success('Your changes were saved.', 'Task updated');
           return true;
         } catch (error) {

@@ -199,7 +199,13 @@ export class TaskForm {
     this.form.markAllAsTouched();
     if (this.form.pending) {
       // Wait for the duplicate-title check instead of submitting with an unknown result.
-      await firstValueFrom(this.form.statusChanges.pipe(filter((status) => status !== 'PENDING')));
+      // The check is run again first: one started by the form directive on first render
+      // runs silently and would never report that it finished.
+      const settled = firstValueFrom(
+        this.form.statusChanges.pipe(filter((status) => status !== 'PENDING')),
+      );
+      this.form.controls.title.updateValueAndValidity();
+      await settled;
     }
     if (this.form.invalid) {
       this.focusFirstInvalid();

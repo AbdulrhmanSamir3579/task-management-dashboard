@@ -6,6 +6,14 @@
   } @placeholder {
     <span class="search-placeholder" aria-hidden="true">🔍 Search tasks...</span>
   }
+  <div headerActions class="header-actions">
+    <!-- Needs PrimeNG's popover; loads right after first paint, like the search box. -->
+    @defer (on idle) {
+      <app-activity-bell />
+    } @placeholder {
+      <span class="bell-placeholder" aria-hidden="true">🔔</span>
+    }
+  </div>
 </app-header>
 <div class="shell" [class.shell--nav-open]="navOpen()">
   <app-sidebar

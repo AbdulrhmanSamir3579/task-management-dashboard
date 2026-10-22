@@ -1,15 +1,15 @@
 import { HttpClient, HttpErrorResponse, provideHttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
-import type {
-  Activity,
-  CreateTaskPayload,
-  TaskDto,
-  TasksResponse,
-  UpdateTaskPayload,
-  User,
+import {
+  type Activity,
+  CURRENT_USER_ACTOR,
+  type CreateTaskPayload,
+  type TaskDto,
+  type TasksResponse,
+  type UpdateTaskPayload,
+  type User,
 } from '../models';
-import { CURRENT_USER_NAME } from './in-memory-data.service';
 import { provideMockApi } from './provide-mock-api';
 
 describe('InMemoryDataService', () => {
@@ -88,6 +88,13 @@ describe('InMemoryDataService', () => {
       expect(timestamps).toEqual([...timestamps].sort().reverse());
     });
 
+    it('limits activities to the newest ones when asked', async () => {
+      const all = await getActivities();
+      const latest = await firstValueFrom(http.get<Activity[]>('api/activities?limit=2'));
+
+      expect(latest).toEqual(all.slice(0, 2));
+    });
+
     it('returns copies, so callers cannot change the database', async () => {
       const first = await getTasks();
       first.tasks[0]!.title = 'Changed locally';
@@ -121,7 +128,7 @@ describe('InMemoryDataService', () => {
       expect(latest).toMatchObject({
         type: 'created',
         taskId: created.id,
-        actor: CURRENT_USER_NAME,
+        actor: CURRENT_USER_ACTOR,
         timestamp: now.toISOString(),
       });
     });

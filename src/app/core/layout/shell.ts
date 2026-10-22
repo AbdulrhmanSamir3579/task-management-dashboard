@@ -9,6 +9,7 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs';
+import { ActivityBell } from '../../features/activity/activity-bell/activity-bell';
 import { UiConfirmOutlet } from '../../shared/ui/confirm/confirm-outlet';
 import { TaskEditorStore } from '../../features/tasks/data-access/task-editor.store';
 import { TaskEditorDialog } from '../../features/tasks/task-editor/task-editor-dialog';
@@ -25,6 +26,7 @@ import { Sidebar } from './sidebar/sidebar';
     RouterOutlet,
     Sidebar,
     Header,
+    ActivityBell,
     TaskSearchBox,
     TaskEditorDialog,
     UiToastOutlet,

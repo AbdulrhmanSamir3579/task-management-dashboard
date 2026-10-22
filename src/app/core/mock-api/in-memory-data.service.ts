@@ -6,19 +6,17 @@ import {
   STATUS,
 } from 'angular-in-memory-web-api';
 import type { Observable } from 'rxjs';
-import type {
-  Activity,
-  CreateTaskPayload,
-  TaskDto,
-  TasksResponse,
-  UpdateTaskPayload,
+import {
+  type Activity,
+  CURRENT_USER_ACTOR,
+  type CreateTaskPayload,
+  type TaskDto,
+  type TasksResponse,
+  type UpdateTaskPayload,
 } from '../models';
 import { moveOnBoard, removeFromBoard } from '../../shared/utils/board-order';
 import { rankByText } from '../../shared/utils/text-search';
 import { type MockDb, cleanChecklist, createMockDb, nextTaskId } from './mock-db';
-
-/** Name shown in the activity feed for changes made through the app. */
-export const CURRENT_USER_NAME = 'You';
 
 /**
  * In-memory "server" for the demo. angular-in-memory-web-api serves the collections;
@@ -34,14 +32,23 @@ export class InMemoryDataService implements InMemoryDbService {
   }
 
   get(reqInfo: RequestInfo): Observable<unknown> | undefined {
-    if (reqInfo.collectionName !== 'tasks' || reqInfo.id) {
+    if (reqInfo.id) {
+      return undefined;
+    }
+    if (reqInfo.collectionName === 'activities') {
+      // Newest first, with an optional `?limit=`.
+      return reqInfo.utils.createResponse$(() => ({
+        status: STATUS.OK,
+        body: structuredClone(this.limited(reqInfo, this.db(reqInfo).activities)),
+      }));
+    }
+    if (reqInfo.collectionName !== 'tasks') {
       return undefined;
     }
     return reqInfo.utils.createResponse$(() => {
       // Optional `?search=` (title and description) and `?limit=` query parameters.
       const matches = rankByText(this.db(reqInfo).tasks, reqInfo.query.get('search')?.[0] ?? '');
-      const limit = Number(reqInfo.query.get('limit')?.[0]);
-      const page = limit > 0 ? matches.slice(0, limit) : matches;
+      const page = this.limited(reqInfo, matches);
       const body: TasksResponse = {
         tasks: structuredClone(page),
         meta: { totalCount: matches.length, lastUpdated: new Date().toISOString() },
@@ -187,6 +194,12 @@ export class InMemoryDataService implements InMemoryDbService {
     return reqInfo.utils.getDb() as MockDb;
   }
 
+  /** The first `?limit=` items, or all of them without a valid limit. */
+  private limited<T>(reqInfo: RequestInfo, items: T[]): T[] {
+    const limit = Number(reqInfo.query.get('limit')?.[0]);
+    return limit > 0 ? items.slice(0, limit) : items;
+  }
+
   private body<T>(reqInfo: RequestInfo): T {
     return reqInfo.utils.getJsonBody(reqInfo.req) as T;
   }
@@ -194,7 +207,7 @@ export class InMemoryDataService implements InMemoryDbService {
   private log(db: MockDb, entry: Omit<Activity, 'id' | 'actor'>): void {
     db.activities.unshift({
       id: `activity-${db.activities.length + 1}`,
-      actor: CURRENT_USER_NAME,
+      actor: CURRENT_USER_ACTOR,
       ...entry,
     });
   }
