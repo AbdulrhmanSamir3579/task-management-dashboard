@@ -18,7 +18,10 @@ export class DonutChartService {
       options: {
         ...this.echarts.base(theme),
         tooltip: { ...this.echarts.tooltip(theme, 'item'), formatter: '{b}: {c} ({d}%)' },
-        legend: this.echarts.legend(theme),
+        legend: this.echarts.legend(
+          theme,
+          data.map((datum) => datum.label),
+        ),
         title: {
           text: String(total),
           subtext: valueLabel,

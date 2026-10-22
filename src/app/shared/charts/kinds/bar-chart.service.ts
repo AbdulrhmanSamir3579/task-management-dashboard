@@ -39,7 +39,7 @@ export class BarChartService {
     return this.compose(
       data.map((datum) => datum.label),
       [series],
-      { horizontal, legend: false },
+      { horizontal, legend: [] },
       datumTable(data, labels),
     );
   }
@@ -63,7 +63,7 @@ export class BarChartService {
     return this.compose(
       categories,
       bars,
-      { horizontal, legend: true },
+      { horizontal, legend: series.map((item) => item.name) },
       seriesTable(categories, series, labels),
     );
   }
@@ -71,7 +71,7 @@ export class BarChartService {
   private compose(
     categories: readonly string[],
     series: BarSeriesOption[],
-    layout: { horizontal: boolean; legend: boolean },
+    layout: { horizontal: boolean; legend: readonly string[] },
     table: ChartTable,
   ): ChartConfig {
     const theme = this.echarts.theme();
@@ -84,11 +84,15 @@ export class BarChartService {
       options: {
         ...this.echarts.base(theme),
         tooltip: this.echarts.tooltip(theme, 'axis'),
-        ...(layout.legend ? { legend: this.echarts.legend(theme) } : {}),
-        grid: this.echarts.grid(layout.legend),
-        xAxis: layout.horizontal ? valueAxis : categoryAxis,
+        ...(layout.legend.length ? { legend: this.echarts.legend(theme, layout.legend) } : {}),
+        grid: this.echarts.grid(layout.legend.length > 0),
+        // Right to left the chart is mirrored: horizontal bars grow to the left from names on
+        // the right, and vertical bars start from the right with the values on the right.
+        xAxis: { ...(layout.horizontal ? valueAxis : categoryAxis), inverse: theme.rtl },
         // Horizontal bars list the first category at the top.
-        yAxis: layout.horizontal ? { ...categoryAxis, inverse: true } : valueAxis,
+        yAxis: layout.horizontal
+          ? { ...categoryAxis, inverse: true, position: theme.rtl ? 'right' : 'left' }
+          : { ...valueAxis, position: theme.rtl ? 'right' : 'left' },
         series,
       },
       table,

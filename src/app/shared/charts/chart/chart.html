@@ -3,8 +3,13 @@
     {{ emptyMessage() ?? ('CHART.EMPTY' | translate) }}
   </p>
 } @else {
+  <!--
+    Always drawn left to right: ECharts places its SVG text by anchor, which a right-to-left
+    page would flip. Mirroring for Arabic is done in the chart options instead.
+  -->
   <div
     echarts
+    dir="ltr"
     class="chart__canvas"
     aria-hidden="true"
     [options]="config().options"

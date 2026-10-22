@@ -35,10 +35,14 @@ export class LineChartService {
       options: {
         ...this.echarts.base(theme),
         tooltip: { ...this.echarts.tooltip(theme, 'axis'), axisPointer: { type: 'line' } },
-        legend: this.echarts.legend(theme),
+        legend: this.echarts.legend(
+          theme,
+          series.map((item) => item.name),
+        ),
         grid: this.echarts.grid(true),
-        xAxis: this.echarts.categoryAxis(theme, [...categories], true),
-        yAxis: this.echarts.valueAxis(theme),
+        // Right to left, time runs from right to left and the values sit on the right.
+        xAxis: { ...this.echarts.categoryAxis(theme, [...categories], true), inverse: theme.rtl },
+        yAxis: { ...this.echarts.valueAxis(theme), position: theme.rtl ? 'right' : 'left' },
         series: lines,
       },
       table: seriesTable(categories, series, labels),
