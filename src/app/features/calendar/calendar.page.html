@@ -1,0 +1,19 @@
+@if (!store.hasLoaded() && store.loadError(); as error) {
+  <app-empty-state icon="⚠️" title="The agenda could not be loaded" [message]="error">
+    <ui-button label="Try again" (clicked)="store.reload()" />
+  </app-empty-state>
+} @else if (groups(); as list) {
+  @if (list.length) {
+    <app-agenda-list [groups]="list" [today]="today()" (taskOpen)="editor.openEdit($event)" />
+  } @else {
+    <app-empty-state icon="🎉" title="Nothing due" message="Every task is done.">
+      <ui-button label="+ New Task" (clicked)="editor.openCreate()" />
+    </app-empty-state>
+  }
+} @else {
+  <div class="calendar__loading" role="status" aria-label="Loading the agenda">
+    @for (skeleton of skeletons; track skeleton) {
+      <ui-skeleton height="7rem" borderRadius="8px" />
+    }
+  </div>
+}
