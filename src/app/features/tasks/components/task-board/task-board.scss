@@ -67,6 +67,20 @@
   background: color-mix(in srgb, var(--app-primary) 6%, transparent);
 }
 
+// New, moved and filtered-in cards fade into place: a CSS animation runs whenever an element
+// is added to the page, so no animation code is needed. No leave animation: during a drag it
+// would leave a ghost of the card in its old column.
+.column__list > app-task-card {
+  animation: card-enter 180ms ease-out;
+}
+
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(0.25rem);
+  }
+}
+
 // Drag and drop visuals. The preview is a clone placed under <body>; it keeps this
 // component's style scope.
 .cdk-drag {
@@ -100,11 +114,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cdk-drag-animating,
-  .cdk-drop-list-dragging .cdk-drag:not(.cdk-drag-placeholder) {
-    transition: none;
-  }
-
   .cdk-drag-preview {
     rotate: none;
   }
