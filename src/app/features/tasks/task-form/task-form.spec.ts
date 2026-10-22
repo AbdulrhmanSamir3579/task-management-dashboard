@@ -39,6 +39,9 @@ describe('TaskForm', () => {
   const combobox = (name: string) => screen.getByRole('combobox', { name });
 
   async function choose(field: string, option: string) {
+    // A list that is still closing keeps its options (without pointer events) for a moment;
+    // wait for it to go so the option comes from the list opened here.
+    await vi.waitFor(() => expect(screen.queryByRole('listbox')).not.toBeInTheDocument());
     await userEvent.click(combobox(field));
     await userEvent.click(await screen.findByRole('option', { name: option }));
   }
