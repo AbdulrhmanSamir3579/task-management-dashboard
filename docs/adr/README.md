@@ -23,6 +23,7 @@ Short records of the decisions that shape this codebase: what was decided, why, 
 | [0017](0017-board-filters.md)                           | Board filters                               | Accepted                  |
 | [0018](0018-chart-layer.md)                             | Chart layer                                 | Accepted                  |
 | [0019](0019-activity-feed.md)                           | Activity feed                               | Accepted                  |
+| [0020](0020-team-page.md)                               | Team page                                   | Accepted                  |
 
 ## Template
 
