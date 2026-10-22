@@ -147,6 +147,7 @@ describe('TasksStore', () => {
 
       expect(await result).toBe(true);
       expect(store.entityMap()['task-004']?.title).toBe('Plan sprint');
+      expect(store.savedChanges()).toBe(1);
       expect(notifications.success).toHaveBeenCalledWith(
         '"Plan sprint" was added to the board.',
         'Task created',
@@ -189,6 +190,26 @@ describe('TasksStore', () => {
       expect(store.entityMap()['task-002']?.title).toBe('Write docs');
       expect(notifications.error).toHaveBeenCalled();
     });
+  });
+
+  it('counts the changes the server accepted', async () => {
+    const store = await loadedStore();
+    expect(store.savedChanges()).toBe(0);
+
+    const edit = store.update('task-002', { title: 'Write API docs' });
+    httpTesting.expectOne('api/tasks/task-002').flush(buildTaskDto({ id: 'task-002' }));
+    await edit;
+    const failedEdit = store.update('task-002', { title: 'Rejected' });
+    httpTesting
+      .expectOne('api/tasks/task-002')
+      .flush(null, { status: 422, statusText: 'Unprocessable' });
+    await failedEdit;
+    store.remove('task-001');
+    httpTesting
+      .expectOne('api/tasks/task-001')
+      .flush(null, { status: 204, statusText: 'No Content' });
+
+    expect(store.savedChanges()).toBe(2);
   });
 
   describe('board changes', () => {
