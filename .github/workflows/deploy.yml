@@ -39,13 +39,10 @@ jobs:
 
       - run: npm ci
 
+      # Also writes one copy of the app per page (tasks.html, …) and 404.html, so deep links
+      # load with status 200. See scripts/prepare-pages.mjs.
       - name: Build
         run: npm run build:pages
-
-      # GitHub Pages answers unknown paths with 404.html. A copy of the app there lets the
-      # router open deep links such as /tasks?assignee=user-002 on reload.
-      - name: Add the single-page app fallback
-        run: cp dist/task-management-dashboard/browser/index.html dist/task-management-dashboard/browser/404.html
 
       - uses: actions/configure-pages@v6
 
