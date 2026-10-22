@@ -2,9 +2,7 @@ import { type EnvironmentProviders, makeEnvironmentProviders } from '@angular/co
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 import { AppPreset } from './theme/app-preset';
-
-/** CSS class on `<html>` that switches the theme to dark mode. */
-export const DARK_MODE_CLASS = 'app-dark';
+import { DARK_MODE_CLASS } from './theme/dark-mode';
 
 /** Everything the UI wrappers need at app level. The only place PrimeNG is configured. */
 export function provideUi(): EnvironmentProviders {

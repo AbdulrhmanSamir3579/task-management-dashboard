@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { render, screen, within } from '@testing-library/angular';
 import { userEvent } from '@testing-library/user-event';
 import { THEME_STORAGE_KEY } from '../../core/theme/theme.service';
-import { DARK_MODE_CLASS } from '../../shared/ui/provide-ui';
+import { DARK_MODE_CLASS } from '../../shared/ui/theme/dark-mode';
 import { SettingsPage } from './settings.page';
 
 describe('SettingsPage', () => {

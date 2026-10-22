@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { DARK_MODE_CLASS } from '../../shared/ui/provide-ui';
+import { DARK_MODE_CLASS } from '../../shared/ui/theme/dark-mode';
 import { THEME_STORAGE_KEY, ThemeService } from './theme.service';
 
 describe('ThemeService', () => {

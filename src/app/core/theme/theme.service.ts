@@ -1,5 +1,5 @@
 import { DOCUMENT, DestroyRef, Injectable, computed, effect, inject, signal } from '@angular/core';
-import { DARK_MODE_CLASS } from '../../shared/ui/provide-ui';
+import { DARK_MODE_CLASS } from '../../shared/ui/theme/dark-mode';
 import { BrowserStorage } from '../storage/browser-storage';
 
 export type ThemePreference = 'light' | 'dark' | 'system';
