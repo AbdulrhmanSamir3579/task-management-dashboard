@@ -24,12 +24,38 @@ function leaves(catalogue: Catalogue, prefix = ''): Map<string, string> {
 const placeholders = (text: string) =>
   [...text.matchAll(/{{\s*(\w+)\s*}}/g)].map((m) => m[1]).sort();
 
+/** Plural forms a language needs, e.g. `one` and `other` for English. */
+const pluralForms = (language: string) =>
+  new Intl.PluralRules(language).resolvedOptions().pluralCategories.slice().sort();
+
+const PLURAL_FORM = /\.(zero|one|two|few|many|other)$/;
+
+/** Keys with plural forms folded into their base key, e.g. `COMMON.DAYS`. */
+const baseKeys = (keys: Iterable<string>) =>
+  [...new Set([...keys].map((key) => key.replace(PLURAL_FORM, '')))].sort();
+
 describe('translations', () => {
   const english = leaves(en);
   const arabic = leaves(ar);
 
   it('has the same keys in English and Arabic', () => {
-    expect([...arabic.keys()].sort()).toEqual([...english.keys()].sort());
+    expect(baseKeys(arabic.keys())).toEqual(baseKeys(english.keys()));
+  });
+
+  it('has every plural form each language needs', () => {
+    for (const [language, catalogue] of [
+      ['en', english],
+      ['ar', arabic],
+    ] as const) {
+      const plurals = baseKeys([...catalogue.keys()].filter((key) => PLURAL_FORM.test(key)));
+      for (const key of plurals) {
+        const forms = [...catalogue.keys()]
+          .filter((k) => k.startsWith(`${key}.`) && PLURAL_FORM.test(k))
+          .map((k) => k.slice(key.length + 1))
+          .sort();
+        expect({ key, language, forms }).toEqual({ key, language, forms: pluralForms(language) });
+      }
+    }
   });
 
   it('has no empty strings', () => {
@@ -39,6 +65,7 @@ describe('translations', () => {
 
   it('uses the same placeholders in both languages', () => {
     const mismatched = [...english]
+      .filter(([key]) => !PLURAL_FORM.test(key))
       .filter(
         ([key, text]) => placeholders(text).join() !== placeholders(arabic.get(key) ?? '').join(),
       )

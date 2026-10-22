@@ -10,7 +10,15 @@
     "DELETE": "حذف",
     "EDIT": "تعديل",
     "TRY_AGAIN": "حاول مرة أخرى",
-    "NEW_TASK": "+ مهمة جديدة"
+    "NEW_TASK": "+ مهمة جديدة",
+    "DAYS": {
+      "zero": "{{count}} يوم",
+      "one": "يوم واحد",
+      "two": "يومان",
+      "few": "{{count}} أيام",
+      "many": "{{count}} يومًا",
+      "other": "{{count}} يوم"
+    }
   },
   "LANGUAGE": {
     "SWITCH_TO": "التبديل إلى {{language}}"

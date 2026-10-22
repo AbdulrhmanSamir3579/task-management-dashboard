@@ -5,8 +5,15 @@ import { of } from 'rxjs';
 import { LANGUAGE_STORAGE_KEY, LanguageService } from './language.service';
 
 const strings = {
-  en: { COMMON: { CANCEL: 'Cancel' } },
-  ar: { COMMON: { CANCEL: 'إلغاء' } },
+  en: {
+    COMMON: { CANCEL: 'Cancel', DAYS: { one: '{{count}} day', other: '{{count}} days' } },
+  },
+  ar: {
+    COMMON: {
+      CANCEL: 'إلغاء',
+      DAYS: { one: 'يوم واحد', two: 'يومان', few: '{{count}} أيام', other: '{{count}} يوم' },
+    },
+  },
 };
 
 describe('LanguageService', () => {
@@ -74,5 +81,24 @@ describe('LanguageService', () => {
     await service.use('ar');
 
     expect(label()).toBe('إلغاء');
+  });
+
+  it('picks the plural form of the current language', async () => {
+    const service = createService();
+    await service.start();
+    expect([1, 3].map((count) => service.plural('COMMON.DAYS', count))).toEqual([
+      '1 day',
+      '3 days',
+    ]);
+
+    await service.use('ar');
+
+    expect([1, 2, 3].map((count) => service.plural('COMMON.DAYS', count))).toEqual([
+      'يوم واحد',
+      'يومان',
+      '3 أيام',
+    ]);
+    // "many" is left out here, so "other" is used.
+    expect(service.plural('COMMON.DAYS', 11)).toBe('11 يوم');
   });
 });

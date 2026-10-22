@@ -10,7 +10,11 @@
     "DELETE": "Delete",
     "EDIT": "Edit",
     "TRY_AGAIN": "Try again",
-    "NEW_TASK": "+ New Task"
+    "NEW_TASK": "+ New Task",
+    "DAYS": {
+      "one": "{{count}} day",
+      "other": "{{count}} days"
+    }
   },
   "LANGUAGE": {
     "SWITCH_TO": "Switch to {{language}}"
