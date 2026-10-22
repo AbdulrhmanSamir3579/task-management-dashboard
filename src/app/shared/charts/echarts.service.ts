@@ -1,0 +1,125 @@
+import { DOCUMENT, Injectable, inject } from '@angular/core';
+import type { LegendComponentOption, TooltipComponentOption } from 'echarts/components';
+import type { ChartOptions, ChartTone } from './chart.models';
+
+/** One axis, usable as `xAxis` or `yAxis`. */
+type AxisOption = Exclude<NonNullable<ChartOptions['xAxis']>, unknown[]> &
+  Exclude<NonNullable<ChartOptions['yAxis']>, unknown[]>;
+
+/** Colours and font of the charts, taken from the design tokens in styles.scss. */
+export interface ChartTheme {
+  font: string;
+  text: string;
+  muted: string;
+  border: string;
+  surface: string;
+  tones: Record<ChartTone, string>;
+  /** Used in order for series without a tone. */
+  palette: string[];
+}
+
+const FALLBACK = {
+  font: 'Inter, system-ui, sans-serif',
+  text: '#212121',
+  muted: '#757575',
+  border: '#e0e0e0',
+  surface: '#ffffff',
+  primary: '#1976d2',
+  success: '#388e3c',
+  warning: '#f57c00',
+  danger: '#d32f2f',
+};
+
+const EXTRA_PALETTE = ['#7b1fa2', '#0097a7', '#c2185b', '#5d4037'];
+
+/**
+ * The one place that knows how our charts look in ECharts: theme colours from the design
+ * tokens, and the shared pieces (tooltip, legend, axes) every chart kind starts from.
+ */
+@Injectable({ providedIn: 'root' })
+export class EchartsService {
+  private readonly document = inject(DOCUMENT);
+
+  /** Read when a chart is built, so charts built after a theme change use its colours. */
+  theme(): ChartTheme {
+    const styles = this.document.defaultView?.getComputedStyle(this.document.documentElement);
+    const token = (name: string, fallback: string): string =>
+      styles?.getPropertyValue(`--app-${name}`).trim() || fallback;
+
+    const tones: Record<ChartTone, string> = {
+      primary: token('primary', FALLBACK.primary),
+      success: token('success', FALLBACK.success),
+      warning: token('warning', FALLBACK.warning),
+      danger: token('danger', FALLBACK.danger),
+      neutral: token('text-muted', FALLBACK.muted),
+    };
+    return {
+      font: token('font', FALLBACK.font),
+      text: token('text', FALLBACK.text),
+      muted: tones.neutral,
+      border: token('border', FALLBACK.border),
+      surface: token('surface', FALLBACK.surface),
+      tones,
+      palette: [tones.primary, tones.success, tones.warning, tones.danger, ...EXTRA_PALETTE],
+    };
+  }
+
+  /** The colour of a tone, or the `index`-th palette colour when there is no tone. */
+  color(theme: ChartTheme, tone: ChartTone | undefined, index: number): string {
+    return tone ? theme.tones[tone] : (theme.palette[index % theme.palette.length] ?? '');
+  }
+
+  /** Options every chart starts from: font, colours and motion. */
+  base(theme: ChartTheme): ChartOptions {
+    return {
+      animation: !this.prefersReducedMotion(),
+      color: theme.palette,
+      textStyle: { fontFamily: theme.font, color: theme.text },
+    };
+  }
+
+  tooltip(theme: ChartTheme, trigger: 'item' | 'axis'): TooltipComponentOption {
+    return {
+      trigger,
+      backgroundColor: theme.surface,
+      borderColor: theme.border,
+      textStyle: { color: theme.text, fontFamily: theme.font },
+      ...(trigger === 'axis' ? { axisPointer: { type: 'shadow' } } : {}),
+    };
+  }
+
+  legend(theme: ChartTheme): LegendComponentOption {
+    return {
+      bottom: 0,
+      icon: 'circle',
+      itemWidth: 10,
+      itemHeight: 10,
+      textStyle: { color: theme.text },
+    };
+  }
+
+  categoryAxis(theme: ChartTheme, labels: string[]): AxisOption {
+    return {
+      type: 'category',
+      data: labels,
+      axisTick: { show: false },
+      axisLine: { lineStyle: { color: theme.border } },
+      axisLabel: { color: theme.muted },
+    };
+  }
+
+  valueAxis(theme: ChartTheme): AxisOption {
+    return {
+      type: 'value',
+      minInterval: 1,
+      splitLine: { lineStyle: { color: theme.border, type: 'dashed' } },
+      axisLabel: { color: theme.muted },
+    };
+  }
+
+  private prefersReducedMotion(): boolean {
+    return (
+      this.document.defaultView?.matchMedia('(prefers-reduced-motion: reduce)').matches ?? false
+    );
+  }
+}
