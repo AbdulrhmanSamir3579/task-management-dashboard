@@ -317,5 +317,23 @@
       "MOVED": "You moved {{title}} to {{status}}",
       "MOVED_SOMEWHERE": "You moved {{title}}"
     }
+  },
+  "SETTINGS": {
+    "APPEARANCE": "Appearance",
+    "THEME": "Theme",
+    "LIGHT": "Light",
+    "LIGHT_HINT": "Bright, as in the design",
+    "DARK": "Dark",
+    "DARK_HINT": "Easier on the eyes at night",
+    "SYSTEM": "System",
+    "SYSTEM_HINT": "Follows your device",
+    "LANGUAGE": "Language",
+    "LEFT_TO_RIGHT": "Left to right",
+    "RIGHT_TO_LEFT": "Right to left",
+    "DEMO_DATA": "Demo data",
+    "DEMO_TEXT": "Tasks are served by a mock API that runs in your browser. Changes last until the page is reloaded, which brings the original data back.",
+    "CHAOS_TEXT": "To see how the app handles errors, add the parameter below to the address: about 30% of requests then fail, and reads are retried before an error is shown.",
+    "TRY_CHAOS": "Try with simulated failures",
+    "BACK_TO_NORMAL": "Back to normal"
   }
 }
