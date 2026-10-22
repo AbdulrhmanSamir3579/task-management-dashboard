@@ -9,7 +9,7 @@ The assignment lists internationalisation as a bonus. The team's other Angular p
 
 ## Decision
 
-- **ngx-translate 18**, set up with the standalone `provideTranslateService` API, so the library matches the other projects.
+- **ngx-translate 18**, set up with the standalone `provideTranslateService` API, so the library matches the other projects. The loader and missing-key handler are passed as plain Angular providers (`{ provide, useClass }`): given a bare class, even through its `provide*` helpers, ngx-translate guesses whether it is a class or a factory, and in the minified build it took the handler for a factory, so the app never started.
 - **Catalogues as code-split modules**: `src/app/core/i18n/translations/{en,ar}.json` load through `import()` (`ImportTranslateLoader`), not over HTTP. Each language is its own cached chunk; the requests skip the API interceptors and the in-browser mock backend, and they work under any base path.
 - **Typed keys**: `TranslationKey` is derived from `en.json`, so a wrong key in TypeScript fails to compile. Keys used in templates are checked by `npm run i18n:check` in CI, which also fails on text written into a template instead of a translation.
 - **No flash and no polling**:
@@ -43,3 +43,4 @@ The assignment lists internationalisation as a bonus. The team's other Angular p
 - Adding a language takes a JSON file, an entry in `LANGUAGES` and the plural forms that language needs; the checks list anything missing.
 - ngx-translate and the i18n code add about 20 kB to the initial bundle. The strings load per language on demand.
 - Keys in templates are strings to the compiler; the CI check covers them, but only for literal keys.
+- `npm run smoke` (in CI, after the build) starts the minified production bundle in jsdom and fails if the shell does not render. Unit tests run unminified code, so they missed the start-up failure above. Lighthouse caught it, but only after a few minutes.

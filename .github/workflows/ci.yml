@@ -89,6 +89,10 @@ jobs:
       - name: Build
         run: npm run build
 
+      # Starts the optimised bundle, which unit tests do not run.
+      - name: Smoke test
+        run: npm run smoke
+
   lighthouse:
     name: Lighthouse
     runs-on: ubuntu-latest
