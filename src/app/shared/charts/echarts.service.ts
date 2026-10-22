@@ -1,5 +1,9 @@
 import { DOCUMENT, Injectable, inject } from '@angular/core';
-import type { LegendComponentOption, TooltipComponentOption } from 'echarts/components';
+import type {
+  GridComponentOption,
+  LegendComponentOption,
+  TooltipComponentOption,
+} from 'echarts/components';
 import type { ChartOptions, ChartTone } from './chart.models';
 
 /** One axis, usable as `xAxis` or `yAxis`. */
@@ -98,10 +102,24 @@ export class EchartsService {
     };
   }
 
-  categoryAxis(theme: ChartTheme, labels: string[]): AxisOption {
+  /** Plot area of bar and line charts; axis labels stay inside the chart. */
+  grid(withLegend: boolean): GridComponentOption {
+    return {
+      left: 8,
+      right: 16,
+      top: 16,
+      bottom: withLegend ? 40 : 8,
+      outerBoundsMode: 'same',
+      outerBoundsContain: 'axisLabel',
+    };
+  }
+
+  /** `edgeToEdge` starts the first label at the axis start, as line charts expect. */
+  categoryAxis(theme: ChartTheme, labels: string[], edgeToEdge = false): AxisOption {
     return {
       type: 'category',
       data: labels,
+      boundaryGap: !edgeToEdge,
       axisTick: { show: false },
       axisLine: { lineStyle: { color: theme.border } },
       axisLabel: { color: theme.muted },

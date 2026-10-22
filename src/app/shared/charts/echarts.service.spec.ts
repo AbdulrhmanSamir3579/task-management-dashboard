@@ -43,6 +43,10 @@ describe('EchartsService', () => {
     expect(service().tooltip(theme, 'item').axisPointer).toBeUndefined();
   });
 
+  it('leaves room for the legend under bar and line charts', () => {
+    expect(service().grid(true).bottom).toBeGreaterThan(service().grid(false).bottom as number);
+  });
+
   it('builds category and value axes', () => {
     const theme = service().theme();
 
