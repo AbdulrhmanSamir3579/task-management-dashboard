@@ -110,6 +110,8 @@ export class TaskForm {
 
   /** The task to edit; `null` creates a new one. */
   readonly task = input<Task | null>(null);
+  /** Assignee filled in for a new task; ignored when editing. */
+  readonly defaultAssigneeId = input<string | null>(null);
   readonly assignees = input<SelectOption<string>[]>([]);
   readonly saving = input(false);
   /** Whether another task already uses a title; the edited task is ignored by the caller. */
@@ -242,7 +244,7 @@ export class TaskForm {
       status: task?.status ?? 'todo',
       priority: task?.priority ?? 'medium',
       dueDate: task?.dueDate ?? null,
-      assigneeId: task?.assignee.id ?? null,
+      assigneeId: task ? task.assignee.id : this.defaultAssigneeId(),
       tags: [...(task?.tags ?? [])],
     });
     for (const item of task?.checklist ?? []) {

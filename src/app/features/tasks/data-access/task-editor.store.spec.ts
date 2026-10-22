@@ -15,4 +15,16 @@ describe('TaskEditorStore', () => {
     store.close();
     expect([store.open(), store.taskId()]).toEqual([false, null]);
   });
+
+  it('remembers an assignee chosen for a new task until the dialog closes', () => {
+    const store = TestBed.inject(TaskEditorStore);
+
+    store.openCreate({ assigneeId: 'user-002' });
+    expect(store.assigneeId()).toBe('user-002');
+
+    store.close();
+    expect(store.assigneeId()).toBeNull();
+    store.openCreate();
+    expect(store.assigneeId()).toBeNull();
+  });
 });

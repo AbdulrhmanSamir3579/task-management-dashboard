@@ -35,6 +35,7 @@ const sameTitle = (a: string, b: string): boolean =>
       @if (editor.open()) {
         <app-task-form
           [task]="task()"
+          [defaultAssigneeId]="editor.assigneeId()"
           [assignees]="users.options()"
           [saving]="saving()"
           [isTitleTaken]="isTitleTaken"
