@@ -10,31 +10,34 @@
     [autoResize]="true"
     [style.height]="height()"
   ></div>
-  <table class="visually-hidden">
-    <caption>
-      {{
-        label()
-      }}
-    </caption>
-    <thead>
-      <tr>
-        @for (column of config().table.columns; track $index) {
-          <th scope="col">{{ column }}</th>
-        }
-      </tr>
-    </thead>
-    <tbody>
-      @for (row of config().table.rows; track $index) {
+  <!-- Hidden through a wrapper: a table ignores a 1px height and would stretch the page. -->
+  <div class="visually-hidden">
+    <table>
+      <caption>
+        {{
+          label()
+        }}
+      </caption>
+      <thead>
         <tr>
-          @for (cell of row; track $index) {
-            @if ($first) {
-              <th scope="row">{{ cell }}</th>
-            } @else {
-              <td>{{ cell }}</td>
-            }
+          @for (column of config().table.columns; track $index) {
+            <th scope="col">{{ column }}</th>
           }
         </tr>
-      }
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        @for (row of config().table.rows; track $index) {
+          <tr>
+            @for (cell of row; track $index) {
+              @if ($first) {
+                <th scope="row">{{ cell }}</th>
+              } @else {
+                <td>{{ cell }}</td>
+              }
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 }
