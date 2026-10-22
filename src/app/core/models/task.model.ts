@@ -7,12 +7,6 @@ export type TaskPriority = 'high' | 'medium' | 'low';
 /** Board order of the statuses. */
 export const TASK_STATUSES: readonly TaskStatus[] = ['todo', 'in_progress', 'done'];
 
-export const TASK_STATUS_LABELS: Readonly<Record<TaskStatus, string>> = {
-  todo: 'To Do',
-  in_progress: 'In Progress',
-  done: 'Done',
-};
-
 /** Translation keys of the status names. */
 export const TASK_STATUS_KEYS: Readonly<Record<TaskStatus, TranslationKey>> = {
   todo: 'TASK.STATUS.TODO',
@@ -22,12 +16,6 @@ export const TASK_STATUS_KEYS: Readonly<Record<TaskStatus, TranslationKey>> = {
 
 /** Priorities from most to least urgent. */
 export const TASK_PRIORITIES: readonly TaskPriority[] = ['high', 'medium', 'low'];
-
-export const TASK_PRIORITY_LABELS: Readonly<Record<TaskPriority, string>> = {
-  high: 'High',
-  medium: 'Medium',
-  low: 'Low',
-};
 
 /** Translation keys of the priority names. */
 export const TASK_PRIORITY_KEYS: Readonly<Record<TaskPriority, TranslationKey>> = {
