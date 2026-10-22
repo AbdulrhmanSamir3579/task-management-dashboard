@@ -8,34 +8,15 @@ import type { SelectOption } from '../ui.types';
   selector: 'ui-multi-select',
   imports: [MultiSelect, FormsModule],
   providers: [provideValueAccessor(() => UiMultiSelect)],
-  template: `
-    <p-multiselect
-      fluid
-      display="chip"
-      appendTo="body"
-      optionLabel="label"
-      optionValue="value"
-      optionDisabled="disabled"
-      [inputId]="controlId()"
-      [options]="options()"
-      [placeholder]="placeholder()"
-      [filter]="searchable()"
-      [showToggleAll]="false"
-      [invalid]="isInvalid()"
-      [ariaLabel]="ariaLabel()"
-      [ariaLabelledBy]="labelledBy()"
-      [disabled]="disabled()"
-      [ngModel]="value()"
-      (ngModelChange)="updateValue($event ?? [])"
-      (onBlur)="markTouched()"
-    />
-  `,
+  templateUrl: './multi-select.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UiMultiSelect<T> extends UiFormControl<T[]> {
   readonly options = input.required<SelectOption<T>[]>();
   readonly placeholder = input('');
   readonly searchable = input(false);
+  /** One line for toolbars: a single label, or "2 selected", instead of chips. */
+  readonly compact = input(false);
   readonly ariaLabel = input<string>();
 
   protected readonly emptyValue: T[] = [];
