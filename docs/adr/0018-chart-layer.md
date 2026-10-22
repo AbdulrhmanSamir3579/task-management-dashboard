@@ -1,6 +1,6 @@
 # 0018. Chart layer
 
-- Status: Accepted
+- Status: Accepted, amended by [0024](0024-dark-mode-and-settings.md)
 - Date: 2026-10-22
 - Amends: [0011](0011-lazy-loading-and-bundle-budget.md)
 
@@ -26,5 +26,5 @@ The assignment asks for charts of task distribution by priority and status ("Cha
 ## Consequences
 
 - Swapping ECharts for another library means rewriting the package service, the kind services and the wrapper. Features and their data functions stay the same.
-- Colours are read when a chart is built. When dark mode is added, the charts must be rebuilt on a theme change (for example by making the theme a signal the kind services read).
+- Colours are read when a chart is built; charts are rebuilt when the theme changes ([0024](0024-dark-mode-and-settings.md)).
 - Unit tests cannot draw in jsdom: `provideChartsForTesting()` in `src/testing/charts.ts` provides a stand-in for ECharts, and tests check the options and the accessible tables instead.
