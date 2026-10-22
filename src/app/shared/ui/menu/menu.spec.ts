@@ -18,6 +18,23 @@ describe('UiMenu', () => {
     return { edit, remove };
   }
 
+  it('creates the menu only when it is first opened, then reuses it', async () => {
+    await render(UiMenu, {
+      inputs: { actions: [{ label: 'Edit', command: vi.fn() }], triggerLabel: 'Task actions' },
+    });
+    expect(document.querySelector('p-menu')).toBeNull();
+
+    const trigger = screen.getByRole('button', { name: 'Task actions' });
+    await userEvent.click(trigger);
+    expect(await screen.findByRole('menu')).toBeInTheDocument();
+
+    await userEvent.click(trigger);
+    await vi.waitFor(() => expect(trigger).toHaveAttribute('aria-expanded', 'false'));
+    await userEvent.click(trigger);
+    expect(await screen.findByRole('menu')).toBeInTheDocument();
+    expect(document.querySelectorAll('p-menu')).toHaveLength(1);
+  });
+
   it('runs the chosen action', async () => {
     const { edit } = await setup();
 

@@ -1,16 +1,24 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  Injector,
   ViewEncapsulation,
+  afterNextRender,
   computed,
+  inject,
   input,
   signal,
+  viewChild,
 } from '@angular/core';
 import type { MenuItem } from 'primeng/api';
 import { Menu } from 'primeng/menu';
 import type { MenuAction } from '../ui.types';
 
-/** Actions menu opened from an icon button, e.g. the "more" button on a task card. */
+/**
+ * Actions menu opened from an icon button, e.g. the "more" button on a task card. The
+ * PrimeNG menu is only created the first time it is opened: a board shows one button per
+ * card, and creating every menu up front cost noticeable start-up time.
+ */
 @Component({
   selector: 'ui-menu',
   imports: [Menu],
@@ -27,6 +35,10 @@ export class UiMenu {
   readonly triggerLabel = input.required<string>();
 
   protected readonly open = signal(false);
+  protected readonly rendered = signal(false);
+
+  private readonly menu = viewChild(Menu);
+  private readonly injector = inject(Injector);
 
   protected readonly items = computed<MenuItem[]>(() =>
     this.actions().map((action) => ({
@@ -36,4 +48,16 @@ export class UiMenu {
       command: () => action.command(),
     })),
   );
+
+  protected toggle(event: MouseEvent): void {
+    // PrimeNG anchors the popup to `currentTarget`, which is gone once the click is over.
+    const anchor = { currentTarget: event.currentTarget } as unknown as Event;
+    const menu = this.menu();
+    if (menu) {
+      menu.toggle(anchor);
+      return;
+    }
+    this.rendered.set(true);
+    afterNextRender(() => this.menu()?.show(anchor), { injector: this.injector });
+  }
 }
