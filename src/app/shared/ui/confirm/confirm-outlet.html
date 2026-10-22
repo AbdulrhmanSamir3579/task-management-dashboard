@@ -1,0 +1,26 @@
+<ui-dialog
+  width="28rem"
+  [heading]="confirm.question()?.title ?? ''"
+  [visible]="confirm.question() !== null"
+  (visibleChange)="onVisibleChange($event)"
+>
+  <!-- Separate blocks: content projection into the footer slot needs a single root node. -->
+  @if (confirm.question(); as question) {
+    <p class="confirm__message">{{ question.message }}</p>
+  }
+  @if (confirm.question(); as question) {
+    <div class="confirm__actions" uiDialogFooter>
+      <ui-button
+        variant="ghost"
+        [autofocus]="true"
+        [label]="question.cancelLabel"
+        (clicked)="confirm.answer(false)"
+      />
+      <ui-button
+        [variant]="question.tone === 'danger' ? 'danger' : 'primary'"
+        [label]="question.confirmLabel"
+        (clicked)="confirm.answer(true)"
+      />
+    </div>
+  }
+</ui-dialog>
