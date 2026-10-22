@@ -1,0 +1,37 @@
+@if (loadFailed()) {
+  <app-empty-state
+    icon="⚠️"
+    title="The team could not be loaded"
+    message="Check your connection and try again."
+  >
+    <ui-button label="Try again" (clicked)="retry()" />
+  </app-empty-state>
+} @else if (members(); as list) {
+  @if (list.length) {
+    <p class="team__summary">{{ summary() }}</p>
+    <ul class="team__grid">
+      @for (member of list; track member.user.id) {
+        <li>
+          <app-member-card [member]="member" (assign)="assignTo($event)" />
+        </li>
+      }
+    </ul>
+  } @else {
+    <app-empty-state
+      icon="👥"
+      title="No team members yet"
+      message="People appear here once they can be assigned tasks."
+    />
+  }
+} @else {
+  <ul class="team__grid" role="status" aria-label="Loading the team">
+    @for (skeleton of skeletons; track skeleton) {
+      <li class="team__skeleton">
+        <ui-skeleton shape="circle" width="2.5rem" height="2.5rem" />
+        <ui-skeleton width="60%" height="1rem" />
+        <ui-skeleton height="3.5rem" />
+        <ui-skeleton height="0.5rem" />
+      </li>
+    }
+  </ul>
+}

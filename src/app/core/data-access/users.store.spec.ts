@@ -34,6 +34,7 @@ describe('UsersStore', () => {
       ]);
     await settle();
 
+    expect(store.hasLoaded()).toBe(true);
     expect(store.users()).toHaveLength(2);
     expect(store.options()).toEqual([
       { label: 'John Doe', value: 'u1' },
