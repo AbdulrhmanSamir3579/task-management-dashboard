@@ -5,7 +5,6 @@ import {
   provideBrowserGlobalErrorListeners,
 } from '@angular/core';
 import {
-  PreloadAllModules,
   TitleStrategy,
   provideRouter,
   withComponentInputBinding,
@@ -16,6 +15,7 @@ import {
 import { routes } from './app.routes';
 import { provideApiHttpClient } from './core/http/provide-api-http-client';
 import { AppTitleStrategy } from './core/layout/app-title.strategy';
+import { IdlePreloadingStrategy } from './core/routing/idle-preloading.strategy';
 import { failureRateFromUrl, provideMockApi } from './core/mock-api/provide-mock-api';
 import { ThemeService } from './core/theme/theme.service';
 import { provideUi } from './shared/ui/provide-ui';
@@ -28,8 +28,9 @@ export const appConfig: ApplicationConfig = {
       withComponentInputBinding(),
       withViewTransitions(),
       withInMemoryScrolling({ scrollPositionRestoration: 'top' }),
-      // Lazy pages are fetched in the background after start-up, so navigation is instant.
-      withPreloading(PreloadAllModules),
+      // Lazy pages are fetched in the background once the browser is idle, so navigation is
+      // instant without slowing the first page.
+      withPreloading(IdlePreloadingStrategy),
     ),
     { provide: TitleStrategy, useClass: AppTitleStrategy },
     provideUi(),
