@@ -1,21 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
-import {
-  TASK_PRIORITY_LABELS,
-  TASK_STATUS_LABELS,
-  type TaskPriority,
-} from '../../../../core/models';
+import { TASK_PRIORITY_LABELS, TASK_STATUS_LABELS } from '../../../../core/models';
 import { UiAvatar } from '../../../../shared/ui/avatar/avatar';
 import { UiTag } from '../../../../shared/ui/tag/tag';
-import type { Tone } from '../../../../shared/ui/ui.types';
 import { fromIsoDate } from '../../../../shared/utils/date.utils';
 import { describeDueDate } from '../../../tasks/utils/due-date';
+import { PRIORITY_TONES } from '../../../tasks/utils/priority-tone';
 import type { AgendaGroup } from '../../data-access/agenda';
-
-const PRIORITY_TONES: Record<TaskPriority, Tone> = {
-  high: 'danger',
-  medium: 'warning',
-  low: 'success',
-};
 
 const weekday = new Intl.DateTimeFormat('en', { weekday: 'short' });
 const month = new Intl.DateTimeFormat('en', { month: 'short' });
