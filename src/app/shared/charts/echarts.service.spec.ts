@@ -60,7 +60,10 @@ describe('EchartsService', () => {
   });
 
   it('leaves room for the legend under bar and line charts', () => {
-    expect(service().grid(true).bottom).toBeGreaterThan(service().grid(false).bottom as number);
+    const theme = service().theme();
+    expect(service().grid(theme, true).bottom).toBeGreaterThan(
+      service().grid(theme, false).bottom as number,
+    );
   });
 
   it('lays the legend out from the right on a right-to-left page', () => {

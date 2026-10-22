@@ -131,11 +131,14 @@ export class EchartsService {
     };
   }
 
-  /** Plot area of bar and line charts; axis labels stay inside the chart. */
-  grid(withLegend: boolean): GridComponentOption {
+  /**
+   * Plot area of bar and line charts; axis labels stay inside the chart. The wider gap is at
+   * the end of the axis, mirrored right to left.
+   */
+  grid(theme: ChartTheme, withLegend: boolean): GridComponentOption {
     return {
-      left: 8,
-      right: 16,
+      left: theme.rtl ? 16 : 8,
+      right: theme.rtl ? 8 : 16,
       top: 16,
       bottom: withLegend ? 40 : 8,
       outerBoundsMode: 'same',

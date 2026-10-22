@@ -85,7 +85,7 @@ export class BarChartService {
         ...this.echarts.base(theme),
         tooltip: this.echarts.tooltip(theme, 'axis'),
         ...(layout.legend.length ? { legend: this.echarts.legend(theme, layout.legend) } : {}),
-        grid: this.echarts.grid(layout.legend.length > 0),
+        grid: this.echarts.grid(theme, layout.legend.length > 0),
         // Right to left the chart is mirrored: horizontal bars grow to the left from names on
         // the right, and vertical bars start from the right with the values on the right.
         xAxis: { ...(layout.horizontal ? valueAxis : categoryAxis), inverse: theme.rtl },

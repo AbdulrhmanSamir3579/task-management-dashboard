@@ -39,7 +39,7 @@ export class LineChartService {
           theme,
           series.map((item) => item.name),
         ),
-        grid: this.echarts.grid(true),
+        grid: this.echarts.grid(theme, true),
         // Right to left, time runs from right to left and the values sit on the right.
         xAxis: { ...this.echarts.categoryAxis(theme, [...categories], true), inverse: theme.rtl },
         yAxis: { ...this.echarts.valueAxis(theme), position: theme.rtl ? 'right' : 'left' },
