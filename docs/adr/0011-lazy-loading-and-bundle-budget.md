@@ -1,6 +1,6 @@
 # 0011. Lazy loading and bundle budget
 
-- Status: Accepted, amended by [0018](0018-chart-layer.md) and [0025](0025-motion-accessibility-and-lighthouse.md)
+- Status: Accepted, amended by [0018](0018-chart-layer.md), [0025](0025-motion-accessibility-and-lighthouse.md) and [0029](0029-dialogs-load-on-first-use.md)
 - Date: 2026-10-21
 
 ## Context
