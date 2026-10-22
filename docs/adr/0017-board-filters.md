@@ -1,6 +1,6 @@
 # 0017. Board filters
 
-- Status: Accepted
+- Status: Accepted, amended by [0022](0022-inline-board-filters.md) (dropdowns in the toolbar instead of a drawer)
 - Date: 2026-10-22
 - Amends: [0014](0014-local-first-search.md)
 
