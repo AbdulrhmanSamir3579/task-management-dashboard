@@ -108,4 +108,20 @@ describe('UiFormField', () => {
 
     expect(screen.getByRole('combobox', { name: 'Assignee' })).toBeInTheDocument();
   });
+
+  it('can hide its label visually while still naming the control', async () => {
+    const control = new FormControl('', { nonNullable: true });
+    await render(
+      `<ui-form-field label="Checklist item 1" [labelVisible]="false" [control]="control">
+         <ui-input-text [formControl]="control" />
+       </ui-form-field>`,
+      {
+        imports: [UiFormField, UiInputText, ReactiveFormsModule],
+        componentProperties: { control },
+      },
+    );
+
+    expect(screen.getByRole('textbox', { name: 'Checklist item 1' })).toBeInTheDocument();
+    expect(screen.getByText('Checklist item 1')).toHaveClass('visually-hidden');
+  });
 });

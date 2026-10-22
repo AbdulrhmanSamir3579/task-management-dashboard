@@ -36,7 +36,12 @@ interface ControlState {
   providers: [{ provide: FORM_FIELD_CONTEXT, useExisting: forwardRef(() => UiFormField) }],
   template: `
     <div class="form-field">
-      <label class="form-field__label" [id]="labelId" [for]="controlId">
+      <label
+        class="form-field__label"
+        [class.visually-hidden]="!labelVisible()"
+        [id]="labelId"
+        [for]="controlId"
+      >
         {{ label() }}
         @if (isRequired()) {
           <span class="form-field__required" aria-hidden="true">*</span>
@@ -73,6 +78,8 @@ export class UiFormField implements FormFieldContext {
   readonly label = input.required<string>();
   readonly control = input.required<AbstractControl>();
   readonly hint = input<string>();
+  /** Hide the label visually (e.g. in repeated rows) while keeping it for screen readers. */
+  readonly labelVisible = input(true);
   /** Overrides per error key, e.g. `{ required: 'Give the task a title.' }`. */
   readonly messages = input<Readonly<Record<string, string>>>({});
 
