@@ -1,19 +1,52 @@
-@if (!store.hasLoaded() && store.loadError(); as error) {
-  <app-empty-state icon="⚠️" title="The agenda could not be loaded" [message]="error">
-    <ui-button label="Try again" (clicked)="store.reload()" />
-  </app-empty-state>
-} @else if (groups(); as list) {
-  @if (list.length) {
-    <app-agenda-list [groups]="list" [today]="today()" (taskOpen)="editor.openEdit($event)" />
-  } @else {
-    <app-empty-state icon="🎉" title="Nothing due" message="Every task is done.">
-      <ui-button label="+ New Task" (clicked)="editor.openCreate()" />
+<div class="calendar">
+  <app-calendar-toolbar
+    [view]="activeView()"
+    [label]="label()"
+    (viewChange)="changeView($event)"
+    (previous)="step(-1)"
+    (next)="step(1)"
+    (goToToday)="goToToday()"
+  />
+
+  @if (!store.hasLoaded() && store.loadError(); as error) {
+    <app-empty-state icon="⚠️" title="The calendar could not be loaded" [message]="error">
+      <ui-button label="Try again" (clicked)="store.reload()" />
     </app-empty-state>
-  }
-} @else {
-  <div class="calendar__loading" role="status" aria-label="Loading the agenda">
-    @for (skeleton of skeletons; track skeleton) {
-      <ui-skeleton height="7rem" borderRadius="8px" />
+  } @else if (!store.hasLoaded()) {
+    <div role="status" aria-label="Loading the calendar">
+      <ui-skeleton height="30rem" borderRadius="8px" />
+    </div>
+  } @else {
+    @switch (activeView()) {
+      @case ('week') {
+        <app-week-view
+          [days]="days()"
+          (taskOpen)="editor.openEdit($event)"
+          (dayAdd)="addTask($event)"
+        />
+      }
+      @case ('agenda') {
+        @if (agenda().length) {
+          <app-agenda-list
+            [groups]="agenda()"
+            [today]="today()"
+            (taskOpen)="editor.openEdit($event)"
+          />
+        } @else {
+          <app-empty-state icon="🎉" title="Nothing due" message="Every task is done.">
+            <ui-button label="+ New Task" (clicked)="editor.openCreate()" />
+          </app-empty-state>
+        }
+      }
+      @default {
+        <app-month-view
+          [weeks]="weeks()"
+          [weekdays]="weekdays"
+          (taskOpen)="editor.openEdit($event)"
+          (dayAdd)="addTask($event)"
+          (dayShow)="showDay($event)"
+        />
+      }
     }
-  </div>
-}
+  }
+</div>
