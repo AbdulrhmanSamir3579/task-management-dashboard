@@ -1,0 +1,38 @@
+@for (section of sections(); track section.id) {
+  <section class="agenda-group" [attr.aria-labelledby]="'agenda-' + section.id">
+    <h2
+      class="agenda-group__title"
+      [class.agenda-group__title--overdue]="section.id === 'overdue'"
+      [id]="'agenda-' + section.id"
+    >
+      {{ section.title }}
+      <span class="agenda-group__count">{{ section.entries.length }}</span>
+    </h2>
+    <ul class="agenda-group__list">
+      @for (entry of section.entries; track entry.task.id) {
+        <li class="agenda-item">
+          <time
+            class="agenda-item__date"
+            [attr.datetime]="entry.task.dueDate"
+            [title]="entry.fullDate"
+          >
+            <span class="agenda-item__weekday">{{ entry.weekday }}</span>
+            <span class="agenda-item__day">{{ entry.day }}</span>
+            <span class="agenda-item__month">{{ entry.month }}</span>
+          </time>
+          <div class="agenda-item__body">
+            <button type="button" class="agenda-item__title" (click)="taskOpen.emit(entry.task.id)">
+              {{ entry.task.title }}
+            </button>
+            <span class="agenda-item__meta" [class]="'agenda-item__meta--' + entry.due.tone">
+              <span aria-hidden="true">{{ entry.due.icon }}</span> {{ entry.due.label }} ·
+              {{ entry.status }}
+            </span>
+          </div>
+          <ui-tag [rounded]="true" [label]="entry.priority" [tone]="entry.priorityTone" />
+          <ui-avatar [initials]="entry.task.assignee.avatar" [name]="entry.task.assignee.name" />
+        </li>
+      }
+    </ul>
+  </section>
+}
