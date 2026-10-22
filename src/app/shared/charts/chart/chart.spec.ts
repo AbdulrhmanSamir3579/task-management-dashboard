@@ -46,6 +46,15 @@ describe('UiChart', () => {
     expect(within(table).getByRole('cell', { name: '3' })).toBeInTheDocument();
   });
 
+  it('hides the table through a wrapper, since tables ignore a 1px height', async () => {
+    await setup();
+
+    const table = screen.getByRole('table', { name: 'Tasks by status' });
+    expect(table).not.toHaveClass('visually-hidden');
+    expect(table.parentElement).toHaveClass('visually-hidden');
+    expect(table.parentElement?.tagName).toBe('DIV');
+  });
+
   it('shows a message instead of an empty chart', async () => {
     const { init } = await setup({ ...config, empty: true });
 

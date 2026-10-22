@@ -1,0 +1,22 @@
+<p-multiselect
+  fluid
+  selectedItemsLabel="{0} selected"
+  [display]="compact() ? 'comma' : 'chip'"
+  [maxSelectedLabels]="compact() ? 1 : null"
+  appendTo="body"
+  optionLabel="label"
+  optionValue="value"
+  optionDisabled="disabled"
+  [inputId]="controlId()"
+  [options]="options()"
+  [placeholder]="placeholder()"
+  [filter]="searchable()"
+  [showToggleAll]="false"
+  [invalid]="isInvalid()"
+  [ariaLabel]="ariaLabel()"
+  [ariaLabelledBy]="labelledBy()"
+  [disabled]="disabled()"
+  [ngModel]="value()"
+  (ngModelChange)="updateValue($event ?? [])"
+  (onBlur)="markTouched()"
+/>
