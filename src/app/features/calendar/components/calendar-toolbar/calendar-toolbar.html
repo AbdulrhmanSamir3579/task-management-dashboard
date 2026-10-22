@@ -1,0 +1,41 @@
+<div class="calendar-toolbar">
+  <div class="calendar-toolbar__period">
+    @if (view() !== 'agenda') {
+      <div class="calendar-toolbar__nav">
+        <button
+          type="button"
+          class="calendar-toolbar__step"
+          [attr.aria-label]="'Previous ' + view()"
+          (click)="previous.emit()"
+        >
+          <span aria-hidden="true">‹</span>
+        </button>
+        <button type="button" class="calendar-toolbar__today" (click)="goToToday.emit()">
+          Today
+        </button>
+        <button
+          type="button"
+          class="calendar-toolbar__step"
+          [attr.aria-label]="'Next ' + view()"
+          (click)="next.emit()"
+        >
+          <span aria-hidden="true">›</span>
+        </button>
+      </div>
+    }
+    <h2 class="calendar-toolbar__title" aria-live="polite">{{ label() }}</h2>
+  </div>
+  <div class="calendar-toolbar__views" role="group" aria-label="Calendar view">
+    @for (option of views; track option.value) {
+      <button
+        type="button"
+        class="calendar-toolbar__view"
+        [class.calendar-toolbar__view--active]="view() === option.value"
+        [attr.aria-pressed]="view() === option.value"
+        (click)="viewChange.emit(option.value)"
+      >
+        {{ option.label }}
+      </button>
+    }
+  </div>
+</div>
