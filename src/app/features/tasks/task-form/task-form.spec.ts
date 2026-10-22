@@ -122,6 +122,16 @@ describe('TaskForm', () => {
     );
   });
 
+  it('saves an edit made right after opening, while the title is still being checked', async () => {
+    const { saved } = await setup({ task: buildTask({ title: 'Security audit' }) });
+
+    await userEvent.click(screen.getByRole('button', { name: 'Save changes' }));
+
+    await vi.waitFor(() =>
+      expect(saved).toHaveBeenCalledWith(expect.objectContaining({ title: 'Security audit' })),
+    );
+  });
+
   it('edits a task, keeping an overdue due date valid', async () => {
     const task = buildTask({
       id: 'task-009',
@@ -172,29 +182,28 @@ describe('TaskForm', () => {
       screen.getByRole('textbox', { name: `Checklist item ${position}` });
 
     it('adds, ticks and removes rows, and sends the remaining items', async () => {
-      const { saved } = await setup();
-      await userEvent.type(title(), 'Plan sprint review');
-      await choose('Assignee', 'John Doe');
-      await pickDueDateNextMonth();
+      // A valid task to start from, so only the checklist decides what is sent.
+      const { saved } = await setup({ task: buildTask({ checklist: [] }) });
 
       await addItem();
       await vi.waitFor(() => expect(item(1)).toHaveFocus());
       await userEvent.type(item(1), '  Draft outline ');
       await addItem();
+      await vi.waitFor(() => expect(item(2)).toHaveFocus());
       await userEvent.type(item(2), 'Temporary');
-      // The checkbox is named after the row's text, which renders after typing; slow CI
-      // machines can take longer than the default second.
-      await userEvent.click(
-        await screen.findByRole('checkbox', { name: 'Done: Draft outline' }, { timeout: 3000 }),
-      );
-      await userEvent.click(await screen.findByRole('button', { name: 'Remove checklist item 2' }));
+
+      // Each row's checkbox is named after the row's text.
+      const [firstDone] = screen.getAllByRole('checkbox', { name: /^Done:/ });
+      await vi.waitFor(() => expect(firstDone).toHaveAccessibleName('Done: Draft outline'));
+      await userEvent.click(firstDone!);
+      await userEvent.click(screen.getByRole('button', { name: 'Remove checklist item 2' }));
 
       await vi.waitFor(() =>
         expect(screen.queryByRole('textbox', { name: 'Checklist item 2' })).not.toBeInTheDocument(),
       );
       expect(await screen.findByText('1/1 done')).toBeInTheDocument();
 
-      await userEvent.click(screen.getByRole('button', { name: 'Create task' }));
+      await userEvent.click(screen.getByRole('button', { name: 'Save changes' }));
       await vi.waitFor(() =>
         expect(saved).toHaveBeenCalledWith(
           expect.objectContaining({ checklist: [{ text: 'Draft outline', done: true }] }),
