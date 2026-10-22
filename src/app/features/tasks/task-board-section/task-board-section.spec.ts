@@ -15,6 +15,7 @@ import { TaskBoard } from '../components/task-board/task-board';
 import { TaskEditorStore } from '../data-access/task-editor.store';
 import { TasksStore } from '../data-access/tasks.store';
 import { TaskBoardSection } from './task-board-section';
+import { expectNoAccessibilityViolations } from '../../../../testing/axe';
 
 const tasks: TasksResponse = {
   tasks: [
@@ -198,5 +199,11 @@ describe('TaskBoardSection', () => {
     ).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: 'Clear filters' }));
     expect(store.hasActiveFilters()).toBe(false);
+  });
+
+  it('has no accessibility violations', async () => {
+    await loaded();
+
+    await expectNoAccessibilityViolations();
   });
 });

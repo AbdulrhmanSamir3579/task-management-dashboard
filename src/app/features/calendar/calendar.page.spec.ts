@@ -18,6 +18,7 @@ import {
 import { TaskEditorStore } from '../tasks/data-access/task-editor.store';
 import { TasksStore } from '../tasks/data-access/tasks.store';
 import { CalendarPage } from './calendar.page';
+import { expectNoAccessibilityViolations } from '../../../testing/axe';
 
 const today = toIsoDate(new Date());
 const monthName = (date: string) =>
@@ -172,4 +173,14 @@ describe('CalendarPage', () => {
 
     expect(await screen.findByRole('table', { name: 'Tasks due each day' })).toBeInTheDocument();
   });
+
+  it.each(['month', 'week', 'agenda'])(
+    'has no accessibility violations in the %s view',
+    async (view) => {
+      const { respond } = await setup({ view });
+      await respond();
+
+      await expectNoAccessibilityViolations();
+    },
+  );
 });

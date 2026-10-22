@@ -8,6 +8,7 @@ import { errorInterceptor } from '../../../core/http/error.interceptor';
 import { type Activity, CURRENT_USER_ACTOR } from '../../../core/models';
 import { TasksStore } from '../../tasks/data-access/tasks.store';
 import { ActivityBell } from './activity-bell';
+import { expectNoAccessibilityViolations } from '../../../../testing/axe';
 
 const activity = (id: string, minutesAgo: number, actor = 'Sarah Smith'): Activity => ({
   id,
@@ -107,5 +108,15 @@ describe('ActivityBell', () => {
     await userEvent.click(within(panel).getByRole('button', { name: 'Try again' }));
     await respond(feed);
     expect(within(panel).getAllByRole('listitem')).toHaveLength(3);
+  });
+
+  it('has no accessibility violations with the panel open', async () => {
+    await setup();
+    await respond(feed);
+    await userEvent.click(screen.getByRole('button', { name: /Notifications/ }));
+    await screen.findByRole('dialog', { name: 'Recent activity' });
+    await respond(feed);
+
+    await expectNoAccessibilityViolations();
   });
 });

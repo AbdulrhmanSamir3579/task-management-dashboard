@@ -11,6 +11,7 @@ import { NotificationService } from '../../shared/ui/notifications/notification.
 import { TaskEditorStore } from '../tasks/data-access/task-editor.store';
 import { TasksStore } from '../tasks/data-access/tasks.store';
 import { TeamPage } from './team.page';
+import { expectNoAccessibilityViolations } from '../../../testing/axe';
 
 const john = buildUser({ id: 'user-001', name: 'John Doe', avatar: 'JD' });
 const sarah = buildUser({ id: 'user-002', name: 'Sarah Smith', avatar: 'SS' });
@@ -108,5 +109,12 @@ describe('TeamPage', () => {
     await settle();
 
     expect(screen.getByRole('article', { name: 'John Doe' })).toBeInTheDocument();
+  });
+
+  it('has no accessibility violations', async () => {
+    await setup();
+    await respond([john, sarah], tasks);
+
+    await expectNoAccessibilityViolations();
   });
 });

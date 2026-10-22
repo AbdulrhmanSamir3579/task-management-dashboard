@@ -11,6 +11,7 @@ import type { TasksResponse } from '../../core/models';
 import { NotificationService } from '../../shared/ui/notifications/notification.service';
 import { TasksStore } from '../tasks/data-access/tasks.store';
 import { AnalyticsPage } from './analytics.page';
+import { expectNoAccessibilityViolations } from '../../../testing/axe';
 
 const tasks: TasksResponse = {
   tasks: [
@@ -93,5 +94,12 @@ describe('AnalyticsPage', () => {
     await respond(tasks);
 
     expect(await screen.findByRole('figure', { name: 'Tasks by status' })).toBeInTheDocument();
+  });
+
+  it('has no accessibility violations', async () => {
+    const { respond } = await setup();
+    await respond(tasks);
+
+    await expectNoAccessibilityViolations();
   });
 });

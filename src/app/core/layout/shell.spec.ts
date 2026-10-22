@@ -7,6 +7,7 @@ import { userEvent } from '@testing-library/user-event';
 import { TaskEditorStore } from '../../features/tasks/data-access/task-editor.store';
 import { provideUi } from '../../shared/ui/provide-ui';
 import { Shell } from './shell';
+import { expectNoAccessibilityViolations } from '../../../testing/axe';
 
 @Component({ template: '<p>Page content</p>', changeDetection: ChangeDetectionStrategy.OnPush })
 class StubPage {}
@@ -109,5 +110,11 @@ describe('Shell', () => {
     await userEvent.click(screen.getByRole('link', { name: 'Skip to main content' }));
 
     expect(screen.getByRole('main')).toHaveFocus();
+  });
+
+  it('has no accessibility violations', async () => {
+    await setup('/dashboard');
+
+    await expectNoAccessibilityViolations();
   });
 });
