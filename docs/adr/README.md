@@ -7,7 +7,7 @@ Short records of the decisions that shape this codebase: what was decided, why, 
 | [0001](0001-state-management-with-ngrx-signal-store.md) | State management with NgRx SignalStore      | Accepted                           |
 | [0002](0002-race-free-optimistic-board-changes.md)      | Race-free optimistic board changes          | Accepted                           |
 | [0003](0003-angular-22-standalone-zoneless.md)          | Angular 22, standalone, zoneless and strict | Accepted                           |
-| [0004](0004-code-quality-and-delivery-workflow.md)      | Code quality and delivery workflow          | Accepted                           |
+| [0004](0004-code-quality-and-delivery-workflow.md)      | Code quality and delivery workflow          | Accepted, amended by 0028          |
 | [0005](0005-testing-strategy.md)                        | Testing strategy                            | Accepted                           |
 | [0006](0006-ui-library-behind-wrapper-components.md)    | UI library behind wrapper components        | Accepted                           |
 | [0007](0007-theming-from-design-tokens.md)              | Theming from design tokens                  | Accepted, amended by 0024 and 0025 |
@@ -28,9 +28,10 @@ Short records of the decisions that shape this codebase: what was decided, why, 
 | [0022](0022-inline-board-filters.md)                    | Inline board filters                        | Accepted                           |
 | [0023](0023-calendar-views.md)                          | Calendar views                              | Accepted                           |
 | [0024](0024-dark-mode-and-settings.md)                  | Dark mode and settings                      | Accepted                           |
-| [0025](0025-motion-accessibility-and-lighthouse.md)     | Motion, accessibility checks and Lighthouse | Accepted                           |
-| [0026](0026-deployment-to-github-pages.md)              | Deployment to GitHub Pages                  | Accepted                           |
+| [0025](0025-motion-accessibility-and-lighthouse.md)     | Motion, accessibility checks and Lighthouse | Accepted, amended by 0028          |
+| [0026](0026-deployment-to-github-pages.md)              | Deployment to GitHub Pages                  | Accepted, amended by 0028          |
 | [0027](0027-arabic-and-english.md)                      | Arabic and English                          | Accepted                           |
+| [0028](0028-simple-ci-cd-pipeline.md)                   | Simple CI/CD pipeline                       | Accepted                           |
 
 ## Template
 
