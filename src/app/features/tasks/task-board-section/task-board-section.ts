@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
 import { UsersStore } from '../../../core/data-access/users.store';
 import { TASK_STATUSES, type Task, type TaskStatus } from '../../../core/models';
 import { EmptyState } from '../../../shared/components/empty-state/empty-state';
@@ -31,7 +30,6 @@ export class TaskBoardSection {
   protected readonly editor = inject(TaskEditorStore);
   protected readonly users = inject(UsersStore);
   private readonly confirm = inject(ConfirmService);
-  private readonly router = inject(Router);
 
   protected readonly skeletonColumns = [0, 1, 2];
   protected readonly skeletonCards = [0, 1, 2];
@@ -87,15 +85,9 @@ export class TaskBoardSection {
 
   protected clearSearch(): void {
     this.store.setFilters({ search: '' });
-    this.removeSearchFromUrl();
   }
 
   protected clearFilters(): void {
     this.store.resetFilters();
-    this.removeSearchFromUrl();
-  }
-
-  private removeSearchFromUrl(): void {
-    void this.router.navigate([], { queryParams: { q: null }, queryParamsHandling: 'merge' });
   }
 }
