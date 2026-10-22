@@ -1,0 +1,28 @@
+@if (entries().length) {
+  <ol class="activity-list">
+    @for (entry of entries(); track entry.id) {
+      <li class="activity" [class.activity--new]="entry.isNew">
+        <span class="activity__icon" aria-hidden="true">{{ entry.icon }}</span>
+        <div class="activity__body">
+          <p class="activity__text">
+            @if (entry.isNew) {
+              <span class="visually-hidden">New:</span>
+            }
+            <strong>{{ entry.actor }}</strong> {{ entry.action }}
+            <strong>{{ entry.taskTitle }}</strong
+            >{{ entry.detail }}
+          </p>
+          <time
+            class="activity__time"
+            [attr.datetime]="entry.timestamp"
+            [title]="entry.timestamp | date: 'medium'"
+          >
+            {{ entry.timestamp | relativeTime: now() }}
+          </time>
+        </div>
+      </li>
+    }
+  </ol>
+} @else {
+  <p class="activity-list__empty">No activity yet.</p>
+}
