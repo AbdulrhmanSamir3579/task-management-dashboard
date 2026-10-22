@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:pages": "ng build --base-href /task-management-dashboard/",
     "lighthouse": "npm run lighthouse:desktop && npm run lighthouse:mobile",
     "lighthouse:desktop": "npx --yes @lhci/cli@0.15.1 autorun --config=lighthouserc.json",
     "lighthouse:mobile": "npx --yes @lhci/cli@0.15.1 autorun --config=lighthouserc.mobile.json",
