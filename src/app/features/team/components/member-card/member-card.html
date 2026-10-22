@@ -1,0 +1,64 @@
+@let m = member();
+<article class="member" [attr.aria-labelledby]="nameId">
+  <div class="member__header">
+    <ui-avatar size="large" [initials]="m.user.avatar" [name]="m.user.name" />
+    <div class="member__identity">
+      <h2 class="member__name" [id]="nameId">{{ m.user.name }}</h2>
+      <a class="member__email" [href]="'mailto:' + m.user.email">{{ m.user.email }}</a>
+    </div>
+  </div>
+
+  <dl class="member__stats">
+    <div class="member__stat">
+      <dt>Open</dt>
+      <dd>{{ m.open }}</dd>
+    </div>
+    <div class="member__stat">
+      <dt>In progress</dt>
+      <dd>{{ m.inProgress }}</dd>
+    </div>
+    <div class="member__stat">
+      <dt>Done</dt>
+      <dd>{{ m.done }}</dd>
+    </div>
+    <div class="member__stat" [class.member__stat--alert]="m.overdue > 0">
+      <dt>Overdue</dt>
+      <dd>{{ m.overdue }}</dd>
+    </div>
+  </dl>
+
+  <div class="member__progress">
+    <div class="member__progress-label">
+      <span>Completed</span>
+      <span>{{ m.completion }}%</span>
+    </div>
+    <div
+      class="member__bar"
+      role="progressbar"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      [attr.aria-valuenow]="m.completion"
+      [attr.aria-label]="'Tasks completed by ' + m.user.name"
+    >
+      <span class="member__bar-fill" [style.width.%]="m.completion"></span>
+    </div>
+  </div>
+
+  <div class="member__actions">
+    <a
+      class="member__link"
+      routerLink="/tasks"
+      [queryParams]="{ assignee: m.user.id }"
+      [attr.aria-label]="'View tasks of ' + m.user.name"
+    >
+      View tasks
+    </a>
+    <ui-button
+      label="Assign task"
+      variant="outline"
+      size="small"
+      [ariaLabel]="'Assign task to ' + m.user.name"
+      (clicked)="assign.emit(m.user.id)"
+    />
+  </div>
+</article>
