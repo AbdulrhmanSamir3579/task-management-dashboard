@@ -98,21 +98,20 @@ describe('TaskBoardSection', () => {
     expect(screen.getByRole('region', { name: 'Done' })).toBeInTheDocument();
   });
 
-  it('filters by assignee from the Filter panel and shows the count', async () => {
+  it('filters by assignee from the toolbar dropdown', async () => {
     const { store } = await loaded();
 
-    await userEvent.click(screen.getByRole('button', { name: 'Filter' }));
-    const panel = await screen.findByRole('dialog', { name: 'Filter tasks' });
-    await userEvent.click(within(panel).getByRole('combobox', { name: 'Assignee' }));
+    const toolbar = screen.getByRole('group', { name: 'Show tasks by status' }).parentElement!;
+    await userEvent.click(within(toolbar).getByRole('combobox', { name: 'Assignee' }));
     await userEvent.click(await screen.findByRole('option', { name: 'Sarah Smith' }));
 
     expect(store.filters().assigneeId).toBe('user-002');
-    expect(await screen.findByRole('button', { name: 'Filter (1)' })).toBeInTheDocument();
-
-    await userEvent.click(within(panel).getByRole('button', { name: 'Clear' }));
+    // Every task in this board belongs to John, so nothing is left.
+    expect(
+      await screen.findByRole('heading', { name: 'No tasks match your filters' }),
+    ).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Clear filters' }));
     expect(store.filters().assigneeId).toBeNull();
-    await userEvent.click(within(panel).getByRole('button', { name: 'Done' }));
-    await vi.waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
   });
 
   it('moves a dropped card through the store', async () => {
