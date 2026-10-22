@@ -40,6 +40,9 @@ export class TaskCard {
   protected readonly priorityLabel = computed(() => TASK_PRIORITY_LABELS[this.task().priority]);
   protected readonly due = computed(() => describeDueDate(this.task(), this.today()));
   protected readonly firstName = computed(() => this.task().assignee.name.split(' ')[0]);
+  protected readonly checklistDone = computed(
+    () => this.task().checklist.filter((item) => item.done).length,
+  );
   protected readonly actions = computed<MenuAction[]>(() => [
     { label: 'Edit', command: () => this.editRequest.emit() },
     ...TASK_STATUSES.filter((status) => status !== this.task().status).map((status) => ({

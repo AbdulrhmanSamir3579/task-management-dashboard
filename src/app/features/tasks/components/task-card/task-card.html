@@ -19,6 +19,13 @@
       {{ task().tags.join(', ') }}
     </p>
   }
+  @if (task().checklist.length) {
+    <p class="card__meta">
+      <span aria-hidden="true">☑️</span>
+      {{ checklistDone() }}/{{ task().checklist.length }}
+      <span class="visually-hidden">checklist items done</span>
+    </p>
+  }
   <footer class="card__footer">
     <ui-avatar [initials]="task().assignee.avatar" [name]="task().assignee.name" />
     <span>&#64;{{ firstName() }}</span>

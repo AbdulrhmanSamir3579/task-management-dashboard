@@ -39,6 +39,7 @@ export function buildTask(overrides: Partial<Task> = {}): Task {
     completedAt: null,
     assignee: buildUser(),
     tags: ['Design'],
+    checklist: [],
     position: 0,
     createdAt: '2026-10-19T10:00:00.000Z',
     updatedAt: '2026-10-21T10:00:00.000Z',

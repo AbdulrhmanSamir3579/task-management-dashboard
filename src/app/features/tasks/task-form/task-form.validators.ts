@@ -31,10 +31,10 @@ export function dateNotAfter(today: () => string): ValidatorFn {
   };
 }
 
-export function maxItems(max: number): ValidatorFn {
+export function maxItems(max: number, noun = 'items'): ValidatorFn {
   return (control) => {
     const items = (control.value as readonly unknown[] | null) ?? [];
-    return items.length > max ? { maxItems: `Use at most ${max} tags.` } : null;
+    return items.length > max ? { maxItems: `Use at most ${max} ${noun}.` } : null;
   };
 }
 

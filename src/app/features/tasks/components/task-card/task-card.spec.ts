@@ -59,12 +59,25 @@ describe('TaskCard', () => {
     expect(host).toHaveTextContent('Overdue by 2 days');
   });
 
-  it('leaves out an empty description and tags', async () => {
-    await setup({ description: '', tags: [] });
+  it('leaves out an empty description, tags and checklist', async () => {
+    await setup({ description: '', tags: [], checklist: [] });
 
     const card = screen.getByRole('article');
     expect(card).not.toHaveTextContent('Compile');
     expect(card).not.toHaveTextContent('🏷️');
+    expect(card).not.toHaveTextContent('checklist');
+  });
+
+  it('shows checklist progress', async () => {
+    await setup({
+      checklist: [
+        { text: 'Collect numbers', done: true },
+        { text: 'Draft slides', done: true },
+        { text: 'Review', done: false },
+      ],
+    });
+
+    expect(screen.getByRole('article')).toHaveTextContent('2/3 checklist items done');
   });
 
   it.each<[TaskChangeState, string]>([

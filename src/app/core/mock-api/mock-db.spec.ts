@@ -2,6 +2,7 @@ import { buildTaskDto, buildUser } from '../../../testing/builders';
 import type { TasksResponse } from '../models';
 import {
   assignPositions,
+  cleanChecklist,
   createMockDb,
   extractUsers,
   nextTaskId,
@@ -144,5 +145,24 @@ describe('nextTaskId', () => {
   it('starts at 001 and ignores ids without digits', () => {
     expect(nextTaskId([])).toBe('task-001');
     expect(nextTaskId([buildTaskDto({ id: 'custom' })])).toBe('task-001');
+  });
+});
+
+describe('cleanChecklist', () => {
+  it('trims texts, drops empty items and keeps the done flag', () => {
+    expect(
+      cleanChecklist([
+        { text: '  Draft outline ', done: true },
+        { text: '   ', done: false },
+        { text: 'Review', done: false },
+      ]),
+    ).toEqual([
+      { text: 'Draft outline', done: true },
+      { text: 'Review', done: false },
+    ]);
+  });
+
+  it('treats a missing checklist as empty', () => {
+    expect(cleanChecklist(undefined)).toEqual([]);
   });
 });

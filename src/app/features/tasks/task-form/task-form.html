@@ -65,6 +65,59 @@
     <ui-tags-input formControlName="tags" placeholder="Add a tag" [max]="limits.tags" />
   </ui-form-field>
 
+  <fieldset class="checklist" formArrayName="checklist">
+    <legend class="checklist__legend">
+      Checklist
+      @if (checklist.length) {
+        <span class="checklist__progress">{{ checklistDone() }}/{{ checklist.length }} done</span>
+      }
+    </legend>
+
+    @for (item of checklist.controls; track item) {
+      <div class="checklist__item" [formGroupName]="$index">
+        <ui-checkbox
+          class="checklist__done"
+          formControlName="done"
+          [ariaLabel]="'Done: ' + (item.controls.text.value || 'item ' + ($index + 1))"
+        />
+        <ui-form-field
+          class="checklist__text"
+          [label]="'Checklist item ' + ($index + 1)"
+          [labelVisible]="false"
+          [control]="item.controls.text"
+        >
+          <ui-input-text
+            formControlName="text"
+            placeholder="Describe a step"
+            [maxLength]="limits.checklistItem"
+          />
+        </ui-form-field>
+        <ui-button
+          variant="ghost"
+          size="small"
+          [ariaLabel]="'Remove checklist item ' + ($index + 1)"
+          (clicked)="removeChecklistItem($index)"
+        >
+          <span aria-hidden="true">✕</span>
+        </ui-button>
+      </div>
+    } @empty {
+      <p class="checklist__note">Break the task into steps.</p>
+    }
+
+    @if (checklist.length < limits.checklist) {
+      <ui-button
+        class="checklist__add"
+        label="+ Add item"
+        variant="secondary"
+        size="small"
+        (clicked)="addChecklistItem()"
+      />
+    } @else {
+      <p class="checklist__note">A checklist can have up to {{ limits.checklist }} items.</p>
+    }
+  </fieldset>
+
   <div class="task-form__actions">
     <ui-button label="Cancel" variant="ghost" [disabled]="saving()" (clicked)="cancelled.emit()" />
     <ui-button

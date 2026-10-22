@@ -151,6 +151,19 @@ describe('InMemoryDataService', () => {
       expect(created.completedAt).toBeNull();
     });
 
+    it('stores a cleaned checklist with a new task', async () => {
+      const created = await firstValueFrom(
+        http.post<TaskDto>('api/tasks', {
+          ...newTask,
+          checklist: [
+            { text: ' Outline ', done: false },
+            { text: '', done: false },
+          ],
+        }),
+      );
+      expect(created.checklist).toEqual([{ text: 'Outline', done: false }]);
+    });
+
     it('rejects a blank title or unknown assignee with 422', async () => {
       const blank = firstValueFrom(http.post('api/tasks', { ...newTask, title: '   ' }));
       const unknown = firstValueFrom(http.post('api/tasks', { ...newTask, assigneeId: 'nobody' }));
@@ -190,6 +203,15 @@ describe('InMemoryDataService', () => {
 
       expect(updated.completedAt).toBe('2026-10-18T12:00:00.000Z');
       expect((await getActivities())[0]).toMatchObject({ type: 'updated', taskId: 'task-009' });
+    });
+
+    it('replaces the checklist and logs it as an update', async () => {
+      const updated = await patchTask('task-002', {
+        checklist: [{ text: 'Check examples', done: true }],
+      });
+
+      expect(updated.checklist).toEqual([{ text: 'Check examples', done: true }]);
+      expect((await getActivities())[0]).toMatchObject({ type: 'updated', taskId: 'task-002' });
     });
 
     it('clears the completion date when a task is reopened', async () => {

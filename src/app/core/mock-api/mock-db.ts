@@ -1,4 +1,4 @@
-import type { Activity, TaskDto, TasksResponse, User } from '../models';
+import type { Activity, ChecklistItem, TaskDto, TasksResponse, User } from '../models';
 import { addDaysToIsoDate, calendarDaysBetween } from '../../shared/utils/date.utils';
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
@@ -80,4 +80,11 @@ export function createMockDb(seed: TasksResponse, now: Date): MockDb {
 export function nextTaskId(tasks: readonly TaskDto[]): string {
   const highest = Math.max(0, ...tasks.map((task) => Number(task.id.replace(/\D/g, '')) || 0));
   return `task-${String(highest + 1).padStart(3, '0')}`;
+}
+
+/** Trims item texts and drops empty items, as a server would before storing them. */
+export function cleanChecklist(items: readonly ChecklistItem[] | undefined): ChecklistItem[] {
+  return (items ?? [])
+    .map((item) => ({ text: (item.text ?? '').trim(), done: item.done === true }))
+    .filter((item) => item.text !== '');
 }

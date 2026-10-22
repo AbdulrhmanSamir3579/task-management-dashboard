@@ -56,8 +56,11 @@ describe('task form validators', () => {
 
   describe('tag limits', () => {
     it('limits the number of tags', () => {
-      expect(maxItems(2)(new FormControl(['a', 'b', 'c']))).toEqual({
+      expect(maxItems(2, 'tags')(new FormControl(['a', 'b', 'c']))).toEqual({
         maxItems: 'Use at most 2 tags.',
+      });
+      expect(maxItems(1)(new FormControl(['a', 'b']))).toEqual({
+        maxItems: 'Use at most 1 items.',
       });
       expect(maxItems(2)(new FormControl(['a', 'b']))).toBeNull();
       expect(maxItems(2)(new FormControl(null))).toBeNull();

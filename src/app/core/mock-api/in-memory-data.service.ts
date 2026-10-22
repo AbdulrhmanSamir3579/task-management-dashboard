@@ -15,7 +15,7 @@ import type {
 } from '../models';
 import { moveOnBoard, removeFromBoard } from '../../shared/utils/board-order';
 import { rankByText } from '../../shared/utils/text-search';
-import { type MockDb, createMockDb, nextTaskId } from './mock-db';
+import { type MockDb, cleanChecklist, createMockDb, nextTaskId } from './mock-db';
 
 /** Name shown in the activity feed for changes made through the app. */
 export const CURRENT_USER_NAME = 'You';
@@ -72,6 +72,7 @@ export class InMemoryDataService implements InMemoryDbService {
         priority: payload.priority,
         dueDate: payload.dueDate,
         tags: payload.tags ?? [],
+        checklist: cleanChecklist(payload.checklist),
         assignee,
         completedAt: payload.status === 'done' ? (payload.completedAt ?? timestamp) : null,
         position: db.tasks.filter((existing) => existing.status === payload.status).length,
@@ -118,6 +119,7 @@ export class InMemoryDataService implements InMemoryDbService {
       const updated: TaskDto = {
         ...current,
         ...fields,
+        ...(fields.checklist ? { checklist: cleanChecklist(fields.checklist) } : {}),
         assignee,
         updatedAt: timestamp,
         // Done tasks keep a completion date: the one sent, the current one, or now.
