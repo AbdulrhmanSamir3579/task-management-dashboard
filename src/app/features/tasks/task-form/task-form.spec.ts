@@ -182,8 +182,11 @@ describe('TaskForm', () => {
       await userEvent.type(item(1), '  Draft outline ');
       await addItem();
       await userEvent.type(item(2), 'Temporary');
-      // The checkbox is named after the row's text, which renders after typing.
-      await userEvent.click(await screen.findByRole('checkbox', { name: 'Done: Draft outline' }));
+      // The checkbox is named after the row's text, which renders after typing; slow CI
+      // machines can take longer than the default second.
+      await userEvent.click(
+        await screen.findByRole('checkbox', { name: 'Done: Draft outline' }, { timeout: 3000 }),
+      );
       await userEvent.click(await screen.findByRole('button', { name: 'Remove checklist item 2' }));
 
       await vi.waitFor(() =>
