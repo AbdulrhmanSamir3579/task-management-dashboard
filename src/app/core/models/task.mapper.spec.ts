@@ -27,6 +27,7 @@ describe('toTask', () => {
     const dto = buildTaskDto({
       description: undefined,
       tags: undefined,
+      checklist: undefined,
       position: undefined,
       completedAt: undefined,
     });
@@ -34,6 +35,7 @@ describe('toTask', () => {
     expect(toTask(dto, today)).toMatchObject({
       description: '',
       tags: [],
+      checklist: [],
       position: 0,
       completedAt: null,
     });

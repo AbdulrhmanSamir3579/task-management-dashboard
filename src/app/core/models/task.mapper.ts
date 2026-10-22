@@ -21,6 +21,7 @@ export function toTask(dto: TaskDto, today: string): Task {
     completedAt: dto.completedAt ?? null,
     assignee: dto.assignee,
     tags: dto.tags ?? [],
+    checklist: dto.checklist ?? [],
     position: dto.position ?? 0,
     createdAt: dto.createdAt,
     updatedAt: dto.updatedAt,
