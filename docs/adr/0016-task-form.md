@@ -1,6 +1,6 @@
 # 0016. Task form
 
-- Status: Accepted
+- Status: Accepted, amended by [0030](0030-inline-task-editing.md)
 - Date: 2026-10-21
 
 ## Context
