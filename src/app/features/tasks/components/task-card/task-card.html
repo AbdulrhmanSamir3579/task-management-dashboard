@@ -1,14 +1,55 @@
 <article class="card" [attr.aria-label]="task().title">
   <div class="card__top">
-    <span class="card__priority" [class]="'card__priority--' + task().priority">
-      {{ priorityKey() | translate }}
-    </span>
+    <ui-menu
+      trigger="content"
+      [actions]="priorityActions()"
+      [triggerLabel]="
+        'CARD.CHANGE_PRIORITY'
+          | translate: { priority: priorityKey() | translate, title: task().title }
+      "
+    >
+      <span class="card__priority" [class]="'card__priority--' + task().priority">
+        {{ priorityKey() | translate }}
+      </span>
+    </ui-menu>
     <ui-menu
       [actions]="actions()"
       [triggerLabel]="'CARD.ACTIONS' | translate: { title: task().title }"
     />
   </div>
-  <h3 class="card__title">{{ task().title }}</h3>
+  @if (editingTitle()) {
+    <!-- Stopping mousedown and touchstart keeps text selection from dragging the card. -->
+    <form
+      class="card__title-form"
+      (submit)="onTitleSubmit($event)"
+      (keydown.escape)="cancelTitleEdit()"
+      (focusout)="onTitleFocusOut($event)"
+      (mousedown)="$event.stopPropagation()"
+      (touchstart)="$event.stopPropagation()"
+    >
+      <ui-form-field
+        [label]="'CARD.TITLE_LABEL' | translate"
+        [labelVisible]="false"
+        [control]="titleDraft"
+        [hint]="'CARD.TITLE_HINT' | translate"
+      >
+        <ui-input-text [formControl]="titleDraft" [maxLength]="titleLimit" />
+      </ui-form-field>
+    </form>
+  } @else {
+    <div class="card__title-row">
+      <h3 class="card__title" (dblclick)="startTitleEdit()">{{ task().title }}</h3>
+      <button
+        #editTitleButton
+        type="button"
+        class="card__edit-title"
+        [attr.aria-label]="'CARD.EDIT_TITLE' | translate: { title: task().title }"
+        (click)="startTitleEdit()"
+      >
+        <span aria-hidden="true">✏️</span>
+      </button>
+    </div>
+  }
   @if (task().description) {
     <p class="card__description">{{ task().description }}</p>
   }
@@ -30,7 +71,25 @@
     </p>
   }
   <footer class="card__footer">
-    <ui-avatar [initials]="task().assignee.avatar" [name]="task().assignee.name" />
-    <span>&#64;{{ firstName() }}</span>
+    @if (assigneeActions().length) {
+      <ui-menu
+        trigger="content"
+        [actions]="assigneeActions()"
+        [triggerLabel]="
+          'CARD.CHANGE_ASSIGNEE' | translate: { name: task().assignee.name, title: task().title }
+        "
+      >
+        <ng-container *ngTemplateOutlet="assignee" />
+      </ui-menu>
+    } @else {
+      <ng-container *ngTemplateOutlet="assignee" />
+    }
   </footer>
 </article>
+
+<ng-template #assignee>
+  <span class="card__assignee">
+    <ui-avatar [initials]="task().assignee.avatar" [name]="task().assignee.name" />
+    <span>&#64;{{ firstName() }}</span>
+  </span>
+</ng-template>
