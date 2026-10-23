@@ -4,7 +4,7 @@
   aria-haspopup="menu"
   [attr.aria-expanded]="open()"
   [attr.aria-label]="triggerLabel()"
-  (click)="menu.toggle($event)"
+  (click)="toggle($event)"
 >
   <svg class="ui-menu__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
     <circle cx="8" cy="3" r="1.6" />
@@ -12,12 +12,14 @@
     <circle cx="8" cy="13" r="1.6" />
   </svg>
 </button>
-<p-menu
-  #menu
-  appendTo="body"
-  [model]="items()"
-  [popup]="true"
-  [ariaLabel]="triggerLabel()"
-  (onShow)="open.set(true)"
-  (onHide)="open.set(false)"
-/>
+<!-- Created on first use: a board renders one of these per card. -->
+@if (rendered()) {
+  <p-menu
+    appendTo="body"
+    [model]="items()"
+    [popup]="true"
+    [ariaLabel]="triggerLabel()"
+    (onShow)="open.set(true)"
+    (onHide)="open.set(false)"
+  />
+}

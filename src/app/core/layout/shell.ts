@@ -12,6 +12,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { filter, map } from 'rxjs';
 import { ActivityBell } from '../../features/activity/activity-bell/activity-bell';
 import { UiConfirmOutlet } from '../../shared/ui/confirm/confirm-outlet';
+import { ConfirmService } from '../../shared/ui/confirm/confirm.service';
 import { TaskEditorStore } from '../../features/tasks/data-access/task-editor.store';
 import { TaskEditorDialog } from '../../features/tasks/task-editor/task-editor-dialog';
 import { TaskSearchBox } from '../../features/tasks/task-search/task-search-box';
@@ -41,7 +42,8 @@ import { Sidebar } from './sidebar/sidebar';
 })
 export class Shell {
   private readonly router = inject(Router);
-  private readonly taskEditor = inject(TaskEditorStore);
+  protected readonly taskEditor = inject(TaskEditorStore);
+  protected readonly confirm = inject(ConfirmService);
   private readonly main = viewChild.required<ElementRef<HTMLElement>>('main');
 
   protected readonly navigation = NAVIGATION;
