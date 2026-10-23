@@ -15,9 +15,10 @@ import { Menu } from 'primeng/menu';
 import type { MenuAction } from '../ui.types';
 
 /**
- * Actions menu opened from an icon button, e.g. the "more" button on a task card. The
- * PrimeNG menu is only created the first time it is opened: a board shows one button per
- * card, and creating every menu up front cost noticeable start-up time.
+ * Actions menu opened from an icon button, e.g. the "more" button on a task card. With
+ * `trigger="content"`, the projected content is the button instead, e.g. a priority chip.
+ * The PrimeNG menu is only created the first time it is opened: a board shows one button
+ * per card, and creating every menu up front cost noticeable start-up time.
  */
 @Component({
   selector: 'ui-menu',
@@ -33,6 +34,8 @@ export class UiMenu {
   readonly actions = input.required<MenuAction[]>();
   /** Accessible name of the trigger button and the menu, e.g. "Task actions". */
   readonly triggerLabel = input.required<string>();
+  /** `icon` shows a "more" icon; `content` turns the projected content into the button. */
+  readonly trigger = input<'icon' | 'content'>('icon');
 
   protected readonly open = signal(false);
   protected readonly rendered = signal(false);

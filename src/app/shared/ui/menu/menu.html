@@ -1,16 +1,21 @@
 <button
   type="button"
   class="ui-menu__trigger"
+  [class.ui-menu__trigger--content]="trigger() === 'content'"
   aria-haspopup="menu"
   [attr.aria-expanded]="open()"
   [attr.aria-label]="triggerLabel()"
   (click)="toggle($event)"
 >
-  <svg class="ui-menu__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-    <circle cx="8" cy="3" r="1.6" />
-    <circle cx="8" cy="8" r="1.6" />
-    <circle cx="8" cy="13" r="1.6" />
-  </svg>
+  @if (trigger() === 'content') {
+    <ng-content />
+  } @else {
+    <svg class="ui-menu__icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+      <circle cx="8" cy="3" r="1.6" />
+      <circle cx="8" cy="8" r="1.6" />
+      <circle cx="8" cy="13" r="1.6" />
+    </svg>
+  }
 </button>
 <!-- Created on first use: a board renders one of these per card. -->
 @if (rendered()) {
