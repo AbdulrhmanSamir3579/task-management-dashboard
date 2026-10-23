@@ -1,3 +1,4 @@
+import { DeferBlockBehavior } from '@angular/core/testing';
 import { render, screen, within } from '@testing-library/angular';
 import { userEvent } from '@testing-library/user-event';
 import { buildTask, buildUser } from '../../../../../testing/builders';
@@ -25,6 +26,7 @@ describe('TaskCard', () => {
     const deleteRequest = vi.fn();
     const quickEdit = vi.fn();
     const { fixture } = await render(TaskCard, {
+      deferBlockBehavior: DeferBlockBehavior.Playthrough,
       inputs: {
         task: buildTask({
           title: 'Prepare Q4 budget report',
@@ -271,6 +273,7 @@ describe('TaskCard', () => {
 
   it('shows its texts in Arabic, with Arabic plural forms', async () => {
     await render(TaskCard, {
+      deferBlockBehavior: DeferBlockBehavior.Playthrough,
       inputs: {
         task: buildTask({
           title: 'Prepare Q4 budget report',

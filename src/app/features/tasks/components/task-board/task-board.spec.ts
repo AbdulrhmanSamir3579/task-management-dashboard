@@ -1,3 +1,4 @@
+import { DeferBlockBehavior } from '@angular/core/testing';
 import { CdkDropList } from '@angular/cdk/drag-drop';
 import { By } from '@angular/platform-browser';
 import { render, screen, within } from '@testing-library/angular';
@@ -22,6 +23,7 @@ describe('TaskBoard', () => {
     const moveRequest = vi.fn();
     const deleteRequest = vi.fn();
     const view = await render(TaskBoard, {
+      deferBlockBehavior: DeferBlockBehavior.Playthrough,
       inputs: {
         columns,
         today: '2026-10-21',
