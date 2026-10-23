@@ -53,13 +53,14 @@ import {
   notBlank,
   uniqueTitle,
 } from './task-form.validators';
-
-export const TITLE_MAX_LENGTH = 100;
-export const DESCRIPTION_MAX_LENGTH = 500;
-export const MAX_TAGS = 5;
-export const TAG_MAX_LENGTH = 20;
-export const MAX_CHECKLIST_ITEMS = 10;
-export const CHECKLIST_ITEM_MAX_LENGTH = 80;
+import {
+  CHECKLIST_ITEM_MAX_LENGTH,
+  DESCRIPTION_MAX_LENGTH,
+  MAX_CHECKLIST_ITEMS,
+  MAX_TAGS,
+  TAG_MAX_LENGTH,
+  TITLE_MAX_LENGTH,
+} from './task-limits';
 
 interface ChecklistItemControls {
   text: FormControl<string>;
