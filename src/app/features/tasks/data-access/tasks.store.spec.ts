@@ -407,11 +407,81 @@ describe('TasksStore', () => {
       });
     });
 
+    describe('edits on the card', () => {
+      const sarah = buildUser({ id: 'user-002', name: 'Sarah Smith' });
+
+      it('shows a new title and assignee at once and saves them', async () => {
+        const store = await loadedStore();
+
+        store.edit('task-002', { title: 'Write the docs', assignee: sarah });
+
+        expect(store.entityMap()['task-002']?.title).toBe('Write the docs');
+        expect(store.entityMap()['task-002']?.assignee.name).toBe('Sarah Smith');
+        expect(store.changeStates()['task-002']).toBe('saving');
+
+        const req = httpTesting.expectOne('api/tasks/task-002');
+        expect(req.request.method).toBe('PATCH');
+        expect(req.request.body).toEqual({ title: 'Write the docs', assigneeId: 'user-002' });
+        req.flush(
+          buildTaskDto({
+            id: 'task-002',
+            title: 'Write the docs',
+            status: 'todo',
+            assignee: sarah,
+          }),
+        );
+
+        expect(store.changeStates()['task-002']).toBe('saved');
+        expect(store.savedChanges()).toBe(1);
+      });
+
+      it('undoes a refused edit', async () => {
+        const store = await loadedStore();
+
+        store.edit('task-002', { priority: 'low', title: 'Docs' });
+        httpTesting.expectOne('api/tasks/task-002').flush(null, serverError);
+
+        expect(store.entityMap()['task-002']?.priority).toBe('high');
+        expect(store.entityMap()['task-002']?.title).toBe('Write docs');
+        expect(store.changeStates()['task-002']).toBe('failed');
+        expect(notifications.error).toHaveBeenCalledWith(
+          'Something went wrong on our side. Please try again.',
+        );
+
+        TestBed.tick();
+        httpTesting.expectOne('api/tasks').flush(response());
+        await settle();
+      });
+
+      it('sends nothing when nothing changed', async () => {
+        const store = await loadedStore();
+        const task = store.entityMap()['task-002']!;
+
+        store.edit('task-002', {
+          title: task.title,
+          priority: task.priority,
+          assignee: { ...task.assignee },
+        });
+        store.edit('task-002', {});
+
+        expect(patches()).toHaveLength(0);
+      });
+
+      it('checks titles against the other tasks, ignoring case and spaces', async () => {
+        const store = await loadedStore();
+
+        expect(store.isTitleTaken(' write DOCS ')).toBe(true);
+        expect(store.isTitleTaken('Write docs', 'task-002')).toBe(false);
+        expect(store.isTitleTaken('Plan sprint')).toBe(false);
+      });
+    });
+
     it('ignores changes to unknown tasks', async () => {
       const store = await loadedStore();
 
       store.move('missing', 'done', 0);
       store.remove('missing');
+      store.edit('missing', { title: 'Lost' });
 
       httpTesting.expectNone((req) => req.url.includes('missing'));
     });
