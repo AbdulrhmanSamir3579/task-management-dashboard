@@ -6,6 +6,8 @@
   border: 1px solid var(--p-form-field-border-color);
   border-radius: var(--p-form-field-border-radius);
   background: var(--p-form-field-background);
+  // PrimeNG sets this on every component (`.p-component`); the height depends on it.
+  line-height: var(--p-typography-line-height, 1.5);
 }
 .ui-select-placeholder__label {
   flex: 1;
