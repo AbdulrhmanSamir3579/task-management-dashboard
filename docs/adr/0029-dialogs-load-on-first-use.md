@@ -1,6 +1,6 @@
 # 0029. Dialogs load on first use
 
-- Status: Accepted
+- Status: Accepted, amended by [0031](0031-filters-and-menus-load-after-first-paint.md)
 - Date: 2026-10-22
 - Amends: [0011](0011-lazy-loading-and-bundle-budget.md)
 
