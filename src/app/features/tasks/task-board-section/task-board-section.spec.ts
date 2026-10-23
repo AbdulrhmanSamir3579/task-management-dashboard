@@ -105,7 +105,8 @@ describe('TaskBoardSection', () => {
     const { store } = await loaded();
 
     const toolbar = screen.getByRole('group', { name: 'Show tasks by status' }).parentElement!;
-    await userEvent.click(within(toolbar).getByRole('combobox', { name: 'Assignee' }));
+    // The dropdowns load once the board has drawn and the browser is idle.
+    await userEvent.click(await within(toolbar).findByRole('combobox', { name: 'Assignee' }));
     await userEvent.click(await screen.findByRole('option', { name: 'Sarah Smith' }));
 
     expect(store.filters().assigneeId).toBe('user-002');

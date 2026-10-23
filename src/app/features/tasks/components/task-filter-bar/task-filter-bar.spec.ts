@@ -55,6 +55,19 @@ describe('TaskFilterBar', () => {
     expect(screen.getByText('All assignees')).toBeInTheDocument();
   });
 
+  it('waits for the board before loading the dropdowns', async () => {
+    const { rerender } = await render(TaskFilterBar, {
+      deferBlockBehavior: DeferBlockBehavior.Playthrough,
+      inputs: { filters: EMPTY_TASK_FILTERS, assignees, ready: false },
+    });
+    expect(screen.getByText('All priorities')).toBeInTheDocument();
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
+
+    await rerender({ inputs: { ready: true }, partialUpdate: true });
+
+    expect(await screen.findByRole('combobox', { name: 'Priority' })).toBeInTheDocument();
+  });
+
   it.each<[Partial<TaskFilters>, string, string]>([
     [{}, 'All priorities', 'All assignees'],
     [{ priorities: ['high', 'low'], assigneeId: 'user-002' }, '2 selected', 'Sarah Smith'],

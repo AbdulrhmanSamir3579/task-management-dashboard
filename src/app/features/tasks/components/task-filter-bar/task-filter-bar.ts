@@ -7,6 +7,7 @@ import {
   input,
   output,
 } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -23,11 +24,12 @@ export type BarFilters = Pick<TaskFilters, 'priorities' | 'assigneeId'>;
 
 /**
  * Priority and assignee dropdowns for the board toolbar; every change is reported at once.
- * The dropdowns load right after first paint; until then look-alikes show the filters.
+ * The dropdowns load once the board has drawn; until then look-alikes show the filters.
  */
 @Component({
   selector: 'app-task-filter-bar',
   imports: [
+    NgTemplateOutlet,
     ReactiveFormsModule,
     TranslatePipe,
     UiFormField,
@@ -42,6 +44,8 @@ export type BarFilters = Pick<TaskFilters, 'priorities' | 'assigneeId'>;
 export class TaskFilterBar {
   readonly filters = input.required<TaskFilters>();
   readonly assignees = input.required<SelectOption<string>[]>();
+  /** False while the board is still loading: the dropdowns wait, so they do not delay it. */
+  readonly ready = input(true);
   readonly filtersChange = output<BarFilters>();
 
   private readonly language = inject(LanguageService);
