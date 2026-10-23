@@ -27,7 +27,8 @@ export const appConfig: ApplicationConfig = {
     provideRouter(
       routes,
       withComponentInputBinding(),
-      withViewTransitions(),
+      // The first load has nothing to animate from, so it skips the transition and its work.
+      withViewTransitions({ skipInitialTransition: true }),
       withInMemoryScrolling({ scrollPositionRestoration: 'top' }),
       // Lazy pages are fetched in the background once the browser is idle, so navigation is
       // instant without slowing the first page.
