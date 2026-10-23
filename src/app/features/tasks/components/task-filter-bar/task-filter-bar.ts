@@ -15,15 +15,26 @@ import { TASK_PRIORITIES, TASK_PRIORITY_KEYS, type TaskPriority } from '../../..
 import { UiFormField } from '../../../../shared/ui/form-field/form-field';
 import { UiMultiSelect } from '../../../../shared/ui/multi-select/multi-select';
 import { UiSelect } from '../../../../shared/ui/select/select';
+import { UiSelectPlaceholder } from '../../../../shared/ui/select-placeholder/select-placeholder';
 import type { SelectOption } from '../../../../shared/ui/ui.types';
 import type { TaskFilters } from '../../data-access/task-filters';
 
 export type BarFilters = Pick<TaskFilters, 'priorities' | 'assigneeId'>;
 
-/** Priority and assignee dropdowns for the board toolbar; every change is reported at once. */
+/**
+ * Priority and assignee dropdowns for the board toolbar; every change is reported at once.
+ * The dropdowns load right after first paint; until then look-alikes show the filters.
+ */
 @Component({
   selector: 'app-task-filter-bar',
-  imports: [ReactiveFormsModule, TranslatePipe, UiFormField, UiMultiSelect, UiSelect],
+  imports: [
+    ReactiveFormsModule,
+    TranslatePipe,
+    UiFormField,
+    UiMultiSelect,
+    UiSelect,
+    UiSelectPlaceholder,
+  ],
   templateUrl: './task-filter-bar.html',
   styleUrl: './task-filter-bar.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,6 +52,25 @@ export class TaskFilterBar {
       value: priority,
     })),
   );
+
+  /** What the closed dropdowns show: the selection, or their placeholder when empty. */
+  protected readonly placeholders = computed(() => {
+    const { priorities, assigneeId } = this.filters();
+    const [onlyPriority] = priorities;
+    const assignee = this.assignees().find((option) => option.value === assigneeId);
+    return {
+      priorities:
+        priorities.length === 0
+          ? this.language.t('FILTERS.ALL_PRIORITIES')
+          : priorities.length === 1 && onlyPriority
+            ? this.language.t(TASK_PRIORITY_KEYS[onlyPriority])
+            : // PrimeNG's format, "{0} selected", which ngx-translate does not fill in.
+              this.language.t('UI.SELECTED_COUNT').replace('{0}', String(priorities.length)),
+      assignee: assignee?.label ?? this.language.t('FILTERS.ALL_ASSIGNEES'),
+      noPriorities: priorities.length === 0,
+      noAssignee: !assignee,
+    };
+  });
 
   protected readonly form = inject(NonNullableFormBuilder).group({
     priorities: [[] as TaskPriority[]],

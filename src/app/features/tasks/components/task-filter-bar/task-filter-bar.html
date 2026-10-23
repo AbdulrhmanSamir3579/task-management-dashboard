@@ -1,27 +1,41 @@
 <form class="filter-bar" [formGroup]="form">
-  <ui-form-field
-    [label]="'FILTERS.PRIORITY' | translate"
-    [labelVisible]="false"
-    [control]="form.controls.priorities"
-  >
-    <ui-multi-select
-      formControlName="priorities"
-      [placeholder]="'FILTERS.ALL_PRIORITIES' | translate"
-      [compact]="true"
-      [options]="priorityOptions()"
+  <!-- PrimeNG's dropdowns are not needed for the first paint of the board. -->
+  @defer (on idle) {
+    <ui-form-field
+      [label]="'FILTERS.PRIORITY' | translate"
+      [labelVisible]="false"
+      [control]="form.controls.priorities"
+    >
+      <ui-multi-select
+        formControlName="priorities"
+        [placeholder]="'FILTERS.ALL_PRIORITIES' | translate"
+        [compact]="true"
+        [options]="priorityOptions()"
+      />
+    </ui-form-field>
+    <ui-form-field
+      [label]="'FILTERS.ASSIGNEE' | translate"
+      [labelVisible]="false"
+      [control]="form.controls.assigneeId"
+    >
+      <ui-select
+        formControlName="assigneeId"
+        [placeholder]="'FILTERS.ALL_ASSIGNEES' | translate"
+        [options]="assignees()"
+        [clearable]="true"
+        [searchable]="true"
+      />
+    </ui-form-field>
+  } @placeholder {
+    <ui-select-placeholder
+      class="filter-bar__field"
+      [text]="placeholders().priorities"
+      [empty]="placeholders().noPriorities"
     />
-  </ui-form-field>
-  <ui-form-field
-    [label]="'FILTERS.ASSIGNEE' | translate"
-    [labelVisible]="false"
-    [control]="form.controls.assigneeId"
-  >
-    <ui-select
-      formControlName="assigneeId"
-      [placeholder]="'FILTERS.ALL_ASSIGNEES' | translate"
-      [options]="assignees()"
-      [clearable]="true"
-      [searchable]="true"
+    <ui-select-placeholder
+      class="filter-bar__field"
+      [text]="placeholders().assignee"
+      [empty]="placeholders().noAssignee"
     />
-  </ui-form-field>
+  }
 </form>
