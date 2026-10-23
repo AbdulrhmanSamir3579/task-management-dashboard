@@ -55,6 +55,14 @@ export function maxItemLength(max: number): ValidatorFn {
   };
 }
 
+/** Sync version of `uniqueTitle`, for places where every task is already loaded. */
+export function titleNotTaken(isTaken: (title: string) => boolean): ValidatorFn {
+  return (control) => {
+    const title = typeof control.value === 'string' ? control.value.trim() : '';
+    return title && isTaken(title) ? { titleTaken: message('VALIDATION.TITLE_TAKEN') } : null;
+  };
+}
+
 /**
  * Async check that no other task has the same title. It waits for a pause in typing;
  * Angular cancels the pending check when the value changes again. A failed check never

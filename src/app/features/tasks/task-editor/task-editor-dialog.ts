@@ -15,11 +15,8 @@ import { ConfirmService } from '../../../shared/ui/confirm/confirm.service';
 import { UiDialog } from '../../../shared/ui/dialog/dialog';
 import { TaskEditorStore } from '../data-access/task-editor.store';
 import { TasksApi } from '../data-access/tasks.api';
-import { TasksStore } from '../data-access/tasks.store';
+import { TasksStore, sameTitle } from '../data-access/tasks.store';
 import { TaskForm } from '../task-form/task-form';
-
-const sameTitle = (a: string, b: string): boolean =>
-  a.trim().toLowerCase() === b.trim().toLowerCase();
 
 /** The one task dialog of the app, opened through `TaskEditorStore`. */
 @Component({
@@ -49,7 +46,7 @@ export class TaskEditorDialog {
     const isOther = (task: { id: string; title: string }) =>
       task.id !== editingId && sameTitle(task.title, title);
     return this.tasks.hasLoaded()
-      ? of(this.tasks.entities().some(isOther))
+      ? of(this.tasks.isTitleTaken(title, editingId))
       : this.api.search(title, 10).pipe(map((tasks) => tasks.some(isOther)));
   };
 

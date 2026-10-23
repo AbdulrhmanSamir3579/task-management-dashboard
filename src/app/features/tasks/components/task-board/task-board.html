@@ -26,9 +26,12 @@
             [task]="task"
             [changeState]="changeStates()[task.id]"
             [today]="today()"
+            [assignees]="assignees()"
+            [isTitleTaken]="isTitleTaken()"
             (editRequest)="editRequest.emit(task)"
             (moveRequest)="moveRequest.emit({ task, status: $event })"
             (deleteRequest)="deleteRequest.emit(task)"
+            (quickEdit)="quickEdit.emit({ task, changes: $event })"
           >
             <div *cdkDragPlaceholder class="column__placeholder"></div>
           </app-task-card>

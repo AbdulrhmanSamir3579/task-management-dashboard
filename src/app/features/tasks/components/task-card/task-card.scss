@@ -50,12 +50,69 @@
   color: var(--app-success-text);
 }
 
+.card__title-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.25rem;
+}
+
 .card__title {
+  flex: 1;
+  min-width: 0;
   margin: 0;
   color: var(--app-text);
   font-size: 0.84375rem;
   font-weight: 700;
   line-height: 1.25rem;
+  overflow-wrap: anywhere;
+}
+
+// Shown on hover and focus; always on touch screens, which have no hover.
+.card__edit-title {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border: 0;
+  border-radius: var(--app-radius-sm);
+  background: transparent;
+  font-size: 0.75rem;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+
+  &:hover {
+    background: var(--app-background);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--app-primary);
+    outline-offset: 2px;
+  }
+}
+
+.card:hover .card__edit-title,
+.card__edit-title:focus-visible {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .card__edit-title {
+    opacity: 1;
+  }
+}
+
+.card__title-form {
+  font-size: 0.8125rem;
+}
+
+.card__assignee {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
 }
 
 .card__description {

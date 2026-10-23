@@ -13,10 +13,11 @@ import {
   TASK_STATUS_KEYS,
   type Task,
   type TaskStatus,
+  type User,
 } from '../../../../core/models';
 import { toIsoDate } from '../../../../shared/utils/date.utils';
 import type { TaskColumns } from '../../data-access/task-filters';
-import type { TaskChangeState } from '../../data-access/tasks.store';
+import type { TaskChangeState, TaskQuickEdit } from '../../data-access/tasks.store';
 import { TaskCard } from '../task-card/task-card';
 
 /** Where a card was dropped: its column and the card it now sits before (`null` = last). */
@@ -29,6 +30,11 @@ export interface TaskDrop {
 export interface TaskMoveRequest {
   task: Task;
   status: TaskStatus;
+}
+
+export interface TaskQuickEditRequest {
+  task: Task;
+  changes: TaskQuickEdit;
 }
 
 /** Kanban columns with drag and drop. Presentational: it only reports what the user did. */
@@ -54,10 +60,13 @@ export class TaskBoard {
   readonly statuses = input<readonly TaskStatus[]>(TASK_STATUSES);
   readonly changeStates = input<Readonly<Record<string, TaskChangeState>>>({});
   readonly today = input(toIsoDate(new Date()));
+  readonly assignees = input<readonly User[]>([]);
+  readonly isTitleTaken = input<(title: string, taskId: string) => boolean>(() => false);
   readonly dropped = output<TaskDrop>();
   readonly editRequest = output<Task>();
   readonly moveRequest = output<TaskMoveRequest>();
   readonly deleteRequest = output<Task>();
+  readonly quickEdit = output<TaskQuickEditRequest>();
 
   protected readonly labels = TASK_STATUS_KEYS;
 

@@ -58,10 +58,13 @@
       [columns]="store.columns()"
       [statuses]="visibleStatuses()"
       [changeStates]="store.changeStates()"
+      [assignees]="users.users()"
+      [isTitleTaken]="store.isTitleTaken"
       (dropped)="drop($event)"
       (editRequest)="editor.openEdit($event.id)"
       (moveRequest)="moveTo($event)"
       (deleteRequest)="confirmDelete($event)"
+      (quickEdit)="store.edit($event.task.id, $event.changes)"
     />
   }
 </div>

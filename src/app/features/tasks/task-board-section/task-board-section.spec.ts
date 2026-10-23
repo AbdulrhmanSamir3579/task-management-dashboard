@@ -5,7 +5,7 @@ import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { render, screen, within } from '@testing-library/angular';
 import { userEvent } from '@testing-library/user-event';
-import { buildTaskDto } from '../../../../testing/builders';
+import { buildTaskDto, buildUser } from '../../../../testing/builders';
 import { UsersStore } from '../../../core/data-access/users.store';
 import { errorInterceptor } from '../../../core/http/error.interceptor';
 import type { TasksResponse } from '../../../core/models';
@@ -26,10 +26,11 @@ const tasks: TasksResponse = {
   meta: { totalCount: 3, lastUpdated: '2026-10-21T10:00:00.000Z' },
 };
 
-const assignees = [
-  { label: 'John Doe', value: 'user-001' },
-  { label: 'Sarah Smith', value: 'user-002' },
+const team = [
+  buildUser({ id: 'user-001', name: 'John Doe' }),
+  buildUser({ id: 'user-002', name: 'Sarah Smith' }),
 ];
+const assignees = team.map((user) => ({ label: user.name, value: user.id }));
 
 describe('TaskBoardSection', () => {
   let confirm: ReturnType<typeof vi.fn>;
@@ -43,7 +44,7 @@ describe('TaskBoardSection', () => {
         provideHttpClientTesting(),
         { provide: ConfirmService, useValue: { confirm } },
         { provide: NotificationService, useValue: { success: vi.fn(), error: vi.fn() } },
-        { provide: UsersStore, useValue: { options: signal(assignees) } },
+        { provide: UsersStore, useValue: { users: signal(team), options: signal(assignees) } },
       ],
     });
     const httpTesting = TestBed.inject(HttpTestingController);
@@ -139,6 +140,32 @@ describe('TaskBoardSection', () => {
     const req = httpTesting.expectOne('api/tasks/task-003');
     expect(req.request.body).toEqual({ status: 'todo', position: 2 });
     req.flush(buildTaskDto({ id: 'task-003', status: 'todo', position: 2 }));
+  });
+
+  it('saves edits made on a card and refuses a title another task has', async () => {
+    const { httpTesting } = await loaded();
+    const card = within(screen.getByRole('article', { name: 'Write docs' }));
+
+    await userEvent.click(card.getByRole('button', { name: 'Edit title of Write docs' }));
+    const title = card.getByRole('textbox', { name: 'Task title' });
+    await userEvent.clear(title);
+    await userEvent.type(title, 'prepare BUDGET{Enter}');
+    expect(card.getByRole('alert')).toHaveTextContent('A task with this title already exists.');
+    httpTesting.expectNone('api/tasks/task-002');
+
+    await userEvent.clear(title);
+    await userEvent.type(title, 'Write the docs{Enter}');
+    const rename = httpTesting.expectOne('api/tasks/task-002');
+    expect(rename.request.body).toEqual({ title: 'Write the docs' });
+    rename.flush(buildTaskDto({ id: 'task-002', title: 'Write the docs', status: 'todo' }));
+
+    const renamed = within(screen.getByRole('article', { name: 'Write the docs' }));
+    await userEvent.click(renamed.getByRole('button', { name: /^Assigned to John Doe/ }));
+    const item = await screen.findByRole('menuitem', { name: 'Sarah Smith' });
+    await userEvent.click(within(item).getByText('Sarah Smith'));
+    const reassign = httpTesting.expectOne('api/tasks/task-002');
+    expect(reassign.request.body).toEqual({ assigneeId: 'user-002' });
+    reassign.flush(buildTaskDto({ id: 'task-002', title: 'Write the docs', assignee: team[1] }));
   });
 
   it('deletes a task only after confirmation', async () => {

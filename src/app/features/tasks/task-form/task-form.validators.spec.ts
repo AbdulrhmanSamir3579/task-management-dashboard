@@ -6,6 +6,7 @@ import {
   maxItemLength,
   maxItems,
   notBlank,
+  titleNotTaken,
   uniqueTitle,
 } from './task-form.validators';
 
@@ -70,6 +71,18 @@ describe('task form validators', () => {
       });
       expect(maxItemLength(3)(new FormControl(['abc']))).toBeNull();
       expect(maxItemLength(3)(new FormControl(null))).toBeNull();
+    });
+  });
+
+  describe('titleNotTaken', () => {
+    const isTaken = (title: string) => title === 'Write docs';
+
+    it.each([
+      [' Write docs ', { titleTaken: { key: 'VALIDATION.TITLE_TAKEN' } }],
+      ['Review docs', null],
+      ['   ', null],
+    ])('checks %j', (value, expected) => {
+      expect(titleNotTaken(isTaken)(new FormControl(value))).toEqual(expected);
     });
   });
 

@@ -19,6 +19,19 @@
   background: rgb(0 0 0 / 6%);
   color: var(--app-text);
 }
+.ui-menu__trigger--content {
+  width: auto;
+  height: auto;
+  border-radius: var(--app-radius-sm);
+  color: inherit;
+  font: inherit;
+}
+.ui-menu__trigger--content:hover,
+.ui-menu__trigger--content[aria-expanded='true'] {
+  background: transparent;
+  box-shadow: 0 0 0 2px var(--app-border);
+  color: inherit;
+}
 .ui-menu__trigger:focus-visible {
   outline: 2px solid var(--app-primary);
   outline-offset: 2px;

@@ -8,7 +8,13 @@ import {
   withProps,
   withState,
 } from '@ngrx/signals';
-import { addEntity, setAllEntities, setEntity, withEntities } from '@ngrx/signals/entities';
+import {
+  addEntity,
+  setAllEntities,
+  setEntity,
+  updateEntity,
+  withEntities,
+} from '@ngrx/signals/entities';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import {
   EMPTY,
@@ -49,8 +55,11 @@ export const TASK_FEEDBACK_MS = new InjectionToken<number>('TASK_FEEDBACK_MS', {
   factory: () => 1500,
 });
 
-/** Feedback for a card after a move or delete: muted while saving, then a short flash. */
+/** Feedback for a card after a board change: muted while saving, then a short flash. */
 export type TaskChangeState = 'saving' | 'saved' | 'failed';
+
+/** What can be changed on the card itself, without opening the task form. */
+export type TaskQuickEdit = Partial<Pick<Task, 'title' | 'priority' | 'assignee'>>;
 
 interface TasksState {
   filters: TaskFilters;
@@ -78,12 +87,16 @@ function messageOf(error: unknown, fallback: string): string {
   return error instanceof Error && error.message ? error.message : fallback;
 }
 
+/** Titles are compared without case and surrounding spaces. */
+export const sameTitle = (a: string, b: string): boolean =>
+  a.trim().toLowerCase() === b.trim().toLowerCase();
+
 /**
  * Single source of truth for tasks. `httpResource` loads them; the store keeps them in
  * entity state, so every page shares the same data without fetching it again, and all
  * changes go through the store's methods. Members starting with `_` are private.
  *
- * Board changes (move, delete) are optimistic and race-free:
+ * Board changes (move, delete, edits on the card) are optimistic and race-free:
  * - they are queued and sent one at a time, in the order the user made them;
  * - a server response only touches a card when no newer change for it is waiting;
  * - a failed change puts the card back, and once the queue is empty the store reloads
@@ -138,6 +151,10 @@ export const TasksStore = signalStore(
     },
     reload(): void {
       store._resource.reload();
+    },
+    /** True when another task than `exceptId` already has this title, ignoring case. */
+    isTitleTaken(title: string, exceptId: string | null = null): boolean {
+      return store.entities().some((task) => task.id !== exceptId && sameTitle(task.title, title));
     },
     _countSaved(): void {
       patchState(store, ({ savedChanges }) => ({ savedChanges: savedChanges + 1 }));
@@ -289,6 +306,34 @@ export const TasksStore = signalStore(
           rollback: () =>
             store._setBoard(moveOnBoard(store.entities(), id, origin.status, origin.position)),
           errorMessage: store._language.t('TASK_MESSAGES.MOVE_FAILED', { title: task.title }),
+        });
+      },
+
+      /** Saves a change made on the card at once; it is undone if the server refuses. */
+      edit(id: string, changes: TaskQuickEdit): void {
+        const task = store.entityMap()[id];
+        if (
+          !task ||
+          ((changes.title ?? task.title) === task.title &&
+            (changes.priority ?? task.priority) === task.priority &&
+            (changes.assignee?.id ?? task.assignee.id) === task.assignee.id)
+        ) {
+          return;
+        }
+        const origin = Object.fromEntries(
+          Object.keys(changes).map((key) => [key, task[key as keyof TaskQuickEdit]]),
+        ) as TaskQuickEdit;
+        const { assignee, ...fields } = changes;
+
+        patchState(store, updateEntity({ id, changes }));
+        store._begin(id);
+        store._runQueue({
+          taskId: id,
+          request: () =>
+            store._api.update(id, { ...fields, ...(assignee ? { assigneeId: assignee.id } : {}) }),
+          onSuccess: (dto) => saveFromServer(dto as TaskDto),
+          rollback: () => patchState(store, updateEntity({ id, changes: origin })),
+          errorMessage: store._language.t('TASK_MESSAGES.EDIT_FAILED', { title: task.title }),
         });
       },
 

@@ -154,7 +154,12 @@
   "CARD": {
     "ACTIONS": "إجراءات «{{title}}»",
     "MOVE_TO": "نقل إلى {{status}}",
-    "CHECKLIST_DONE": "من خطوات القائمة مكتملة"
+    "CHECKLIST_DONE": "من خطوات القائمة مكتملة",
+    "EDIT_TITLE": "تعديل عنوان «{{title}}»",
+    "TITLE_LABEL": "عنوان المهمة",
+    "TITLE_HINT": "Enter للحفظ، Esc للإلغاء",
+    "CHANGE_PRIORITY": "أولوية {{priority}}. تغيير أولوية «{{title}}»",
+    "CHANGE_ASSIGNEE": "مسندة إلى {{name}}. تغيير مسؤول «{{title}}»"
   },
   "FILTERS": {
     "PRIORITY": "الأولوية",
@@ -173,7 +178,8 @@
     "DELETED_TITLE": "تم حذف المهمة",
     "DELETED": "تم حذف «{{title}}».",
     "MOVE_FAILED": "تعذر نقل «{{title}}».",
-    "DELETE_FAILED": "تعذر حذف «{{title}}»."
+    "DELETE_FAILED": "تعذر حذف «{{title}}».",
+    "EDIT_FAILED": "تعذر حفظ «{{title}}»."
   },
   "SEARCH": {
     "LABEL": "البحث في المهام",

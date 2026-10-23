@@ -61,4 +61,23 @@ describe('UiMenu', () => {
     );
     expect(screen.getByRole('menuitem', { name: 'Delete' })).toHaveClass('ui-menu-item-danger');
   });
+
+  it('can use its content as the button', async () => {
+    const choose = vi.fn();
+    await render(
+      `<ui-menu trigger="content" triggerLabel="High priority. Change priority" [actions]="actions">
+        <span>High</span>
+      </ui-menu>`,
+      { imports: [UiMenu], componentProperties: { actions: [{ label: 'Low', command: choose }] } },
+    );
+
+    const trigger = screen.getByRole('button', { name: 'High priority. Change priority' });
+    expect(trigger).toHaveTextContent('High');
+    expect(trigger.querySelector('svg')).toBeNull();
+
+    await userEvent.click(trigger);
+    const item = await screen.findByRole('menuitem', { name: 'Low' });
+    await userEvent.click(within(item).getByText('Low'));
+    expect(choose).toHaveBeenCalled();
+  });
 });

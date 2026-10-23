@@ -138,7 +138,12 @@
   "CARD": {
     "ACTIONS": "Actions for {{title}}",
     "MOVE_TO": "Move to {{status}}",
-    "CHECKLIST_DONE": "checklist items done"
+    "CHECKLIST_DONE": "checklist items done",
+    "EDIT_TITLE": "Edit title of {{title}}",
+    "TITLE_LABEL": "Task title",
+    "TITLE_HINT": "Enter to save, Esc to cancel",
+    "CHANGE_PRIORITY": "{{priority}} priority. Change priority of {{title}}",
+    "CHANGE_ASSIGNEE": "Assigned to {{name}}. Change assignee of {{title}}"
   },
   "FILTERS": {
     "PRIORITY": "Priority",
@@ -157,7 +162,8 @@
     "DELETED_TITLE": "Task deleted",
     "DELETED": "\"{{title}}\" was deleted.",
     "MOVE_FAILED": "\"{{title}}\" could not be moved.",
-    "DELETE_FAILED": "\"{{title}}\" could not be deleted."
+    "DELETE_FAILED": "\"{{title}}\" could not be deleted.",
+    "EDIT_FAILED": "\"{{title}}\" could not be saved."
   },
   "SEARCH": {
     "LABEL": "Search tasks",

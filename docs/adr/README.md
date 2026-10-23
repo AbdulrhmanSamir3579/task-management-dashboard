@@ -19,7 +19,7 @@ Short records of the decisions that shape this codebase: what was decided, why, 
 | [0013](0013-task-board-interactions.md)                 | Task board interactions                     | Accepted                                 |
 | [0014](0014-local-first-search.md)                      | Local-first search                          | Accepted, amended by 0017                |
 | [0015](0015-dashboard-statistics-from-tasks.md)         | Dashboard statistics computed from tasks    | Accepted                                 |
-| [0016](0016-task-form.md)                               | Task form                                   | Accepted                                 |
+| [0016](0016-task-form.md)                               | Task form                                   | Accepted, amended by 0030                |
 | [0017](0017-board-filters.md)                           | Board filters                               | Accepted, amended by 0022                |
 | [0018](0018-chart-layer.md)                             | Chart layer                                 | Accepted, amended by 0024                |
 | [0019](0019-activity-feed.md)                           | Activity feed                               | Accepted                                 |
@@ -33,6 +33,7 @@ Short records of the decisions that shape this codebase: what was decided, why, 
 | [0027](0027-arabic-and-english.md)                      | Arabic and English                          | Accepted                                 |
 | [0028](0028-simple-ci-cd-pipeline.md)                   | Simple CI/CD pipeline                       | Accepted                                 |
 | [0029](0029-dialogs-load-on-first-use.md)               | Dialogs load on first use                   | Accepted                                 |
+| [0030](0030-inline-task-editing.md)                     | Inline task editing                         | Accepted                                 |
 
 ## Template
 
