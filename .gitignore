@@ -36,10 +36,6 @@ Thumbs.db
 npm-debug.log*
 yarn-error.log*
 
-# Local tooling
-.claude/
-CLAUDE.md
-
 # Assignment brief (kept locally only)
 SENIOR_ANGULAR_DEVELOPER_ASSIGNMENT.md
 
