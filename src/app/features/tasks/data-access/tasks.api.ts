@@ -19,6 +19,21 @@ export class TasksApi {
     return this.http.resource<TasksResponse>(() => ({ endpoint: 'tasks' }));
   }
 
+  /**
+   * `GET /tasks?search=` as an `httpResource`: it searches again when `query()` changes,
+   * cancels the request for an older query, and sends nothing while `query()` is
+   * `undefined`. Must be called in an injection context.
+   */
+  searchResource(
+    query: () => string | undefined,
+    limit: number,
+  ): HttpResourceRef<TasksResponse | undefined> {
+    return this.http.resource<TasksResponse>(() => {
+      const search = query();
+      return search === undefined ? undefined : { endpoint: 'tasks', params: { search, limit } };
+    });
+  }
+
   /** Tasks whose title or description contains `query`, title matches first. */
   search(query: string, limit: number): Observable<TaskDto[]> {
     return this.http

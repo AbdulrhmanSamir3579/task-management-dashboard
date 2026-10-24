@@ -29,7 +29,7 @@ const loadedTasks: TasksResponse = {
 };
 
 describe('TaskSearchBox', () => {
-  async function setup(url = '/dashboard') {
+  async function setup(url = '/dashboard', debounceMs = 0) {
     const { navigate } = await render(TaskSearchBox, {
       routes: [
         { path: 'tasks', children: [] },
@@ -38,7 +38,7 @@ describe('TaskSearchBox', () => {
       providers: [
         provideHttpClient(withInterceptors([errorInterceptor])),
         provideHttpClientTesting(),
-        { provide: TASK_SEARCH_OPTIONS, useValue: { debounceMs: 0 } },
+        { provide: TASK_SEARCH_OPTIONS, useValue: { debounceMs } },
         { provide: NotificationService, useValue: { success: vi.fn(), error: vi.fn() } },
       ],
     });
@@ -122,6 +122,26 @@ describe('TaskSearchBox', () => {
       const marks = within(option).getAllByText('budget');
       expect(marks).toHaveLength(2);
       expect(marks.every((mark) => mark.tagName === 'MARK')).toBe(true);
+    });
+
+    it('waits for a pause in typing, and searches at once on Enter', async () => {
+      // A wait far longer than the test, so only Enter can start the search.
+      const { input, httpTesting } = await setup('/dashboard', 60_000);
+
+      await userEvent.type(input, 'budget');
+      TestBed.tick();
+      expect(searchRequests(httpTesting)).toHaveLength(0);
+
+      await userEvent.keyboard('{Enter}');
+
+      // `match()` takes requests off the list, so the request is kept once found.
+      let request: ReturnType<typeof searchRequests>[number] | undefined;
+      await vi.waitFor(() => {
+        request ??= searchRequests(httpTesting)[0];
+        expect(request).toBeDefined();
+      });
+      expect(request!.request.params.get('search')).toBe('budget');
+      request!.flush({ tasks: [], meta: { totalCount: 0, lastUpdated: '' } });
     });
 
     it('tells the user when search fails', async () => {
