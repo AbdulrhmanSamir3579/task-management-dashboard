@@ -3,6 +3,7 @@
     <app-task-filter-bar
       [filters]="store.filters()"
       [assignees]="users.options()"
+      [ready]="store.hasLoaded()"
       (filtersChange)="store.setFilters($event)"
     />
     <ui-button

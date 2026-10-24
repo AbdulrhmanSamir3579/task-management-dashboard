@@ -1,3 +1,4 @@
+import { DeferBlockBehavior } from '@angular/core/testing';
 import { render, screen, within } from '@testing-library/angular';
 import { userEvent } from '@testing-library/user-event';
 import type { MenuAction } from '../ui.types';
@@ -12,7 +13,10 @@ describe('UiMenu', () => {
       { label: 'Archive', command: vi.fn(), disabled: true },
       { label: 'Delete', command: remove, tone: 'danger' },
     ];
-    await render(UiMenu, { inputs: { actions, triggerLabel: 'Task actions' } });
+    await render(UiMenu, {
+      deferBlockBehavior: DeferBlockBehavior.Playthrough,
+      inputs: { actions, triggerLabel: 'Task actions' },
+    });
     await userEvent.click(screen.getByRole('button', { name: 'Task actions' }));
     await screen.findByRole('menu');
     return { edit, remove };
@@ -20,6 +24,7 @@ describe('UiMenu', () => {
 
   it('creates the menu only when it is first opened, then reuses it', async () => {
     await render(UiMenu, {
+      deferBlockBehavior: DeferBlockBehavior.Playthrough,
       inputs: { actions: [{ label: 'Edit', command: vi.fn() }], triggerLabel: 'Task actions' },
     });
     expect(document.querySelector('p-menu')).toBeNull();
@@ -68,7 +73,11 @@ describe('UiMenu', () => {
       `<ui-menu trigger="content" triggerLabel="High priority. Change priority" [actions]="actions">
         <span>High</span>
       </ui-menu>`,
-      { imports: [UiMenu], componentProperties: { actions: [{ label: 'Low', command: choose }] } },
+      {
+        deferBlockBehavior: DeferBlockBehavior.Playthrough,
+        imports: [UiMenu],
+        componentProperties: { actions: [{ label: 'Low', command: choose }] },
+      },
     );
 
     const trigger = screen.getByRole('button', { name: 'High priority. Change priority' });

@@ -1,0 +1,30 @@
+:host {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid var(--p-form-field-border-color);
+  border-radius: var(--p-form-field-border-radius);
+  background: var(--p-form-field-background);
+  // PrimeNG sets this on every component (`.p-component`); the height depends on it.
+  line-height: var(--p-typography-line-height, 1.5);
+}
+.ui-select-placeholder__label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  padding: var(--p-form-field-padding-y) var(--p-form-field-padding-x);
+  color: var(--p-form-field-color);
+  font-size: var(--p-form-field-font-size);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ui-select-placeholder__label--empty {
+  color: var(--p-form-field-placeholder-color);
+}
+.ui-select-placeholder__icon {
+  flex: none;
+  width: 2.5rem;
+  height: 0.875rem;
+  fill: var(--p-form-field-icon-color);
+}

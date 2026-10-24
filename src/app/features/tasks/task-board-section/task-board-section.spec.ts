@@ -1,7 +1,7 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ApplicationRef, signal } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import { TestBed, DeferBlockBehavior } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { render, screen, within } from '@testing-library/angular';
 import { userEvent } from '@testing-library/user-event';
@@ -38,6 +38,7 @@ describe('TaskBoardSection', () => {
   async function setup() {
     confirm = vi.fn().mockResolvedValue(true);
     const view = await render(TaskBoardSection, {
+      deferBlockBehavior: DeferBlockBehavior.Playthrough,
       routes: [{ path: '**', children: [] }],
       providers: [
         provideHttpClient(withInterceptors([errorInterceptor])),
@@ -104,7 +105,8 @@ describe('TaskBoardSection', () => {
     const { store } = await loaded();
 
     const toolbar = screen.getByRole('group', { name: 'Show tasks by status' }).parentElement!;
-    await userEvent.click(within(toolbar).getByRole('combobox', { name: 'Assignee' }));
+    // The dropdowns load once the board has drawn and the browser is idle.
+    await userEvent.click(await within(toolbar).findByRole('combobox', { name: 'Assignee' }));
     await userEvent.click(await screen.findByRole('option', { name: 'Sarah Smith' }));
 
     expect(store.filters().assigneeId).toBe('user-002');

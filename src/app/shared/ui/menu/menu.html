@@ -18,8 +18,9 @@
   }
 </button>
 <!-- Created on first use: a board renders one of these per card. -->
-@if (rendered()) {
+@defer (when rendered(); prefetch on idle) {
   <p-menu
+    #popup
     appendTo="body"
     [model]="items()"
     [popup]="true"
