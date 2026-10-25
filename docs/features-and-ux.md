@@ -36,6 +36,10 @@ Status tabs, priority and assignee filters and the search are kept in the query 
 
 Month (a real `table`), week and agenda views, with the view and date in the URL. Weeks start on Monday. Pure functions build the grids, and everything is computed from the store, so the calendar follows board changes. A calendar library would have been heavier than the small views needed.
 
+## Responsive, mobile-first
+
+Base styles are the phone layout; `min-width` media queries add the tablet and desktop layouts (600, 768, 992 and 1200 px). The design was desktop-only, so phone and tablet layouts were derived from it: the sidebar becomes a drawer, the board and forms stack into one column, and calendar days show a count instead of task chips.
+
 ## Accessibility
 
 - Landmarks, headings, a skip link, visible focus, and accessible names on every icon button.

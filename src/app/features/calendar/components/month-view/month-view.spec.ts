@@ -4,6 +4,7 @@ import { buildTask } from '../../../../../testing/builders';
 import { provideArabicForTesting } from '../../../../../testing/i18n';
 import { monthGrid, weekdayLabels } from '../../data-access/calendar-grid';
 import { MonthView } from './month-view';
+import { DESKTOP_WIDTH, applyScreenWidth } from '../../../../../testing/viewport';
 
 const today = '2026-10-22';
 
@@ -43,6 +44,7 @@ describe('MonthView', () => {
 
   it('marks today and shows its first tasks with the rest behind "+N more"', async () => {
     const { dayShow, taskOpen } = await setup();
+    applyScreenWidth(DESKTOP_WIDTH);
 
     const todayCell = cell('Thursday, October 22');
     expect(todayCell).toHaveAttribute('aria-current', 'date');
@@ -69,6 +71,7 @@ describe('MonthView', () => {
 
   it('names done tasks as done', async () => {
     await setup();
+    applyScreenWidth(DESKTOP_WIDTH);
 
     expect(
       within(cell('Friday, October 23')).getByRole('button', { name: 'Release notes, done' }),

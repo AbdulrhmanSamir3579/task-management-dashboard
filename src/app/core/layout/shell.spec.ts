@@ -9,6 +9,7 @@ import { ConfirmService } from '../../shared/ui/confirm/confirm.service';
 import { provideUi } from '../../shared/ui/provide-ui';
 import { Shell } from './shell';
 import { expectNoAccessibilityViolations } from '../../../testing/axe';
+import { DESKTOP_WIDTH, applyScreenWidth } from '../../../testing/viewport';
 
 @Component({ template: '<p>Page content</p>', changeDetection: ChangeDetectionStrategy.OnPush })
 class StubPage {}
@@ -29,6 +30,7 @@ describe('Shell', () => {
 
   it('lists every page in the main navigation', async () => {
     await setup('/dashboard');
+    applyScreenWidth(DESKTOP_WIDTH);
 
     const links = screen.getAllByRole('link').map((link) => link.textContent?.trim());
     expect(links).toEqual(
@@ -46,6 +48,7 @@ describe('Shell', () => {
 
   it('shows the active page title and marks its link as current', async () => {
     await setup('/tasks');
+    applyScreenWidth(DESKTOP_WIDTH);
 
     expect(await screen.findByRole('heading', { level: 1, name: 'Tasks' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Tasks/ })).toHaveAttribute('aria-current', 'page');
@@ -101,6 +104,7 @@ describe('Shell', () => {
 
   it('loads and opens the task form from the sidebar only when asked', async () => {
     await setup('/dashboard', DeferBlockBehavior.Playthrough);
+    applyScreenWidth(DESKTOP_WIDTH);
     expect(screen.queryByRole('dialog', { name: 'New task' })).not.toBeInTheDocument();
 
     await userEvent.click(screen.getByRole('button', { name: '+ New Task' }));

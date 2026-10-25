@@ -69,18 +69,37 @@
 
 .shell {
   display: grid;
-  grid-template-columns: 15rem minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   min-height: calc(100vh - 4rem);
 }
 
+// Phones and tablets: a drawer below the header, so the menu button stays reachable.
 .shell__sidebar {
-  position: sticky;
-  top: 4rem;
-  height: calc(100vh - 4rem);
+  position: fixed;
+  inset-block: 4rem 0;
+  inset-inline-start: 0;
+  z-index: 1000;
+  width: 16rem;
+  transform: translateX(-100%);
+  // Hidden from keyboard and screen readers while closed.
+  visibility: hidden;
+  transition:
+    transform 0.2s ease,
+    visibility 0.2s;
+}
+
+// Right to left the drawer sits on the right, so it slides out to the right.
+.shell__sidebar:dir(rtl) {
+  transform: translateX(100%);
+}
+
+.shell--nav-open .shell__sidebar {
+  transform: none;
+  visibility: visible;
 }
 
 .shell__main {
-  padding: 2rem;
+  padding: 1rem;
   view-transition-name: page;
 
   &:focus {
@@ -88,7 +107,7 @@
   }
 }
 
-// Only rendered while the mobile drawer is open.
+// Only rendered while the drawer is open.
 .shell__backdrop {
   position: fixed;
   inset: 4rem 0 0;
@@ -97,44 +116,30 @@
   background: rgb(0 0 0 / 40%);
 }
 
+// Desktop: the sidebar is a fixed column next to the page.
 @media (min-width: 992px) {
-  .shell__backdrop {
-    display: none;
-  }
-}
-
-@media (max-width: 991.98px) {
   .shell {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: 15rem minmax(0, 1fr);
   }
 
-  // Drawer below the header, so the menu button stays reachable.
-  .shell__sidebar {
-    position: fixed;
-    inset-block: 4rem 0;
-    inset-inline-start: 0;
-    z-index: 1000;
-    width: 16rem;
-    height: auto;
-    transform: translateX(-100%);
-    // Hidden from keyboard and screen readers while closed.
-    visibility: hidden;
-    transition:
-      transform 0.2s ease,
-      visibility 0.2s;
-  }
-
-  // Right to left the drawer sits on the right, so it slides out to the right.
+  .shell__sidebar,
   .shell__sidebar:dir(rtl) {
-    transform: translateX(100%);
-  }
-
-  .shell--nav-open .shell__sidebar {
+    position: sticky;
+    inset: auto;
+    top: 4rem;
+    z-index: auto;
+    width: auto;
+    height: calc(100vh - 4rem);
     transform: none;
     visibility: visible;
+    transition: none;
   }
 
   .shell__main {
-    padding: 1rem;
+    padding: 2rem;
+  }
+
+  .shell__backdrop {
+    display: none;
   }
 }

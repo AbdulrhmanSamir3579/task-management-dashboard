@@ -19,6 +19,7 @@ import { TaskEditorStore } from '../tasks/data-access/task-editor.store';
 import { TasksStore } from '../tasks/data-access/tasks.store';
 import { CalendarPage } from './calendar.page';
 import { expectNoAccessibilityViolations } from '../../../testing/axe';
+import { DESKTOP_WIDTH, applyScreenWidth } from '../../../testing/viewport';
 
 const today = toIsoDate(new Date());
 const monthName = (date: string) =>
@@ -69,6 +70,7 @@ describe('CalendarPage', () => {
   it('opens on this month, with tasks on their days', async () => {
     const { respond } = await setup();
     await respond();
+    applyScreenWidth(DESKTOP_WIDTH);
 
     expect(screen.getByRole('heading', { name: monthName(today) })).toBeInTheDocument();
     expect(screen.getByRole('table', { name: 'Tasks due each day' })).toBeInTheDocument();
@@ -135,6 +137,7 @@ describe('CalendarPage', () => {
     );
     const { respond, router } = await setup();
     await respond({ tasks: busy, meta: { totalCount: 5, lastUpdated: '' } });
+    applyScreenWidth(DESKTOP_WIDTH);
 
     await userEvent.click(screen.getByRole('button', { name: `+2 more on ${fullDate(today)}` }));
 
