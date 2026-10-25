@@ -14,7 +14,7 @@ A task management dashboard built with Angular 22, NgRx SignalStore and PrimeNG.
 - **Form** with custom and async validators, a dynamic checklist and an unsaved-changes prompt
 - **Search** with suggestions; filters by status, priority and assignee, kept in the URL
 - **Statistics and charts**, calendar (month, week, agenda), team page and activity feed
-- **English and Arabic** with right-to-left layout; light and dark themes
+- **Responsive, mobile-first** layout; **English and Arabic** with right-to-left layout; light and dark themes
 - **Optimistic updates** with rollback, loading skeletons, error states and automatic retries
 
 ## Getting started

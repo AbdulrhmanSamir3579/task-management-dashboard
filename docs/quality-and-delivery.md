@@ -7,6 +7,7 @@
 - **`HttpTestingController`** for stores and services; retries, errors and the mock API are also tested through the real interceptors.
 - **axe-core** checks every page and dialog for accessibility violations.
 - **Arabic:** a helper renders components in Arabic to test right-to-left text and plurals.
+- **Screen widths:** jsdom ignores width media queries, so tests see the phone layout; desktop tests apply the `min-width` rules with `applyScreenWidth()`.
 - **Smoke test:** the production build is started in a headless DOM under its GitHub Pages path. It was added after a bug that only appeared in the minified build (the app never started), so that kind of failure is caught before deploying.
 - **Coverage gate:** 80% for statements, branches, functions and lines, over every file in `src/app`. Currently about 98%.
 - Regression tests are run once against the broken code, to confirm they fail without the fix.
